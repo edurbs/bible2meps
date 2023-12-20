@@ -1,0 +1,91 @@
+Step 2: 
+
+    2.1.	First line must have the cod of the book starting with %. Exemple: %01
+        Note: create a enum with word file names
+        •	A hard return must appear at the end of the first line, which includes unique numbers important for processing of the file.
+
+    2.2.	On the second line, paste or type the Bible book name and make sure it is bold. Make sure that a Percent sign (%) appears at the start of the second line with the Bible book name.
+        •	A hard return must appear at the end of the second line containing the Bible book name. The entire name must be on one line.
+
+    2.3.	On the third line, paste the book content:
+
+Step 3: Clean the text
+
+    3.2.	Remove unwanted text such as introductions, comments, footers, and page numbers.
+        Note: Text such as headings, superscriptions, and footnotes should not be removed.
+
+    3.3.	Remove unnecessary formatting such as bulleted list styles or hyperlinks.
+        Note: If the text contains attributes, such as italics, this can remain so as to retain the original formatting of the text.
+
+    3.4.	Clean up soft and hard returns.
+        Note: Generally speaking, a hard return should appear at the end of each chapter or paragraph and a soft return at the end of a line of poetic text. If the returns included in the pasted text follow this pattern, it may be practical to keep them and review them in Step 4.B.1. If they do not serve a purpose, it may be best to remove all returns except those at the end of the chapter and then add hard and soft returns where they should be in Step 4.B.1.
+
+Step 4: Format the text
+
+    A) Chapters and verses
+    Note: If the Bible uses vernacular digits, keep chapter and verse numbers as they appear.
+
+        1.	For books containing chapters:
+
+            a.	Add chapter number one to the beginning of the first verse of the Bible book, if it has not been included in the pasted text.
+
+            b.	Remove the verse number from the first verse in each chapter, if it has been included in the pasted text.
+
+            c.	If additional text, such as a heading, appears between a chapter number and the text of the first verse, move it to the line above.
+
+        2.	For books not containing chapters, add verse number one to the beginning of the first verse, if it has not been included in the pasted text.
+
+            Note: add chapter number 1 if it does not exists.
+
+        3.	Chapter numbers:
+
+            a.	Add curly brackets { } around the number. For example, chapter 10 would appear as {10}.
+
+            b.	Ensure that one space exists after each chapter number.
+
+        4.	Verse numbers:
+
+            a.	Ensure that one space exists before each verse number, unless it appears in the beginning of the line.
+
+            b.	Make sure that each digit is bold.
+
+            c.	Ensure that one space exists after each verse number.
+
+    B) Line breaking and special formatting characters
+
+        1.	Make sure that hard and soft returns appear where they should, as explained in the document How to handle formatting.
+        Note: Soft returns should only appear in poetic text.
+
+            •	Add a hard return at the end of each line containing a heading.
+
+        2.	Add special formatting characters to the text, as explained in the document How to handle formatting.
+
+            •	Place an Ampersand (&) at the start of a line with a book division.
+
+            •	Place a Dollar sign ($) at the start of a line with a superscription.
+
+            •	Place an At sign (@) at the start of a line with any heading other than a book division or superscription.
+
+            •	Add a soft return (Shift+Enter) at the end of each line.
+            •	Add a hard return at the end of a stanza of poetic text.
+
+            •	When poetic text starts in the middle of a verse, add a soft return (Shift+Enter) to the end of the line preceding the poetic text.
+
+            Place an Equals sign (=) before the first chapter or verse number where poetic text starts.
+                Note: If a Bible book begins with poetic text, place the Equals sign (=) at the beginning of the second verse containing poetic text instead. If poetic text starts in the middle of a verse, no Equals sign (=) is necessary. 
+
+            Add a hard return at the end of each chapter and group of verses that form a paragraph.
+
+            Place a Plus sign (+) at the start of a line when body text immediately follows poetic text or any type of heading.
+
+        Footnotes
+
+            •	Add a hard return at the end of each line with footnote text.
+
+            •	Replace each footnote reference symbol with an Asterisk (*) in the body text.
+
+            •	Place a Number sign (#) at the start of a line with footnote text.
+
+            Place all footnote text at the end of the Bible book.
+
+
