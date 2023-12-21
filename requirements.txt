@@ -45,11 +45,11 @@ Step 4: Format the text
 
         4.	Verse numbers:
 
-            a.	Ensure that one space exists before each verse number, unless it appears in the beginning of the line.
+            a.	✅Ensure that one space exists before each verse number, ✅unless it appears in the beginning of the line.
 
-            b.	Make sure that each digit is bold.
+            b.	✅Make sure that each digit is bold.
 
-            c.	Ensure that one space exists after each verse number.
+            c.	✅Ensure that one space exists after each verse number.
 
     B) Line breaking and special formatting characters
 

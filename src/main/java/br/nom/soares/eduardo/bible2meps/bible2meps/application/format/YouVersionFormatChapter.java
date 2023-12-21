@@ -31,8 +31,12 @@ public class YouVersionFormatChapter {
     private void formatScriptureNumberAsBold(Element chapter) {
         Elements scriptureNumbers = chapter.select("span.ChapterContent_label__R2PLt");
         for(Element scriptureNumber : scriptureNumbers){
-            // scriptureNumber.appendElement("strong").text(scriptureNumber.text());
-            scriptureNumber.replaceWith(new Element("strong").addClass("scriptureNumberBold").text(" "+scriptureNumber.text()+" "));
+            String scriptureText = scriptureNumber.parent().text();
+            String startSpace = " ";
+            if(scriptureText.startsWith(scriptureNumber.text())){
+                startSpace = "";
+            }
+            scriptureNumber.replaceWith(new Element("strong").addClass("scriptureNumberBold").text(startSpace+scriptureNumber.text()+" "));
         }
     }
 

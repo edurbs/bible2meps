@@ -72,7 +72,7 @@ public class YouVersionFormatChapterTest {
         
         assertEquals(31, scriptureNumbers.size());
         assertEquals(
-            "<strong class=\"scriptureNumberBold\"> 31 </strong>", 
+            "<strong class=\"scriptureNumberBold\">31 </strong>", 
             scriptureNumbers.get(30).outerHtml()
         );
     }
