@@ -1,6 +1,7 @@
 package br.nom.soares.eduardo.bible2meps.bible2meps.application.format;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 import java.io.IOException;
 
@@ -79,6 +80,14 @@ class YouVersionFormatChapterTest {
         }
 
         @Test
+        void shouldAddAtSighBeforeHeadings(){
+            Elements headings = chapter.select("span.ChapterContent_heading__xBDcs");
+            for (Element heading : headings) {
+                assertEquals("@", heading.text().substring(0, 1));
+            }
+        }
+
+        @Test
         void shouldGetOnlyTheChapter() {
             assertEquals(0, chapter.select(".div.ChapterContent_book__VkdB2").size());
         }
@@ -152,5 +161,39 @@ class YouVersionFormatChapterTest {
             shouldMoveChapterNumberNextToScriptureNumberOneGeneric();
         }
 
+    }
+
+    @Nested
+    @TestInstance(Lifecycle.PER_CLASS)
+    class psalmo4test {
+
+        @BeforeAll
+        void setup() {
+            String url = "https://www.bible.com/bible/2645/PSA.4.A21";
+            formatChapter(url);
+        }
+
+        @Test
+        void shouldAddDolarSignToSuperscription(){
+            Element superscription = chapter.selectFirst("div.ChapterContent_d__OHSpy");
+            assertEquals("$", superscription.text().substring(0, 1));
+        }
+    }
+
+    @Nested
+    @TestInstance(Lifecycle.PER_CLASS)
+    class psalmo2test {
+
+        @BeforeAll
+        void setup() {
+            String url = "https://www.bible.com/bible/2645/PSA.2.A21";
+            formatChapter(url);
+        }
+
+        @Test
+        void shouldAddDolarSignToSuperscription(){
+            Element superscription = chapter.selectFirst("div.ChapterContent_d__OHSpy");
+            assertNull(superscription);
+        }
     }
 }

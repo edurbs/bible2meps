@@ -27,7 +27,42 @@ public class YouVersionFormatChapter {
         addCurlyBracketsToChapterNumber(chapter);
         removeScriptureNumberOne(chapter);
         moveChapterNumberNextToScriptureNumberOne(chapter);
+        addAtSignToHeadings(chapter);
+        addDolarSignToSuperscription(chapter);
         this.page = chapter;
+    }
+
+    private void addDolarSignToSuperscription(Element chapter) {
+        // TODO: do this logic only on book of Psalms
+        String stringChapterNumber = chapter.selectFirst("span.chapterNumber").wholeText();
+        stringChapterNumber = stringChapterNumber
+                .replace("{","")
+                .replace("}","")
+                .trim();
+        int chapterNumber = Integer.parseInt(stringChapterNumber);  
+        boolean thisChapterHasSupercription = switch (chapterNumber) {
+            case 1, 2, 10, 33, 43, 71, 91, 93, 94, 95, 96, 97, 99, 104, 105, 106, 107, 111, 112, 113, 114, 115, 116,
+                    117, 118, 119, 135, 136, 137, 146, 147, 148, 149, 150 -> false;
+            default -> true;
+        };
+        Element superscription = chapter.selectFirst("div.ChapterContent_d__OHSpy");
+        if(thisChapterHasSupercription){
+            if(superscription == null){
+                superscription = new Element("div").addClass("ChapterContent_d__OHSpy");
+            }
+            superscription.text("$"+superscription.text());
+        }else{
+            if(superscription != null){
+                superscription.remove();
+            }
+        }
+    }
+
+    private void addAtSignToHeadings(Element chapter) {
+        Elements headings = chapter.select("span.ChapterContent_heading__xBDcs");
+        for (Element heading : headings) {
+            heading.text("@"+heading.text());
+        }
     }
 
     private void moveChapterNumberNextToScriptureNumberOne(Element chapter) {
