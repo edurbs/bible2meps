@@ -31,7 +31,7 @@ Step 4: Format the text
 
             b.	✅Remove the verse number from the first verse in each chapter, if it has been included in the pasted text.
 
-            c.	If additional text, such as a heading, appears between a chapter number and the text of the first verse, move it to the line above.
+            c.	✅If additional text, such as a heading, appears between a chapter number and the text of the first verse, move it to the line above.
 
         2.	For books not containing chapters, add verse number one to the beginning of the first verse, if it has not been included in the pasted text.
 

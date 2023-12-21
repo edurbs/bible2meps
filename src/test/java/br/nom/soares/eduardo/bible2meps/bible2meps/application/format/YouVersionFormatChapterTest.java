@@ -21,11 +21,11 @@ import org.springframework.boot.test.context.TestComponent;
 class YouVersionFormatChapterTest {
 
     private YouVersionFormatChapter youVersionFormatChapter;
-    private Element cleanedPage;
+    private Element chapter;
 
     @AfterAll
     void afterAll() {
-        System.out.println(cleanedPage);
+        System.out.println(chapter);
     }
 
     void formatChapter(String url) {
@@ -37,19 +37,19 @@ class YouVersionFormatChapterTest {
             return;
         }
         youVersionFormatChapter.execute();
-        cleanedPage = youVersionFormatChapter.getPage();
+        chapter = youVersionFormatChapter.getPage();
     }
 
     void shouldFormatScriptureNumberAsBoldGeneric(int totalScriptureNumbers) {
-        Elements scriptureNumbers = cleanedPage.select("strong.scriptureNumberBold");
+        Elements scriptureNumbers = chapter.select("strong.scriptureNumberBold");
         assertEquals(totalScriptureNumbers, scriptureNumbers.size());
         assertEquals(
-                "<strong class=\"scriptureNumberBold\">" + totalScriptureNumbers + " </strong>",
-                scriptureNumbers.get(totalScriptureNumbers - 1).outerHtml());
+                "<strong class=\"scriptureNumberBold\">" + (totalScriptureNumbers)+ " </strong>",
+                scriptureNumbers.get(totalScriptureNumbers-1).outerHtml());
     }
 
     void shouldFormatFootNotesGeneric(String footnoteTextExpected, int position) {
-        assertEquals(0, cleanedPage.select("span.ChapterContent_note__YlDW0").size());
+        assertEquals(0, chapter.select("span.ChapterContent_note__YlDW0").size());
         assertEquals(position, youVersionFormatChapter.getFootnotesElementList().size());
         assertEquals(
                 footnoteTextExpected,
@@ -57,8 +57,15 @@ class YouVersionFormatChapterTest {
     }
 
     void shouldRemoveScriptureNumberOneGeneric() {
-        Elements scriptureNumbers = cleanedPage.select("strong.scriptureNumberBold");
+        Elements scriptureNumbers = chapter.select("strong.scriptureNumberBold");
         scriptureNumbers.get(0).wholeText().equals("");
+    }
+
+    void shouldMoveChapterNumberNextToScriptureNumberOneGeneric() {
+        Element scriptureNumberOne = chapter.select("strong.scriptureNumberBold").get(0);
+        String chapterNumber = chapter.selectFirst("span.chapterNumber").wholeText();
+        Element previousSibling = scriptureNumberOne.previousElementSibling();
+        assertEquals(chapterNumber, previousSibling.wholeText());
     }
 
     @Nested
@@ -73,17 +80,17 @@ class YouVersionFormatChapterTest {
 
         @Test
         void shouldGetOnlyTheChapter() {
-            assertEquals(0, cleanedPage.select(".div.ChapterContent_book__VkdB2").size());
+            assertEquals(0, chapter.select(".div.ChapterContent_book__VkdB2").size());
         }
 
         @Test
         void shouldCleanAllUnwantedFootnotes() {
-            assertEquals(0, cleanedPage.select("span.ChapterContent_x__tsTlk").size());
+            assertEquals(0, chapter.select("span.ChapterContent_x__tsTlk").size());
         }
 
         @Test
         void shouldRemoveAllWantedText() {
-            assertEquals(0, cleanedPage.select("div.ChapterContent_version-copyright__FlNOi").size());
+            assertEquals(0, chapter.select("div.ChapterContent_version-copyright__FlNOi").size());
         }
 
         @Test
@@ -94,18 +101,25 @@ class YouVersionFormatChapterTest {
 
         @Test
         void shouldFormatScriptureNumbersAsBold() {
-            shouldFormatScriptureNumberAsBoldGeneric(31);
+            shouldFormatScriptureNumberAsBoldGeneric(31);            
         }
 
         @Test
         void shouldAddCurlyBracketsToChapterNumber() {
-            assertEquals("{1} ", cleanedPage.selectFirst("div.chapterNumber").wholeText());
+            assertEquals("{1} ", chapter.selectFirst("span.chapterNumber").wholeText());
         }
 
         @Test
         void shouldRemoveScriptureNumberOne(){
             shouldRemoveScriptureNumberOneGeneric();
         }
+
+        @Test
+        void shouldMoveChapterNumberNextToScriptureNumberOne(){
+            shouldMoveChapterNumberNextToScriptureNumberOneGeneric();
+        }
+
+        
     }
     @Nested
     @TestInstance(Lifecycle.PER_CLASS)
@@ -130,7 +144,12 @@ class YouVersionFormatChapterTest {
 
         @Test
         void shouldAddCurlyBracketsToChapterNumber() {
-            assertEquals("{2} ", cleanedPage.selectFirst("div.chapterNumber").wholeText());
+            assertEquals("{2} ", chapter.selectFirst("span.chapterNumber").wholeText());
+        }
+
+        @Test
+        void shouldMoveChapterNumberNextToScriptureNumberOne(){
+            shouldMoveChapterNumberNextToScriptureNumberOneGeneric();
         }
 
     }

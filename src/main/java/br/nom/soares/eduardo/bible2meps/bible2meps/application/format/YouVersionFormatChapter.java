@@ -26,7 +26,18 @@ public class YouVersionFormatChapter {
         formatScriptureNumberAsBold(chapter);
         addCurlyBracketsToChapterNumber(chapter);
         removeScriptureNumberOne(chapter);
+        moveChapterNumberNextToScriptureNumberOne(chapter);
         this.page = chapter;
+    }
+
+    private void moveChapterNumberNextToScriptureNumberOne(Element chapter) {
+        Elements scriptureNumbers = chapter.select("strong.scriptureNumberBold");
+        Element scriptureNumberOne = scriptureNumbers.get(0);
+        Element chapterNumber = chapter.selectFirst("span.chapterNumber");
+        String chapterNumberText = chapterNumber.wholeText();
+        chapterNumber.remove();        
+        Element newChapterNumber = new Element("span").addClass("chapterNumber").text(chapterNumberText);
+        scriptureNumberOne.before(newChapterNumber);
     }
 
     private void removeScriptureNumberOne(Element chapter) {
@@ -37,7 +48,7 @@ public class YouVersionFormatChapter {
     private void addCurlyBracketsToChapterNumber(Element chapter) {
         Element chapterNumber = chapter.selectFirst("div.ChapterContent_label__R2PLt");
         String formatedChapterNumber = "{"+chapterNumber.text()+"} ";
-        Element newChapterNumberElement = new Element("div")
+        Element newChapterNumberElement = new Element("span")
                 .addClass("chapterNumber")
                 .text(formatedChapterNumber);
         chapterNumber.replaceWith(newChapterNumberElement);
