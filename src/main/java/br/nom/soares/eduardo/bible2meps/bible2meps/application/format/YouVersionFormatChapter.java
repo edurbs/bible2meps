@@ -24,19 +24,33 @@ public class YouVersionFormatChapter {
         removeUnwantedNotes(chapter);   
         extractFootnotes(chapter);
         formatScriptureNumberAsBold(chapter);
-        
+        addCurlyBracketsToChapterNumber(chapter);
         this.page = chapter;
+    }
+
+    private void addCurlyBracketsToChapterNumber(Element chapter) {
+        Element chapterNumber = chapter.selectFirst("div.ChapterContent_label__R2PLt");
+        String formatedChapterNumber = "{"+chapterNumber.text()+"}";
+        Element newChapterNumberElement = new Element("div")
+                .addClass("chapterNumber")
+                .text(formatedChapterNumber);
+        chapterNumber.replaceWith(newChapterNumberElement);
     }
 
     private void formatScriptureNumberAsBold(Element chapter) {
         Elements scriptureNumbers = chapter.select("span.ChapterContent_label__R2PLt");
-        for(Element scriptureNumber : scriptureNumbers){
+        for (int i = 0; i < scriptureNumbers.size(); i++) {
+            Element scriptureNumber = scriptureNumbers.get(i);
+            String scriptureNumberText = scriptureNumber.text();
             String scriptureText = scriptureNumber.parent().text();
             String startSpace = " ";
-            if(scriptureText.startsWith(scriptureNumber.text())){
+            if(scriptureText.startsWith(scriptureNumberText)){
                 startSpace = "";
             }
-            scriptureNumber.replaceWith(new Element("strong").addClass("scriptureNumberBold").text(startSpace+scriptureNumber.text()+" "));
+            Element scriptureNumberBoldWithSpace = new Element("strong")
+                    .addClass("scriptureNumberBold")
+                    .text(startSpace+scriptureNumberText+" ");
+            scriptureNumber.replaceWith(scriptureNumberBoldWithSpace);
         }
     }
 

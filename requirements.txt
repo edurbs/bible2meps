@@ -39,7 +39,7 @@ Step 4: Format the text
 
         3.	Chapter numbers:
 
-            a.	Add curly brackets { } around the number. For example, chapter 10 would appear as {10}.
+            a.	✅Add curly brackets { } around the number. For example, chapter 10 would appear as {10}.
 
             b.	Ensure that one space exists after each chapter number.
 

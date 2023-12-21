@@ -10,6 +10,7 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
@@ -17,63 +18,105 @@ import org.springframework.boot.test.context.TestComponent;
 
 @TestComponent
 @TestInstance(Lifecycle.PER_CLASS)
-public class YouVersionFormatChapterTest {
-    
+class YouVersionFormatChapterTest {
+
     private YouVersionFormatChapter youVersionFormatChapter;
     private Element cleanedPage;
 
     @AfterAll
-    void afterAll(){
+    void afterAll() {
         System.out.println(cleanedPage);
     }
 
-    @BeforeAll
-    void beforeAll(){
+    void formatChapter(String url) {
         try {
-            String url = "https://www.bible.com/bible/2645/GEN.1.A21";
             Document page = Jsoup.connect(url).get();
-            youVersionFormatChapter = new YouVersionFormatChapter(page);            
+            youVersionFormatChapter = new YouVersionFormatChapter(page);
         } catch (IOException e) {
             e.printStackTrace();
             return;
         }
-        youVersionFormatChapter.execute();        
-        cleanedPage = youVersionFormatChapter.getPage();        
-    }
-    
-    @Test
-    void shouldGetOnlyTheChapter(){
-        assertEquals(0, cleanedPage.select(".div.ChapterContent_book__VkdB2").size());
+        youVersionFormatChapter.execute();
+        cleanedPage = youVersionFormatChapter.getPage();
     }
 
-    @Test
-    void shouldCleanAllUnwantedFootnotes(){
-        assertEquals(0, cleanedPage.select("span.ChapterContent_x__tsTlk").size());        
-    }
-
-    @Test
-    void shouldRemoveAllWantedText(){
-        assertEquals(0, cleanedPage.select("div.ChapterContent_version-copyright__FlNOi").size());
-    }
-
-    @Test
-    void shouldFormatFootnotes(){
-        assertEquals(0, cleanedPage.select("span.ChapterContent_note__YlDW0").size());
-        assertEquals(2, youVersionFormatChapter.getFootnotesElementList().size());
-        assertEquals(
-            "#1:26 Cf. a Versão siríaca.<br>", 
-            youVersionFormatChapter.getFootnotesElementList().get(1).html());
-    }
-
-    @Test
-    void shouldFormatScriptureNumbersAsBold(){
-        // Elements scriptureNumbers = cleanedPage.select("span.ChapterContent_label__R2PLt");
+    void shouldFormatScriptureNumberAsBoldGeneric(int totalScriptureNumbers) {
         Elements scriptureNumbers = cleanedPage.select("strong.scriptureNumberBold");
-        
-        assertEquals(31, scriptureNumbers.size());
+        assertEquals(totalScriptureNumbers, scriptureNumbers.size());
         assertEquals(
-            "<strong class=\"scriptureNumberBold\">31 </strong>", 
-            scriptureNumbers.get(30).outerHtml()
-        );
+                "<strong class=\"scriptureNumberBold\">" + totalScriptureNumbers + " </strong>",
+                scriptureNumbers.get(totalScriptureNumbers - 1).outerHtml());
+    }
+
+    void shouldFormatFootNotesGeneric(String footnoteTextExpected, int position) {
+        assertEquals(0, cleanedPage.select("span.ChapterContent_note__YlDW0").size());
+        assertEquals(position, youVersionFormatChapter.getFootnotesElementList().size());
+        assertEquals(
+                footnoteTextExpected,
+                youVersionFormatChapter.getFootnotesElementList().get(position-1).html());
+    }
+
+    @Nested
+    @TestInstance(Lifecycle.PER_CLASS)
+    class genesis1test {
+
+        @BeforeAll
+        void setup() {
+            String url = "https://www.bible.com/bible/2645/GEN.1.A21";
+            formatChapter(url);
+        }
+
+        @Test
+        void shouldGetOnlyTheChapter() {
+            assertEquals(0, cleanedPage.select(".div.ChapterContent_book__VkdB2").size());
+        }
+
+        @Test
+        void shouldCleanAllUnwantedFootnotes() {
+            assertEquals(0, cleanedPage.select("span.ChapterContent_x__tsTlk").size());
+        }
+
+        @Test
+        void shouldRemoveAllWantedText() {
+            assertEquals(0, cleanedPage.select("div.ChapterContent_version-copyright__FlNOi").size());
+        }
+
+        @Test
+        void shouldFormatFootnotes() {
+            String footnoteTextExpected = "#1:26 Cf. a Versão siríaca.<br>";
+            shouldFormatFootNotesGeneric(footnoteTextExpected, 2);
+        }
+
+        @Test
+        void shouldFormatScriptureNumbersAsBold() {
+            shouldFormatScriptureNumberAsBoldGeneric(31);
+        }
+
+        @Test
+        void shouldAddCurlyBracketsToChapterNumber() {
+            assertEquals("{1}", cleanedPage.selectFirst("div.chapterNumber").text());
+        }
+    }
+    @Nested
+    @TestInstance(Lifecycle.PER_CLASS)
+    class genesis2test {
+
+        @BeforeAll
+        void setup() {
+            String url = "https://www.bible.com/bible/2645/GEN.2.A21";
+            formatChapter(url);
+        }
+
+        @Test
+        void shouldFormatScriptureNumbersAsBold() {
+            shouldFormatScriptureNumberAsBoldGeneric(25);
+        }
+
+        @Test
+        void shouldFormatFootnotes() {
+            String footnoteTextExpected = "#2:23 No hebr., há um jogo de palavras: varoa (mulher) e varão (homem).<br>";
+            shouldFormatFootNotesGeneric(footnoteTextExpected, 1);
+        }
+
     }
 }
