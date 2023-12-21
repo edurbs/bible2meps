@@ -1,4 +1,4 @@
-package br.nom.soares.eduardo.bible2meps.bible2meps.model;
+package br.nom.soares.eduardo.bible2meps.bible2meps.domain;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
