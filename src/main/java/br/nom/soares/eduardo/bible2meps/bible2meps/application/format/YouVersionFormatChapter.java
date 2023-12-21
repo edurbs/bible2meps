@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.jsoup.nodes.Element;
-import org.jsoup.parser.Tag;
 import org.jsoup.select.Elements;
 
 import lombok.Getter;
@@ -18,32 +17,42 @@ public class YouVersionFormatChapter {
     @NonNull
     private Element page;
 
-    private List<String> footnotesList = new ArrayList<>();
+    private List<Element> footnotesElementList = new ArrayList<>();
 
     public void execute(){
         Element chapter = extractChapter(page);
         removeUnwantedNotes(chapter);   
         extractFootnotes(chapter);
+        formatScriptureNumberAsBold(chapter);
         
         this.page = chapter;
+    }
+
+    private void formatScriptureNumberAsBold(Element chapter) {
+        Elements scriptureNumbers = chapter.select("span.ChapterContent_label__R2PLt");
+        for(Element scriptureNumber : scriptureNumbers){
+            // scriptureNumber.appendElement("strong").text(scriptureNumber.text());
+            scriptureNumber.replaceWith(new Element("strong").addClass("scriptureNumberBold").text(" "+scriptureNumber.text()+" "));
+        }
     }
 
     private void extractFootnotes(Element chapter) {
         Elements footnoteElements = chapter.select("span.ChapterContent_note__YlDW0");        
         for (Element footnote : footnoteElements) {
-            Element footnoteValue = footnote.selectFirst("span.ChapterContent_body__O3qjr");
-            Element footnoteKeyElement = footnoteValue.selectFirst("span.ChapterContent_fr__0KsID");
-            String footnoteKey = footnoteKeyElement.text();
-            footnoteKeyElement.remove();
-            addFootnote(footnoteValue.text(), footnoteKey);        
+            Element footnoteBody = footnote.selectFirst("span.ChapterContent_body__O3qjr");
+            Element footnoteScriptureNumber = footnoteBody.selectFirst("span.ChapterContent_fr__0KsID");            
+            String footnoteScriptureNumberText = footnoteScriptureNumber.text();
+            footnoteScriptureNumber.remove();
+            addFootnote(footnoteScriptureNumberText, footnoteBody.text());        
         }
-        footnoteElements.replaceAll(element -> new Element(Tag.valueOf("span"), "").text("*"));        
+        footnoteElements.replaceAll(element -> new Element("span").text("*"));
     }
 
-    private void addFootnote(String footnoteValue, String footnoteKey) {
-        String formatedFootnoteKey = "#"+footnoteKey.replace(".", ":")+" ";
-        String formatedFootnoteValue = footnoteValue + "<br>";
-        footnotesList.add(formatedFootnoteKey + formatedFootnoteValue);
+    private void addFootnote(String footnoteKey, String footnoteValue) {
+        String formatedFootnoteText = "#"+footnoteKey.replace(".", ":")+" "+footnoteValue;
+        Element footnoteElement = new Element("span").text(formatedFootnoteText);
+        footnoteElement.appendElement("br");
+        footnotesElementList.add(footnoteElement);
     }
 
     private void removeUnwantedNotes(Element element) {
