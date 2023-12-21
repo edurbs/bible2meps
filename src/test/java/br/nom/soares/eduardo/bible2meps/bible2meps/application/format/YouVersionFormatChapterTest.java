@@ -33,6 +33,14 @@ public class YouVersionFormatChapterTest {
     }
 
     @Test
+    void shouldExtractFoonotes(){
+        youVersionFormatChapter.extractFootnotes(page);
+        Element finalText = youVersionFormatChapter.getPage();
+        assertEquals(0, finalText.select("span.ChapterContent_note__YlDW0").size());
+        assertEquals(1, youVersionFormatChapter.getFootnotesMap().size());
+    }
+
+    @Test
     void shoudlRemoveAllUnwantedText(){
         youVersionFormatChapter.execute();
         Element finalCleanText = youVersionFormatChapter.getPage();
