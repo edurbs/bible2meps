@@ -94,7 +94,7 @@ class YouVersionFormatChapterTest {
 
         @Test
         void shouldAddCurlyBracketsToChapterNumber() {
-            assertEquals("{1}", cleanedPage.selectFirst("div.chapterNumber").text());
+            assertEquals("{1} ", cleanedPage.selectFirst("div.chapterNumber").wholeText());
         }
     }
     @Nested
@@ -116,6 +116,11 @@ class YouVersionFormatChapterTest {
         void shouldFormatFootnotes() {
             String footnoteTextExpected = "#2:23 No hebr., há um jogo de palavras: varoa (mulher) e varão (homem).<br>";
             shouldFormatFootNotesGeneric(footnoteTextExpected, 1);
+        }
+
+        @Test
+        void shouldAddCurlyBracketsToChapterNumber() {
+            assertEquals("{2} ", cleanedPage.selectFirst("div.chapterNumber").wholeText());
         }
 
     }

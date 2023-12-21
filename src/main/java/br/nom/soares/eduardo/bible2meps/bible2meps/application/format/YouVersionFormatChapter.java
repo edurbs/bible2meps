@@ -30,7 +30,7 @@ public class YouVersionFormatChapter {
 
     private void addCurlyBracketsToChapterNumber(Element chapter) {
         Element chapterNumber = chapter.selectFirst("div.ChapterContent_label__R2PLt");
-        String formatedChapterNumber = "{"+chapterNumber.text()+"}";
+        String formatedChapterNumber = "{"+chapterNumber.text()+"} ";
         Element newChapterNumberElement = new Element("div")
                 .addClass("chapterNumber")
                 .text(formatedChapterNumber);
