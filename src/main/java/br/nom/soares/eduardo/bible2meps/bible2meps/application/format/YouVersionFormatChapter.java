@@ -1,5 +1,6 @@
 package br.nom.soares.eduardo.bible2meps.bible2meps.application.format;
 
+import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
@@ -14,11 +15,16 @@ public class YouVersionFormatChapter {
     private Document page;   
 
     public void execute(){
-        Element chapterOnly = extractChapter(page);
-        removeUnwantedText(chapterOnly);        
+        Element chapter = extractChapter(page);
+        removeUnwantedNotes(chapter);   
+        setPageWithFinalFormatedText(chapter);
     }
 
-    protected void removeUnwantedText(Element element) {
+    private void setPageWithFinalFormatedText(Element chapterOnly) {
+        this.page = Jsoup.parse("<html><body>"+chapterOnly.html()+"</body></html>");
+    }
+
+    protected void removeUnwantedNotes(Element element) {
         Elements crossReferences = element.select("span.ChapterContent_x__tsTlk");
         for(Element crossReference : crossReferences){
             crossReference.remove();

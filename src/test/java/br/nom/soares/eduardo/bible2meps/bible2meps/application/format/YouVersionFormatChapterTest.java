@@ -33,15 +33,21 @@ public class YouVersionFormatChapterTest {
     }
 
     @Test
+    void shoudlRemoveAllUnwantedText(){
+        youVersionFormatChapter.execute();
+        Element finalCleanText = youVersionFormatChapter.getPage();
+        assertEquals(0, finalCleanText.select("div.ChapterContent_version-copyright__FlNOi").size());
+    }
+
+    @Test
     void shouldGetOnlyTheChapter(){
         Element chapter = youVersionFormatChapter.extractChapter(page);
         assertEquals(0, chapter.select(".div.ChapterContent_book__VkdB2").size());
     }
 
     @Test
-    void shoudlRemoveUnwantedText(){                
-        youVersionFormatChapter.removeUnwantedText(body);        
-        assertEquals(0, body.select("span.ChapterContent_x__tsTlk").size());
-        
+    void shoudlRemoveUnwantedNotes(){                
+        youVersionFormatChapter.removeUnwantedNotes(body);        
+        assertEquals(0, body.select("span.ChapterContent_x__tsTlk").size());        
     }
 }

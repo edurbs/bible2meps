@@ -11,7 +11,7 @@ Step 2:
 
 Step 3: Clean the text
 
-    ✅3.2.	Remove unwanted text such as introductions, comments, footers, and page numbers.
+    ➡️3.2.	Remove unwanted text such as introductions, comments, footers, cros references✅, and page numbers.
         Note: Text such as headings, superscriptions, and footnotes should not be removed.
 
     3.3.	Remove unnecessary formatting such as bulleted list styles or hyperlinks.
