@@ -1,4 +1,4 @@
-package br.nom.soares.eduardo.bible2meps.bible2meps.domain;
+package br.nom.soares.eduardo.bible2meps.bible2meps.domain.enums;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
