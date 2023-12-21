@@ -56,6 +56,11 @@ class YouVersionFormatChapterTest {
                 youVersionFormatChapter.getFootnotesElementList().get(position-1).html());
     }
 
+    void shouldRemoveScriptureNumberOneGeneric() {
+        Elements scriptureNumbers = cleanedPage.select("strong.scriptureNumberBold");
+        scriptureNumbers.get(0).wholeText().equals("");
+    }
+
     @Nested
     @TestInstance(Lifecycle.PER_CLASS)
     class genesis1test {
@@ -95,6 +100,11 @@ class YouVersionFormatChapterTest {
         @Test
         void shouldAddCurlyBracketsToChapterNumber() {
             assertEquals("{1} ", cleanedPage.selectFirst("div.chapterNumber").wholeText());
+        }
+
+        @Test
+        void shouldRemoveScriptureNumberOne(){
+            shouldRemoveScriptureNumberOneGeneric();
         }
     }
     @Nested

@@ -25,7 +25,13 @@ public class YouVersionFormatChapter {
         extractFootnotes(chapter);
         formatScriptureNumberAsBold(chapter);
         addCurlyBracketsToChapterNumber(chapter);
+        removeScriptureNumberOne(chapter);
         this.page = chapter;
+    }
+
+    private void removeScriptureNumberOne(Element chapter) {
+        Elements scriptureNumbers = chapter.select("strong.scriptureNumberBold");
+        scriptureNumbers.get(0).text("");
     }
 
     private void addCurlyBracketsToChapterNumber(Element chapter) {
