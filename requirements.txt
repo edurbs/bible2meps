@@ -11,7 +11,7 @@ Step 2:
 
 Step 3: Clean the text
 
-    ➡️3.2.	Remove unwanted text such as introductions, comments, footers, cros references✅, and page numbers.
+    ➡️3.2.	Remove unwanted text such as introductions, comments, footers✅, cros references✅, and page numbers.
         Note: Text such as headings, superscriptions, and footnotes should not be removed.
 
     3.3.	Remove unnecessary formatting such as bulleted list styles or hyperlinks.
@@ -81,11 +81,11 @@ Step 4: Format the text
 
 Step 5 - Footnotes
 
-    1	Add a hard return at the end of each line with footnote text.
+    1	✅Add a hard return at the end of each line with footnote text.
 
-    2	Replace each footnote reference symbol with an Asterisk (*) in the body text.
+    2	✅Replace each footnote reference symbol with an Asterisk (*) in the body text.
 
-    3	Place a Number sign (#) at the start of a line with footnote text.
+    3	✅Place a Number sign (#) at the start of a line with footnote text.
 
     4   Place all footnote text at the end of the Bible book.
 
