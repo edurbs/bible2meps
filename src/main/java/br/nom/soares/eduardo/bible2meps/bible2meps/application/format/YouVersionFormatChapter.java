@@ -35,6 +35,8 @@ public class YouVersionFormatChapter {
     }
 
     private void addAmpersandToBookDivision() {
+        Element bookDivision = chapter.selectFirst("div.ChapterContent_ms1__s_U5R");
+        bookDivision.text("&"+bookDivision.text());
     }
 
     private void addDolarSignToSuperscription() {

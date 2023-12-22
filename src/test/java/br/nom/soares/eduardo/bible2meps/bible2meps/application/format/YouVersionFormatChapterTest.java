@@ -196,4 +196,21 @@ class YouVersionFormatChapterTest {
             assertNull(superscription);
         }
     }
+
+    @Nested
+    @TestInstance(Lifecycle.PER_CLASS)
+    class psalmo1test {
+
+        @BeforeAll
+        void setup() {
+            String url = "https://www.bible.com/bible/2645/PSA.1.A21";
+            formatChapter(url);
+        }
+
+        @Test
+        void shouldAddAmpersandToBookDivision() {
+            Element bookDivision = chapter.selectFirst("div.ChapterContent_ms1__s_U5R");
+            assertEquals("&", bookDivision.text().substring(0, 1));
+        }
+    }
 }
