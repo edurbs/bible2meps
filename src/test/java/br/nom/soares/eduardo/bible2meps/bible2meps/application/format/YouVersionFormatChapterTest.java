@@ -71,7 +71,7 @@ class YouVersionFormatChapterTest {
 
     @Nested
     @TestInstance(Lifecycle.PER_CLASS)
-    class genesis1test {
+    class Genesis1Test {
 
         @BeforeAll
         void setup() {
@@ -128,11 +128,22 @@ class YouVersionFormatChapterTest {
             shouldMoveChapterNumberNextToScriptureNumberOneGeneric();
         }
 
+        @Test 
+        void shouldAddPlusSignAtNextLineThatFollowsHeading(){
+            Elements headings = chapter.select("span.ChapterContent_heading__xBDcs");
+            for (Element heading : headings) {
+                if(heading.nextElementSibling() != null 
+                    && !heading.nextElementSibling().text().startsWith("@")) {
+                    assertEquals("+", heading.nextElementSibling().text().substring(0, 1));
+                }
+            }
+        }
+
         
     }
     @Nested
     @TestInstance(Lifecycle.PER_CLASS)
-    class genesis2test {
+    class Genesis2Test {
 
         @BeforeAll
         void setup() {
@@ -165,7 +176,7 @@ class YouVersionFormatChapterTest {
 
     @Nested
     @TestInstance(Lifecycle.PER_CLASS)
-    class psalmo4test {
+    class Psalm4test {
 
         @BeforeAll
         void setup() {
@@ -182,7 +193,7 @@ class YouVersionFormatChapterTest {
 
     @Nested
     @TestInstance(Lifecycle.PER_CLASS)
-    class psalmo2test {
+    class Psalm2test {
 
         @BeforeAll
         void setup() {
@@ -199,7 +210,7 @@ class YouVersionFormatChapterTest {
 
     @Nested
     @TestInstance(Lifecycle.PER_CLASS)
-    class psalmo1test {
+    class Psalmo1test {
 
         @BeforeAll
         void setup() {

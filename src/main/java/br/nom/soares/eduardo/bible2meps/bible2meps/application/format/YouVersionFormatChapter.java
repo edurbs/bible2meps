@@ -13,7 +13,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @Getter
 public class YouVersionFormatChapter {
-    
+
     @NonNull
     private Element page;
 
@@ -22,17 +22,25 @@ public class YouVersionFormatChapter {
 
     public void execute(){
         extractChapter();
-        removeUnwantedNotes();   
+        removeUnwantedNotes();
+        removeUnwantedHeaders();
         extractFootnotes();
         formatScriptureNumberAsBold();
         addCurlyBracketsToChapterNumber();
         removeScriptureNumberOne();
         moveChapterNumberNextToScriptureNumberOne();
         addAtSignToHeadings();
+        addPlusSignToHeadings();
         addDolarSignToSuperscription();
         addAmpersandToBookDivision();
-        removeUnwantedHeaders();
         page = chapter;
+    }
+
+    private void addAtSignToHeadings() {
+    Elements headings = chapter.select("span.ChapterContent_heading__xBDcs");
+        for (Element heading : headings) {
+            heading.text("@"+heading.text());
+        }
     }
 
     private void removeUnwantedHeaders() {
@@ -45,8 +53,10 @@ public class YouVersionFormatChapter {
 
     private void addAmpersandToBookDivision() {
         Element bookDivision = chapter.selectFirst("div.ChapterContent_ms1__s_U5R");
+        if(bookDivision==null) return;
         bookDivision.text("&"+bookDivision.text());
     }
+
 
     private void addDolarSignToSuperscription() {
         // TODO: do this logic only on book of Psalms
@@ -55,7 +65,7 @@ public class YouVersionFormatChapter {
                 .replace("{","")
                 .replace("}","")
                 .trim();
-        int chapterNumber = Integer.parseInt(stringChapterNumber);  
+        int chapterNumber = Integer.parseInt(stringChapterNumber);
         boolean thisChapterHasSupercription = switch (chapterNumber) {
             case 1, 2, 10, 33, 43, 71, 91, 93, 94, 95, 96, 97, 99, 104, 105, 106, 107, 111, 112, 113, 114, 115, 116,
                     117, 118, 119, 135, 136, 137, 146, 147, 148, 149, 150 -> false;
@@ -74,10 +84,14 @@ public class YouVersionFormatChapter {
         }
     }
 
-    private void addAtSignToHeadings() {
+    private void addPlusSignToHeadings() {
         Elements headings = chapter.select("span.ChapterContent_heading__xBDcs");
         for (Element heading : headings) {
-            heading.text("@"+heading.text());
+            if(heading.nextElementSibling() != null
+                && !heading.nextElementSibling().text().startsWith("@")) {
+                String nextHeadingText = heading.nextElementSibling().text();
+                heading.nextElementSibling().text("+" + nextHeadingText);
+            }
         }
     }
 
@@ -86,7 +100,7 @@ public class YouVersionFormatChapter {
         Element scriptureNumberOne = scriptureNumbers.get(0);
         Element chapterNumber = chapter.selectFirst("span.chapterNumber");
         String chapterNumberText = chapterNumber.wholeText();
-        chapterNumber.remove();        
+        chapterNumber.remove();
         Element newChapterNumber = new Element("span").addClass("chapterNumber").text(chapterNumberText);
         scriptureNumberOne.before(newChapterNumber);
     }
@@ -123,13 +137,13 @@ public class YouVersionFormatChapter {
     }
 
     private void extractFootnotes() {
-        Elements footnoteElements = chapter.select("span.ChapterContent_note__YlDW0");        
+        Elements footnoteElements = chapter.select("span.ChapterContent_note__YlDW0");
         for (Element footnote : footnoteElements) {
             Element footnoteBody = footnote.selectFirst("span.ChapterContent_body__O3qjr");
-            Element footnoteScriptureNumber = footnoteBody.selectFirst("span.ChapterContent_fr__0KsID");            
+            Element footnoteScriptureNumber = footnoteBody.selectFirst("span.ChapterContent_fr__0KsID");
             String footnoteScriptureNumberText = footnoteScriptureNumber.text();
             footnoteScriptureNumber.remove();
-            addFootnote(footnoteScriptureNumberText, footnoteBody.text());        
+            addFootnote(footnoteScriptureNumberText, footnoteBody.text());
         }
         footnoteElements.replaceAll(element -> new Element("span").text("*"));
     }
@@ -145,7 +159,7 @@ public class YouVersionFormatChapter {
         Elements crossReferences = chapter.select("span.ChapterContent_x__tsTlk");
         for(Element crossReference : crossReferences){
             crossReference.remove();
-        }       
+        }
     }
 
     private void extractChapter(){
