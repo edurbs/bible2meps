@@ -36,8 +36,11 @@ public class YouVersionFormatChapter {
     }
 
     private void removeUnwantedHeaders() {
-        Elements elementsToRemove = chapter.select("div.ChapterContent_mr__Vxus8");
-        elementsToRemove.remove();
+        Elements headersWithPsalmDivision = chapter.select("div.ChapterContent_mr__Vxus8");
+        headersWithPsalmDivision.remove();
+
+        Elements headersWithCrosReferences = chapter.select("div.ChapterContent_r___3KRx");
+        headersWithCrosReferences.remove();
     }
 
     private void addAmpersandToBookDivision() {

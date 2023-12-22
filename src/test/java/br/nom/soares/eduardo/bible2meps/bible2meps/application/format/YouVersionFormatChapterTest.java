@@ -215,8 +215,10 @@ class YouVersionFormatChapterTest {
 
         @Test
         void shouldRemoveUnwantedHeaders(){
-            Elements elementsToRemove = chapter.select("div.ChapterContent_mr__Vxus8");
-            assertEquals(0, elementsToRemove.size());
+            Elements headersWithPsalmDivision = chapter.select("div.ChapterContent_mr__Vxus8");
+            assertEquals(0, headersWithPsalmDivision.size());
+            Elements headersWithCrosReferences = chapter.select("div.ChapterContent_r___3KRx");
+            assertEquals(0, headersWithCrosReferences.size());
         }
     }
 }
