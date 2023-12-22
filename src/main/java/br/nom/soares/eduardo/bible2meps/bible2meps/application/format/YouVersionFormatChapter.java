@@ -18,21 +18,26 @@ public class YouVersionFormatChapter {
     private Element page;
 
     private List<Element> footnotesElementList = new ArrayList<>();
+    private Element chapter;
 
     public void execute(){
-        Element chapter = extractChapter(page);
-        removeUnwantedNotes(chapter);   
-        extractFootnotes(chapter);
-        formatScriptureNumberAsBold(chapter);
-        addCurlyBracketsToChapterNumber(chapter);
-        removeScriptureNumberOne(chapter);
-        moveChapterNumberNextToScriptureNumberOne(chapter);
-        addAtSignToHeadings(chapter);
-        addDolarSignToSuperscription(chapter);
-        this.page = chapter;
+        extractChapter();
+        removeUnwantedNotes();   
+        extractFootnotes();
+        formatScriptureNumberAsBold();
+        addCurlyBracketsToChapterNumber();
+        removeScriptureNumberOne();
+        moveChapterNumberNextToScriptureNumberOne();
+        addAtSignToHeadings();
+        addDolarSignToSuperscription();
+        addAmpersandToBookDivision();
+        page = chapter;
     }
 
-    private void addDolarSignToSuperscription(Element chapter) {
+    private void addAmpersandToBookDivision() {
+    }
+
+    private void addDolarSignToSuperscription() {
         // TODO: do this logic only on book of Psalms
         String stringChapterNumber = chapter.selectFirst("span.chapterNumber").wholeText();
         stringChapterNumber = stringChapterNumber
@@ -58,14 +63,14 @@ public class YouVersionFormatChapter {
         }
     }
 
-    private void addAtSignToHeadings(Element chapter) {
+    private void addAtSignToHeadings() {
         Elements headings = chapter.select("span.ChapterContent_heading__xBDcs");
         for (Element heading : headings) {
             heading.text("@"+heading.text());
         }
     }
 
-    private void moveChapterNumberNextToScriptureNumberOne(Element chapter) {
+    private void moveChapterNumberNextToScriptureNumberOne() {
         Elements scriptureNumbers = chapter.select("strong.scriptureNumberBold");
         Element scriptureNumberOne = scriptureNumbers.get(0);
         Element chapterNumber = chapter.selectFirst("span.chapterNumber");
@@ -75,12 +80,12 @@ public class YouVersionFormatChapter {
         scriptureNumberOne.before(newChapterNumber);
     }
 
-    private void removeScriptureNumberOne(Element chapter) {
+    private void removeScriptureNumberOne() {
         Elements scriptureNumbers = chapter.select("strong.scriptureNumberBold");
         scriptureNumbers.get(0).text("");
     }
 
-    private void addCurlyBracketsToChapterNumber(Element chapter) {
+    private void addCurlyBracketsToChapterNumber() {
         Element chapterNumber = chapter.selectFirst("div.ChapterContent_label__R2PLt");
         String formatedChapterNumber = "{"+chapterNumber.text()+"} ";
         Element newChapterNumberElement = new Element("span")
@@ -89,7 +94,7 @@ public class YouVersionFormatChapter {
         chapterNumber.replaceWith(newChapterNumberElement);
     }
 
-    private void formatScriptureNumberAsBold(Element chapter) {
+    private void formatScriptureNumberAsBold() {
         Elements scriptureNumbers = chapter.select("span.ChapterContent_label__R2PLt");
         for (int i = 0; i < scriptureNumbers.size(); i++) {
             Element scriptureNumber = scriptureNumbers.get(i);
@@ -106,7 +111,7 @@ public class YouVersionFormatChapter {
         }
     }
 
-    private void extractFootnotes(Element chapter) {
+    private void extractFootnotes() {
         Elements footnoteElements = chapter.select("span.ChapterContent_note__YlDW0");        
         for (Element footnote : footnoteElements) {
             Element footnoteBody = footnote.selectFirst("span.ChapterContent_body__O3qjr");
@@ -125,15 +130,15 @@ public class YouVersionFormatChapter {
         footnotesElementList.add(footnoteElement);
     }
 
-    private void removeUnwantedNotes(Element element) {
-        Elements crossReferences = element.select("span.ChapterContent_x__tsTlk");
+    private void removeUnwantedNotes() {
+        Elements crossReferences = chapter.select("span.ChapterContent_x__tsTlk");
         for(Element crossReference : crossReferences){
             crossReference.remove();
         }       
     }
 
-    private Element extractChapter(Element page){
-        return page.selectFirst("div.ChapterContent_chapter__uvbXo");
+    private void extractChapter(){
+        chapter = page.selectFirst("div.ChapterContent_chapter__uvbXo");
     }
 
 
