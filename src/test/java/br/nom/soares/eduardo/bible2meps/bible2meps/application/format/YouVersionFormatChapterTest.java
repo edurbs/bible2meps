@@ -212,5 +212,11 @@ class YouVersionFormatChapterTest {
             Element bookDivision = chapter.selectFirst("div.ChapterContent_ms1__s_U5R");
             assertEquals("&", bookDivision.text().substring(0, 1));
         }
+
+        @Test
+        void shouldRemoveUnwantedHeaders(){
+            Elements elementsToRemove = chapter.select("div.ChapterContent_mr__Vxus8");
+            assertEquals(0, elementsToRemove.size());
+        }
     }
 }

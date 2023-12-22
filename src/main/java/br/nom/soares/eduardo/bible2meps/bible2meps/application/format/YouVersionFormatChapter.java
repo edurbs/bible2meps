@@ -31,7 +31,13 @@ public class YouVersionFormatChapter {
         addAtSignToHeadings();
         addDolarSignToSuperscription();
         addAmpersandToBookDivision();
+        removeUnwantedHeaders();
         page = chapter;
+    }
+
+    private void removeUnwantedHeaders() {
+        Elements elementsToRemove = chapter.select("div.ChapterContent_mr__Vxus8");
+        elementsToRemove.remove();
     }
 
     private void addAmpersandToBookDivision() {
