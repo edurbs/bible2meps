@@ -3,233 +3,211 @@ package br.nom.soares.eduardo.bible2meps.bible2meps.application.format;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
-import java.io.IOException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Stream;
 
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Nested;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
-import org.junit.jupiter.api.TestInstance.Lifecycle;
-import org.springframework.boot.test.context.TestComponent;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 
-@TestComponent
-@TestInstance(Lifecycle.PER_CLASS)
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class YouVersionFormatChapterTest {
 
-    private YouVersionFormatChapter youVersionFormatChapter;
-    private Element chapter;
+    private Map<String, YouVersionFormatChapterTestHelper> pages = new HashMap<>();
 
-    @AfterAll
-    void afterAll() {
-        System.out.println(chapter);
+    @BeforeAll
+    void setup() {
+        pages.put("GEN.1.A21",
+                YouVersionFormatChapterTestHelper.builder()
+                        .url("https://www.bible.com/bible/2645/GEN.1.A21")
+                        .chapterNumber("1")
+                        .totalScriptureNumbers(31)
+                        .footnoteExpectedText("#1:26 Cf. a Versão siríaca.<br>")
+                        .footnoteExpectedPosition(1)
+                        .footnoteExpectedSize(2)
+                        .build().get());
+        pages.put("GEN.2.A21",
+                YouVersionFormatChapterTestHelper.builder()
+                        .url("https://www.bible.com/bible/2645/GEN.2.A21")
+                        .chapterNumber("2")
+                        .totalScriptureNumbers(25)
+                        .footnoteExpectedText(
+                                "#2:23 No hebr., há um jogo de palavras: varoa (mulher) e varão (homem).<br>")
+                        .footnoteExpectedPosition(0)
+                        .footnoteExpectedSize(1)
+                        .build().get());
+        pages.put("PSA.1.A21",
+                YouVersionFormatChapterTestHelper.builder()
+                        .url("https://www.bible.com/bible/2645/PSA.1.A21")
+                        .chapterNumber("1")
+                        .totalScriptureNumbers(6)
+                        .footnoteExpectedText(
+                                "#1:6 Lit., conhece.<br>")
+                        .footnoteExpectedPosition(0)
+                        .footnoteExpectedSize(1)
+                        .psalmWithBookDivision(true)
+                        .build().get());
+        pages.put("PSA.2.A21",
+                YouVersionFormatChapterTestHelper.builder()
+                        .url("https://www.bible.com/bible/2645/PSA.2.A21")
+                        .chapterNumber("2")
+                        .totalScriptureNumbers(12)
+                        .footnoteExpectedText(
+                                "#2:12 I.e., dai honra ao. Algumas versões trazem Beijai os pés do.<br>")
+                        .footnoteExpectedPosition(2)
+                        .footnoteExpectedSize(3)
+                        .build().get());
+        pages.put("PSA.4.A21",
+                YouVersionFormatChapterTestHelper.builder()
+                        .url("https://www.bible.com/bible/2645/PSA.4.A21")
+                        .chapterNumber("4")
+                        .psalmWithSuperscription(true)
+                        .totalScriptureNumbers(8)
+                        .footnoteExpectedText(
+                                "#4:5 I.e., sacrifícios exigidos.<br>")
+                        .footnoteExpectedPosition(0)
+                        .footnoteExpectedSize(1)
+                        .build().get());
+        pages.put("PSA.42.A21",
+                YouVersionFormatChapterTestHelper.builder()
+                        .url("https://www.bible.com/bible/2645/PSA.42.A21")
+                        .chapterNumber("42")
+                        .psalmWithSuperscription(true)
+                        .totalScriptureNumbers(11)
+                        .footnoteExpectedSize(0)
+                        .psalmWithBookDivision(true)
+                        .build().get());
     }
 
-    void formatChapter(String url) {
-        try {
-            Document page = Jsoup.connect(url).get();
-            youVersionFormatChapter = new YouVersionFormatChapter(page);
-        } catch (IOException e) {
-            e.printStackTrace();
-            return;
-        }
-        youVersionFormatChapter.execute();
-        chapter = youVersionFormatChapter.getPage();
+    Stream<Arguments> provideTestData() {
+        return pages.entrySet().stream()
+                .map(entry -> Arguments.of(entry.getValue()));
     }
 
-    void shouldFormatScriptureNumberAsBoldGeneric(int totalScriptureNumbers) {
+    @ParameterizedTest
+    @MethodSource("provideTestData")
+    void shouldFormatScriptureNumberAsBoldGeneric(YouVersionFormatChapterTestHelper page) {
+        int totalScriptureNumbers = page.getTotalScriptureNumbers();
+        Element chapter = page.getChapter();
         Elements scriptureNumbers = chapter.select("strong.scriptureNumberBold");
         assertEquals(totalScriptureNumbers, scriptureNumbers.size());
         assertEquals(
-                "<strong class=\"scriptureNumberBold\">" + (totalScriptureNumbers)+ " </strong>",
-                scriptureNumbers.get(totalScriptureNumbers-1).outerHtml());
+                "<strong class=\"scriptureNumberBold\">" + (totalScriptureNumbers) + " </strong>",
+                scriptureNumbers.get(totalScriptureNumbers - 1).outerHtml());
     }
 
-    void shouldFormatFootNotesGeneric(String footnoteTextExpected, int position) {
-        assertEquals(0, chapter.select("span.ChapterContent_note__YlDW0").size());
-        assertEquals(position, youVersionFormatChapter.getFootnotesElementList().size());
-        assertEquals(
-                footnoteTextExpected,
-                youVersionFormatChapter.getFootnotesElementList().get(position-1).html());
+    @ParameterizedTest
+    @MethodSource("provideTestData")
+    void shouldFormatFootNotes(YouVersionFormatChapterTestHelper page) {
+        assertEquals(0, page.getChapter().select("span.ChapterContent_note__YlDW0").size());
+        List<Element> footnotesElementList = page.getFootnotesElementList();
+        assertEquals(page.getFootnoteExpectedSize(), footnotesElementList.size());
+        if (page.getFootnoteExpectedSize() > 0) {
+            assertEquals(
+                    page.getFootnoteExpectedText(),
+                    footnotesElementList.get(page.getFootnoteExpectedPosition()).html());
+        }
     }
 
-    void shouldRemoveScriptureNumberOneGeneric() {
-        Elements scriptureNumbers = chapter.select("strong.scriptureNumberBold");
+    @ParameterizedTest
+    @MethodSource("provideTestData")
+    void shouldRemoveScriptureNumberOne(YouVersionFormatChapterTestHelper page) {
+        Elements scriptureNumbers = page.getChapter().select("strong.scriptureNumberBold");
         scriptureNumbers.get(0).wholeText().equals("");
     }
 
-    void shouldMoveChapterNumberNextToScriptureNumberOneGeneric() {
+    @ParameterizedTest
+    @MethodSource("provideTestData")
+    void shouldMoveChapterNumberNextToScriptureNumberOne(YouVersionFormatChapterTestHelper page) {
+        Element chapter = page.getChapter();
         Element scriptureNumberOne = chapter.select("strong.scriptureNumberBold").get(0);
         String chapterNumber = chapter.selectFirst("span.chapterNumber").wholeText();
         Element previousSibling = scriptureNumberOne.previousElementSibling();
         assertEquals(chapterNumber, previousSibling.wholeText());
     }
 
-    @Nested
-    @TestInstance(Lifecycle.PER_CLASS)
-    class Genesis1Test {
-
-        @BeforeAll
-        void setup() {
-            String url = "https://www.bible.com/bible/2645/GEN.1.A21";
-            formatChapter(url);
+    @ParameterizedTest
+    @MethodSource("provideTestData")
+    void shouldAddAtSighBeforeHeadings(YouVersionFormatChapterTestHelper page) {
+        Elements headings = page.getChapter().select("span.ChapterContent_heading__xBDcs");
+        for (Element heading : headings) {
+            assertEquals("@", heading.text().substring(0, 1));
         }
+    }
 
-        @Test
-        void shouldAddAtSighBeforeHeadings(){
-            Elements headings = chapter.select("span.ChapterContent_heading__xBDcs");
-            for (Element heading : headings) {
-                assertEquals("@", heading.text().substring(0, 1));
-            }
-        }
+    @ParameterizedTest
+    @MethodSource("provideTestData")
+    void shouldGetOnlyTheChapter(YouVersionFormatChapterTestHelper page) {
+        assertEquals(0, page.getChapter().select(".div.ChapterContent_book__VkdB2").size());
+    }
 
-        @Test
-        void shouldGetOnlyTheChapter() {
-            assertEquals(0, chapter.select(".div.ChapterContent_book__VkdB2").size());
-        }
+    @ParameterizedTest
+    @MethodSource("provideTestData")
+    void shouldCleanAllUnwantedFootnotes(YouVersionFormatChapterTestHelper page) {
+        assertEquals(0, page.getChapter().select("span.ChapterContent_x__tsTlk").size());
+    }
 
-        @Test
-        void shouldCleanAllUnwantedFootnotes() {
-            assertEquals(0, chapter.select("span.ChapterContent_x__tsTlk").size());
-        }
+    @ParameterizedTest
+    @MethodSource("provideTestData")
+    void shouldRemoveAllWantedText(YouVersionFormatChapterTestHelper page) {
+        assertEquals(0,
+                page.getChapter().select("div.ChapterContent_version-copyright__FlNOi").size());
+    }
 
-        @Test
-        void shouldRemoveAllWantedText() {
-            assertEquals(0, chapter.select("div.ChapterContent_version-copyright__FlNOi").size());
-        }
+    @ParameterizedTest
+    @MethodSource("provideTestData")
+    void shouldAddCurlyBracketsToChapterNumber(YouVersionFormatChapterTestHelper page) {
+        String chapterNumberExpected = String.format("{%s} ", page.getChapterNumber());
+        assertEquals(chapterNumberExpected, page.getChapter().selectFirst("span.chapterNumber").wholeText());
+    }
 
-        @Test
-        void shouldFormatFootnotes() {
-            String footnoteTextExpected = "#1:26 Cf. a Versão siríaca.<br>";
-            shouldFormatFootNotesGeneric(footnoteTextExpected, 2);
-        }
-
-        @Test
-        void shouldFormatScriptureNumbersAsBold() {
-            shouldFormatScriptureNumberAsBoldGeneric(31);            
-        }
-
-        @Test
-        void shouldAddCurlyBracketsToChapterNumber() {
-            assertEquals("{1} ", chapter.selectFirst("span.chapterNumber").wholeText());
-        }
-
-        @Test
-        void shouldRemoveScriptureNumberOne(){
-            shouldRemoveScriptureNumberOneGeneric();
-        }
-
-        @Test
-        void shouldMoveChapterNumberNextToScriptureNumberOne(){
-            shouldMoveChapterNumberNextToScriptureNumberOneGeneric();
-        }
-
-        @Test 
-        void shouldAddPlusSignAtNextLineThatFollowsHeading(){
-            Elements headings = chapter.select("span.ChapterContent_heading__xBDcs");
-            for (Element heading : headings) {
-                if(heading.nextElementSibling() != null 
+    @ParameterizedTest
+    @MethodSource("provideTestData")
+    void shouldAddPlusSignAtNextLineThatFollowsHeading(YouVersionFormatChapterTestHelper page) {
+        Elements headings = page.getChapter().select("span.ChapterContent_heading__xBDcs");
+        for (Element heading : headings) {
+            if (heading.nextElementSibling() != null
                     && !heading.nextElementSibling().text().startsWith("@")) {
-                    assertEquals("+", heading.nextElementSibling().text().substring(0, 1));
-                }
+                assertEquals("+", heading.nextElementSibling().text().substring(0, 1));
             }
         }
-
-        
-    }
-    @Nested
-    @TestInstance(Lifecycle.PER_CLASS)
-    class Genesis2Test {
-
-        @BeforeAll
-        void setup() {
-            String url = "https://www.bible.com/bible/2645/GEN.2.A21";
-            formatChapter(url);
-        }
-
-        @Test
-        void shouldFormatScriptureNumbersAsBold() {
-            shouldFormatScriptureNumberAsBoldGeneric(25);
-        }
-
-        @Test
-        void shouldFormatFootnotes() {
-            String footnoteTextExpected = "#2:23 No hebr., há um jogo de palavras: varoa (mulher) e varão (homem).<br>";
-            shouldFormatFootNotesGeneric(footnoteTextExpected, 1);
-        }
-
-        @Test
-        void shouldAddCurlyBracketsToChapterNumber() {
-            assertEquals("{2} ", chapter.selectFirst("span.chapterNumber").wholeText());
-        }
-
-        @Test
-        void shouldMoveChapterNumberNextToScriptureNumberOne(){
-            shouldMoveChapterNumberNextToScriptureNumberOneGeneric();
-        }
-
     }
 
-    @Nested
-    @TestInstance(Lifecycle.PER_CLASS)
-    class Psalm4test {
-
-        @BeforeAll
-        void setup() {
-            String url = "https://www.bible.com/bible/2645/PSA.4.A21";
-            formatChapter(url);
-        }
-
-        @Test
-        void shouldAddDolarSignToSuperscription(){
-            Element superscription = chapter.selectFirst("div.ChapterContent_d__OHSpy");
+    @ParameterizedTest
+    @MethodSource("provideTestData")
+    void shouldAddDolarSignToSuperscription(YouVersionFormatChapterTestHelper page) {
+        Element superscription = page.getChapter().selectFirst("div.ChapterContent_d__OHSpy");
+        if (page.isPsalmWithSuperscription()) {
             assertEquals("$", superscription.text().substring(0, 1));
-        }
-    }
-
-    @Nested
-    @TestInstance(Lifecycle.PER_CLASS)
-    class Psalm2test {
-
-        @BeforeAll
-        void setup() {
-            String url = "https://www.bible.com/bible/2645/PSA.2.A21";
-            formatChapter(url);
-        }
-
-        @Test
-        void shouldAddDolarSignToSuperscription(){
-            Element superscription = chapter.selectFirst("div.ChapterContent_d__OHSpy");
+        } else {
             assertNull(superscription);
         }
     }
 
-    @Nested
-    @TestInstance(Lifecycle.PER_CLASS)
-    class Psalmo1test {
-
-        @BeforeAll
-        void setup() {
-            String url = "https://www.bible.com/bible/2645/PSA.1.A21";
-            formatChapter(url);
-        }
-
-        @Test
-        void shouldAddAmpersandToBookDivision() {
-            Element bookDivision = chapter.selectFirst("div.ChapterContent_ms1__s_U5R");
+    @ParameterizedTest
+    @MethodSource("provideTestData")
+    void shouldAddAmpersandToBookDivision(YouVersionFormatChapterTestHelper page) {
+        Element bookDivision = page.getChapter().selectFirst("div.ChapterContent_ms1__s_U5R");
+        if (page.isPsalmWithBookDivision()) {
             assertEquals("&", bookDivision.text().substring(0, 1));
+        } else {
+            assertNull(bookDivision);
         }
+    }
 
-        @Test
-        void shouldRemoveUnwantedHeaders(){
-            Elements headersWithPsalmDivision = chapter.select("div.ChapterContent_mr__Vxus8");
-            assertEquals(0, headersWithPsalmDivision.size());
-            Elements headersWithCrosReferences = chapter.select("div.ChapterContent_r___3KRx");
-            assertEquals(0, headersWithCrosReferences.size());
-        }
+    @ParameterizedTest
+    @MethodSource("provideTestData")
+    void shouldRemoveUnwantedHeaders(YouVersionFormatChapterTestHelper page) {
+        var chapter = page.getChapter();
+        Elements headersWithPsalmDivision = chapter.select("div.ChapterContent_mr__Vxus8");
+        assertEquals(0, headersWithPsalmDivision.size());
+        Elements headersWithCrosReferences = chapter.select("div.ChapterContent_r___3KRx");
+        assertEquals(0, headersWithCrosReferences.size());
     }
 }

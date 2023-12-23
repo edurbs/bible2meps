@@ -91,4 +91,13 @@ Step 5 - Footnotes
 
     4   Place all footnote text at the end of the Bible book.
 
+    5   Preseve formatting
+        pegar todos span class="ft"
+        transformar em itálico:  span class="ChapterContent_fqa__Xa2yn"
+
+    6   Criar css para bold e italico
+        font-weight: bold;
+        font-style: italic;
+
+
 

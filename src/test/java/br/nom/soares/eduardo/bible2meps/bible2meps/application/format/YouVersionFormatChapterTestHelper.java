@@ -1,0 +1,47 @@
+package br.nom.soares.eduardo.bible2meps.bible2meps.application.format;
+
+import java.io.IOException;
+import java.util.List;
+
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+
+import lombok.Builder;
+import lombok.Getter;
+
+@Builder
+@Getter
+public class YouVersionFormatChapterTestHelper {
+    private String url;
+    private Element chapter;
+    private String chapterNumber;
+    private YouVersionFormatChapter youVersionFormatChapter;
+    private int totalScriptureNumbers;
+    private List<Element> footnotesElementList;
+    private String footnoteExpectedText;
+    private int footnoteExpectedPosition;
+    private int footnoteExpectedSize;
+
+    @Builder.Default
+    private boolean psalmWithSuperscription = false;
+
+    @Builder.Default
+    private boolean psalmWithBookDivision = false;
+
+    public YouVersionFormatChapterTestHelper get() {
+        try {
+            Document document = Jsoup.connect(url).get();
+            YouVersionFormatChapter youVersionFormatChapter = new YouVersionFormatChapter(document);
+            youVersionFormatChapter.execute();
+            this.youVersionFormatChapter = youVersionFormatChapter;
+            this.chapter = youVersionFormatChapter.getChapter();
+            this.footnotesElementList = youVersionFormatChapter.getFootnotesElementList();
+            return this;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+}
