@@ -1,11 +1,15 @@
 Step 2:
 
-    2.1.	First line must have the cod of the book starting with %. Example: %01
-        Note: create a enum with word file names
-        •	A hard return must appear at the end of the first line, which includes unique numbers important for processing of the file.
+    2.1.	✅First line must have the cod of the book starting with %. Example: %01
+            ✅Note: create a enum with word file names
 
-    2.2.	On the second line, paste or type the Bible book name and make sure it is bold. Make sure that a Percent sign (%) appears at the start of the second line with the Bible book name.
-        •	A hard return must appear at the end of the second line containing the Bible book name. The entire name must be on one line.
+        •	✅A hard return must appear at the end of the first line, which includes unique numbers important for processing of the file.
+
+    2.2.	✅On the second line, paste or type the Bible book name and make sure it is bold.
+
+        •   ✅Make sure that a Percent sign (%) appears at the start of the second line with the Bible book name.
+
+        •	✅A hard return must appear at the end of the second line containing the Bible book name. The entire name must be on one line.
 
     2.3.	On the third line, paste the book content:
 
