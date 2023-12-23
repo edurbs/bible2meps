@@ -15,7 +15,7 @@ Step 3: Clean the text
         Note: Text such as headings, superscriptions, and footnotes should not be removed.
 
     3.3.	Remove unnecessary formatting such as bulleted list styles or hyperlinks.
-        Note: If the text contains attributes, such as italics, this can remain so as to retain the original formatting of the text.
+        ✅Note: If the text contains attributes, such as italics, this can remain so as to retain the original formatting of the text.
 
     3.4.	Clean up soft and hard returns.
         Note: Generally speaking, a hard return should appear at the end of each chapter or paragraph and a soft return at the end of a line of poetic text. If the returns included in the pasted text follow this pattern, it may be practical to keep them and review them in Step 4.B.1. If they do not serve a purpose, it may be best to remove all returns except those at the end of the chapter and then add hard and soft returns where they should be in Step 4.B.1.
@@ -33,7 +33,7 @@ Step 4: Format the text
 
             c.	✅If additional text, such as a heading, appears between a chapter number and the text of the first verse, move it to the line above.
 
-        2.	For books not containing chapters, add verse number one to the beginning of the first verse, if it has not been included in the pasted text.
+        2.	✅ For books not containing chapters, add verse number one to the beginning of the first verse, if it has not been included in the pasted text.
 
             Note: add chapter number 1 if it does not exists.
 
