@@ -28,7 +28,8 @@ class YouVersionFormatChapterTest {
                         .url("https://www.bible.com/bible/2645/GEN.1.A21")
                         .chapterNumber("1")
                         .totalScriptureNumbers(31)
-                        .footnoteExpectedText("#1:26 Cf. a Versão siríaca.<br>")
+                        .footnoteExpectedText(
+                                "<span class=\"ChapterContent_fr__0KsID\">#1:26 </span><span class=\"ft\">Cf. a </span><span class=\"ChapterContent_fqa__Xa2yn\">Versão siríaca.</span><br>")
                         .footnoteExpectedPosition(1)
                         .footnoteExpectedSize(2)
                         .build().get());
@@ -38,7 +39,7 @@ class YouVersionFormatChapterTest {
                         .chapterNumber("2")
                         .totalScriptureNumbers(25)
                         .footnoteExpectedText(
-                                "#2:23 No hebr., há um jogo de palavras: varoa (mulher) e varão (homem).<br>")
+                                "<span class=\"ChapterContent_fr__0KsID\">#2:23 </span><span class=\"ft\">No hebr., há um jogo de palavras: <span class=\"ChapterContent_tl__at1as\">varoa</span> (</span><span class=\"ChapterContent_fk__ZzZlQ\">mulher</span><span class=\"ft\">) e <span class=\"ChapterContent_tl__at1as\">varão</span> (</span><span class=\"ChapterContent_fk__ZzZlQ\">homem</span><span class=\"ft\">).</span><br>")
                         .footnoteExpectedPosition(0)
                         .footnoteExpectedSize(1)
                         .build().get());
@@ -48,7 +49,7 @@ class YouVersionFormatChapterTest {
                         .chapterNumber("1")
                         .totalScriptureNumbers(6)
                         .footnoteExpectedText(
-                                "#1:6 Lit., conhece.<br>")
+                                "<span class=\"ChapterContent_fr__0KsID\">#1:6 </span><span class=\"ft\">Lit., </span><span class=\"ChapterContent_fqa__Xa2yn\">conhece.</span><br>")
                         .footnoteExpectedPosition(0)
                         .footnoteExpectedSize(1)
                         .psalmWithBookDivision(true)
@@ -59,7 +60,7 @@ class YouVersionFormatChapterTest {
                         .chapterNumber("2")
                         .totalScriptureNumbers(12)
                         .footnoteExpectedText(
-                                "#2:12 I.e., dai honra ao. Algumas versões trazem Beijai os pés do.<br>")
+                                "<span class=\"ChapterContent_fr__0KsID\">#2:12 </span><span class=\"ft\">I.e., </span><span class=\"ChapterContent_fqa__Xa2yn\">dai honra ao. </span><span class=\"ft\">Algumas versões trazem </span><span class=\"ChapterContent_fqa__Xa2yn\">Beijai os pés do.</span><br>")
                         .footnoteExpectedPosition(2)
                         .footnoteExpectedSize(3)
                         .build().get());
@@ -70,7 +71,7 @@ class YouVersionFormatChapterTest {
                         .psalmWithSuperscription(true)
                         .totalScriptureNumbers(8)
                         .footnoteExpectedText(
-                                "#4:5 I.e., sacrifícios exigidos.<br>")
+                                "<span class=\"ChapterContent_fr__0KsID\">#4:5 </span><span class=\"ft\">I.e., </span><span class=\"ChapterContent_fqa__Xa2yn\">sacrifícios exigidos.</span><br>")
                         .footnoteExpectedPosition(0)
                         .footnoteExpectedSize(1)
                         .build().get());
