@@ -7,6 +7,7 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import br.nom.soares.eduardo.bible2meps.bible2meps.domain.enums.BookName;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -18,11 +19,14 @@ public class YouVersionFormatChapter {
     @NonNull
     private Element page;
 
+    @NonNull
+    private BookName bookName;
+
     private List<Element> footnotesElementList = new ArrayList<>();
     private Element chapter;
     private String css = """
             .ChapterContent_fqa__Xa2yn, .ChapterContent_tl__at1as { font-style: italic; }
-            ChapterContent_fk__ZzZlQ { font-weight: bold; }
+            ChapterContent_fk__ZzZlQ, scriptureNumberBold { font-weight: bold; }
             """;
 
     public void execute() {
@@ -112,8 +116,10 @@ public class YouVersionFormatChapter {
     }
 
     private void removeScriptureNumberOne() {
-        Elements scriptureNumbers = chapter.select("strong.scriptureNumberBold");
-        scriptureNumbers.get(0).text("");
+        if (bookName.getNumberOfChapters() > 1) {
+            Elements scriptureNumbers = chapter.select("strong.scriptureNumberBold");
+            scriptureNumbers.get(0).text("");
+        }
     }
 
     private void addCurlyBracketsToChapterNumber() {

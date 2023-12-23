@@ -16,6 +16,8 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
+import br.nom.soares.eduardo.bible2meps.bible2meps.domain.enums.BookName;
+
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class YouVersionFormatChapterTest {
 
@@ -32,6 +34,7 @@ class YouVersionFormatChapterTest {
                                 "<span class=\"ChapterContent_fr__0KsID\">#1:26 </span><span class=\"ft\">Cf. a </span><span class=\"ChapterContent_fqa__Xa2yn\">Versão siríaca.</span><br>")
                         .footnoteExpectedPosition(1)
                         .footnoteExpectedSize(2)
+                        .bookName(BookName._01_GEN)
                         .build().get());
         pages.put("GEN.2.A21",
                 YouVersionFormatChapterTestHelper.builder()
@@ -42,6 +45,7 @@ class YouVersionFormatChapterTest {
                                 "<span class=\"ChapterContent_fr__0KsID\">#2:23 </span><span class=\"ft\">No hebr., há um jogo de palavras: <span class=\"ChapterContent_tl__at1as\">varoa</span> (</span><span class=\"ChapterContent_fk__ZzZlQ\">mulher</span><span class=\"ft\">) e <span class=\"ChapterContent_tl__at1as\">varão</span> (</span><span class=\"ChapterContent_fk__ZzZlQ\">homem</span><span class=\"ft\">).</span><br>")
                         .footnoteExpectedPosition(0)
                         .footnoteExpectedSize(1)
+                        .bookName(BookName._01_GEN)
                         .build().get());
         pages.put("PSA.1.A21",
                 YouVersionFormatChapterTestHelper.builder()
@@ -53,6 +57,7 @@ class YouVersionFormatChapterTest {
                         .footnoteExpectedPosition(0)
                         .footnoteExpectedSize(1)
                         .psalmWithBookDivision(true)
+                        .bookName(BookName._19_PSA)
                         .build().get());
         pages.put("PSA.2.A21",
                 YouVersionFormatChapterTestHelper.builder()
@@ -63,6 +68,7 @@ class YouVersionFormatChapterTest {
                                 "<span class=\"ChapterContent_fr__0KsID\">#2:12 </span><span class=\"ft\">I.e., </span><span class=\"ChapterContent_fqa__Xa2yn\">dai honra ao. </span><span class=\"ft\">Algumas versões trazem </span><span class=\"ChapterContent_fqa__Xa2yn\">Beijai os pés do.</span><br>")
                         .footnoteExpectedPosition(2)
                         .footnoteExpectedSize(3)
+                        .bookName(BookName._19_PSA)
                         .build().get());
         pages.put("PSA.4.A21",
                 YouVersionFormatChapterTestHelper.builder()
@@ -74,6 +80,7 @@ class YouVersionFormatChapterTest {
                                 "<span class=\"ChapterContent_fr__0KsID\">#4:5 </span><span class=\"ft\">I.e., </span><span class=\"ChapterContent_fqa__Xa2yn\">sacrifícios exigidos.</span><br>")
                         .footnoteExpectedPosition(0)
                         .footnoteExpectedSize(1)
+                        .bookName(BookName._19_PSA)
                         .build().get());
         pages.put("PSA.42.A21",
                 YouVersionFormatChapterTestHelper.builder()
@@ -83,6 +90,18 @@ class YouVersionFormatChapterTest {
                         .totalScriptureNumbers(11)
                         .footnoteExpectedSize(0)
                         .psalmWithBookDivision(true)
+                        .bookName(BookName._19_PSA)
+                        .build().get());
+        pages.put("OBA.1.A21",
+                YouVersionFormatChapterTestHelper.builder()
+                        .url("https://www.bible.com/bible/2645/OBA.1.A21")
+                        .chapterNumber("1")
+                        .totalScriptureNumbers(21)
+                        .footnoteExpectedSize(1)
+                        .footnoteExpectedPosition(0)
+                        .footnoteExpectedText(
+                                "<span class=\"ChapterContent_fr__0KsID\">#1:15 </span><span class=\"ft\">Lit., </span><span class=\"ChapterContent_fqa__Xa2yn\">sobre a tua cabeça.</span><br>")
+                        .bookName(BookName._31_OBA)
                         .build().get());
     }
 
@@ -93,14 +112,33 @@ class YouVersionFormatChapterTest {
 
     @ParameterizedTest
     @MethodSource("provideTestData")
+    void shouldAddScriptureOneForBooksWithJustOneChapter(YouVersionFormatChapterTestHelper page) {
+        int totalChapters = page.getBookName().getNumberOfChapters();
+        if (totalChapters == 1) {
+            assertEquals(
+                    "<strong class=\"scriptureNumberBold\">1 </strong>",
+                    page.getChapter().select("strong.scriptureNumberBold").get(0).outerHtml());
+        }
+    }
+
+    @ParameterizedTest
+    @MethodSource("provideTestData")
     void shouldFormatScriptureNumberAsBoldGeneric(YouVersionFormatChapterTestHelper page) {
         int totalScriptureNumbers = page.getTotalScriptureNumbers();
         Element chapter = page.getChapter();
         Elements scriptureNumbers = chapter.select("strong.scriptureNumberBold");
-        assertEquals(totalScriptureNumbers, scriptureNumbers.size());
         assertEquals(
                 "<strong class=\"scriptureNumberBold\">" + (totalScriptureNumbers) + " </strong>",
                 scriptureNumbers.get(totalScriptureNumbers - 1).outerHtml());
+    }
+
+    @ParameterizedTest
+    @MethodSource("provideTestData")
+    void shouldgetAllScriptures(YouVersionFormatChapterTestHelper page) {
+        int totalScriptureNumbers = page.getTotalScriptureNumbers();
+        Element chapter = page.getChapter();
+        Elements scriptureNumbers = chapter.select("strong.scriptureNumberBold");
+        assertEquals(totalScriptureNumbers, scriptureNumbers.size());
     }
 
     @ParameterizedTest

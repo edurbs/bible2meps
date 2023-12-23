@@ -7,6 +7,7 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 
+import br.nom.soares.eduardo.bible2meps.bible2meps.domain.enums.BookName;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -22,6 +23,7 @@ public class YouVersionFormatChapterTestHelper {
     private String footnoteExpectedText;
     private int footnoteExpectedPosition;
     private int footnoteExpectedSize;
+    private BookName bookName;
 
     @Builder.Default
     private boolean psalmWithSuperscription = false;
@@ -32,7 +34,7 @@ public class YouVersionFormatChapterTestHelper {
     public YouVersionFormatChapterTestHelper get() {
         try {
             Document document = Jsoup.connect(url).get();
-            YouVersionFormatChapter youVersionFormatChapter = new YouVersionFormatChapter(document);
+            YouVersionFormatChapter youVersionFormatChapter = new YouVersionFormatChapter(document, bookName);
             youVersionFormatChapter.execute();
             this.youVersionFormatChapter = youVersionFormatChapter;
             this.chapter = youVersionFormatChapter.getChapter();
