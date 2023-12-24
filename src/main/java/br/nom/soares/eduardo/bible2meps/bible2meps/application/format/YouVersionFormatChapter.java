@@ -39,9 +39,9 @@ public class YouVersionFormatChapter {
         removeScriptureNumberOne();
         moveChapterNumberNextToScriptureNumberOne();
         addAtSignToHeadings();
-        addPlusSignToHeadings();
         addDolarSignToSuperscription();
         addAmpersandToBookDivision();
+        addPlusSignToHeadings();
         page = Jsoup.parseBodyFragment(css + chapter.html());
     }
 
@@ -68,7 +68,9 @@ public class YouVersionFormatChapter {
     }
 
     private void addDolarSignToSuperscription() {
-        // TODO: do this logic only on book of Psalms
+        if (bookName != BookName._19_PSA) {
+            return;
+        }
         String stringChapterNumber = chapter.selectFirst("span.chapterNumber").wholeText();
         stringChapterNumber = stringChapterNumber
                 .replace("{", "")
@@ -95,12 +97,19 @@ public class YouVersionFormatChapter {
     }
 
     private void addPlusSignToHeadings() {
-        Elements headings = chapter.select("span.ChapterContent_heading__xBDcs");
+        Elements headings = chapter
+                .select("div.ChapterContent_s1__bNNaW, div.ChapterContent_d__OHSpy, ChapterContent_ms1__s_U5R");
         for (Element heading : headings) {
-            if (heading.nextElementSibling() != null
-                    && !heading.nextElementSibling().text().startsWith("@")) {
-                String nextHeadingText = heading.nextElementSibling().text();
-                heading.nextElementSibling().text("+" + nextHeadingText);
+            Elements nextSiblingElements = heading.nextElementSiblings();
+            for (Element sibling : nextSiblingElements) {
+                if ((sibling.classNames().contains("ChapterContent_m__3AINJ")
+                        || sibling.classNames().contains("ChapterContent_p__dVKHb"))
+                        && !sibling.text().matches("[@$&].*")
+                        && sibling.previousElementSibling().text().matches("[@$&].*")) {
+                    Element startBlock = sibling.selectFirst("span.ChapterContent_verse__57FIw");
+                    startBlock.firstChild().before("+");
+                }
+                break;
             }
         }
     }

@@ -1,6 +1,7 @@
 package br.nom.soares.eduardo.bible2meps.bible2meps.application.format;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
 import java.util.HashMap;
@@ -10,6 +11,7 @@ import java.util.stream.Stream;
 
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -22,6 +24,12 @@ import br.nom.soares.eduardo.bible2meps.bible2meps.domain.enums.BookName;
 class YouVersionFormatChapterTest {
 
     private Map<String, YouVersionFormatChapterTestHelper> pages = new HashMap<>();
+
+    @AfterAll
+    void tearDown() {
+        String html = pages.get("PSA.1.A21").getChapter().outerHtml();
+        System.out.println(html);
+    }
 
     @BeforeAll
     void setup() {
@@ -102,6 +110,17 @@ class YouVersionFormatChapterTest {
                         .footnoteExpectedText(
                                 "<span class=\"ChapterContent_fr__0KsID\">#1:15 </span><span class=\"ft\">Lit., </span><span class=\"ChapterContent_fqa__Xa2yn\">sobre a tua cabeça.</span><br>")
                         .bookName(BookName._31_OBA)
+                        .build().get());
+        pages.put("JOL.1.A21",
+                YouVersionFormatChapterTestHelper.builder()
+                        .url("https://www.bible.com/bible/2645/JOL.1.A21")
+                        .chapterNumber("1")
+                        .totalScriptureNumbers(20)
+                        .footnoteExpectedSize(3)
+                        .footnoteExpectedPosition(0)
+                        .footnoteExpectedText(
+                                "<span class=\"ChapterContent_fr__0KsID\">#1:2 </span><span class=\"ft\">Ou </span><span class=\"ChapterContent_fqa__Xa2yn\">líderes.</span><br>")
+                        .bookName(BookName._29_JOE)
                         .build().get());
     }
 
@@ -209,11 +228,20 @@ class YouVersionFormatChapterTest {
     @ParameterizedTest
     @MethodSource("provideTestData")
     void shouldAddPlusSignAtNextLineThatFollowsHeading(YouVersionFormatChapterTestHelper page) {
-        Elements headings = page.getChapter().select("span.ChapterContent_heading__xBDcs");
+        Element chapter = page.getChapter();
+        Elements headings = chapter
+                .select("div.ChapterContent_s1__bNNaW, div.ChapterContent_d__OHSpy, ChapterContent_ms1__s_U5R");
         for (Element heading : headings) {
-            if (heading.nextElementSibling() != null
-                    && !heading.nextElementSibling().text().startsWith("@")) {
-                assertEquals("+", heading.nextElementSibling().text().substring(0, 1));
+            Elements nextSiblingElements = heading.nextElementSiblings();
+            for (Element sibling : nextSiblingElements) {
+                if ((sibling.classNames().contains("ChapterContent_m__3AINJ")
+                        || sibling.classNames().contains("ChapterContent_p__dVKHb"))
+                        && !sibling.text().matches("[@$&].*")
+                        && sibling.previousElementSibling().text().matches("[@$&].*")) {
+                    assertEquals("+", sibling.text().substring(0, 1));
+                } else {
+                    assertNotEquals("+", sibling.text().substring(0, 1));
+                }
             }
         }
     }
