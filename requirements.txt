@@ -93,7 +93,7 @@ Step 5 - Footnotes
 
     3	✅Place a Number sign (#) at the start of a line with footnote text.
 
-    4   Place all footnote text at the end of the Bible book.
+    4   ✅Place all footnote text at the end of the Bible book.
 
     5   ✅Preseve formatting of footnotes
 
