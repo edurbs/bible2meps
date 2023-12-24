@@ -1,6 +1,7 @@
 package br.nom.soares.eduardo.bible2meps.bible2meps.application.format;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
@@ -135,8 +136,8 @@ class YouVersionFormatChapterTest {
         int totalChapters = page.getBookName().getNumberOfChapters();
         if (totalChapters == 1) {
             assertEquals(
-                    "<strong class=\"scriptureNumberBold\">1 </strong>",
-                    page.getChapter().select("strong.scriptureNumberBold").get(0).outerHtml());
+                    "<span class=\"scriptureNumberBold\" style=\"font-weight: bold\">1 </span>",
+                    page.getChapter().select("span.scriptureNumberBold").get(0).outerHtml());
         }
     }
 
@@ -145,9 +146,10 @@ class YouVersionFormatChapterTest {
     void shouldFormatScriptureNumberAsBoldGeneric(YouVersionFormatChapterTestHelper page) {
         int totalScriptureNumbers = page.getTotalScriptureNumbers();
         Element chapter = page.getChapter();
-        Elements scriptureNumbers = chapter.select("strong.scriptureNumberBold");
+        Elements scriptureNumbers = chapter.select("span.scriptureNumberBold");
         assertEquals(
-                "<strong class=\"scriptureNumberBold\">" + (totalScriptureNumbers) + " </strong>",
+                "<span class=\"scriptureNumberBold\" style=\"font-weight: bold\">" + (totalScriptureNumbers)
+                        + " </span>",
                 scriptureNumbers.get(totalScriptureNumbers - 1).outerHtml());
     }
 
@@ -156,7 +158,7 @@ class YouVersionFormatChapterTest {
     void shouldgetAllScriptures(YouVersionFormatChapterTestHelper page) {
         int totalScriptureNumbers = page.getTotalScriptureNumbers();
         Element chapter = page.getChapter();
-        Elements scriptureNumbers = chapter.select("strong.scriptureNumberBold");
+        Elements scriptureNumbers = chapter.select("span.scriptureNumberBold");
         assertEquals(totalScriptureNumbers, scriptureNumbers.size());
     }
 
@@ -176,7 +178,7 @@ class YouVersionFormatChapterTest {
     @ParameterizedTest
     @MethodSource("provideTestData")
     void shouldRemoveScriptureNumberOne(YouVersionFormatChapterTestHelper page) {
-        Elements scriptureNumbers = page.getChapter().select("strong.scriptureNumberBold");
+        Elements scriptureNumbers = page.getChapter().select("span.scriptureNumberBold");
         scriptureNumbers.get(0).wholeText().equals("");
     }
 
@@ -184,7 +186,7 @@ class YouVersionFormatChapterTest {
     @MethodSource("provideTestData")
     void shouldMoveChapterNumberNextToScriptureNumberOne(YouVersionFormatChapterTestHelper page) {
         Element chapter = page.getChapter();
-        Element scriptureNumberOne = chapter.select("strong.scriptureNumberBold").get(0);
+        Element scriptureNumberOne = chapter.select("span.scriptureNumberBold").get(0);
         String chapterNumber = chapter.selectFirst("span.chapterNumber").wholeText();
         Element previousSibling = scriptureNumberOne.previousElementSibling();
         assertEquals(chapterNumber, previousSibling.wholeText());
@@ -193,7 +195,7 @@ class YouVersionFormatChapterTest {
     @ParameterizedTest
     @MethodSource("provideTestData")
     void shouldAddAtSighBeforeHeadings(YouVersionFormatChapterTestHelper page) {
-        Elements headings = page.getChapter().select("span.ChapterContent_heading__xBDcs");
+        Elements headings = page.getChapter().select("div.ChapterContent_s1__bNNaW");
         for (Element heading : headings) {
             assertEquals("@", heading.text().substring(0, 1));
         }
@@ -234,13 +236,15 @@ class YouVersionFormatChapterTest {
         for (Element heading : headings) {
             Elements nextSiblingElements = heading.nextElementSiblings();
             for (Element sibling : nextSiblingElements) {
+                String siblingText = sibling.text();
                 if ((sibling.classNames().contains("ChapterContent_m__3AINJ")
                         || sibling.classNames().contains("ChapterContent_p__dVKHb"))
-                        && !sibling.text().matches("[@$&].*")
+                        && !siblingText.matches("[@$&].*")
                         && sibling.previousElementSibling().text().matches("[@$&].*")) {
-                    assertEquals("+", sibling.text().substring(0, 1));
+                    assertEquals("+", siblingText.substring(0, 1));
+                    assertNotEquals("+ ", siblingText.substring(0, 2));
                 } else {
-                    assertNotEquals("+", sibling.text().substring(0, 1));
+                    assertNotEquals("+", siblingText.substring(0, 1));
                 }
             }
         }
@@ -252,6 +256,7 @@ class YouVersionFormatChapterTest {
         Element superscription = page.getChapter().selectFirst("div.ChapterContent_d__OHSpy");
         if (page.isPsalmWithSuperscription()) {
             assertEquals("$", superscription.text().substring(0, 1));
+            assertNotEquals("$@", superscription.text().substring(0, 2));
         } else {
             assertNull(superscription);
         }
@@ -263,6 +268,7 @@ class YouVersionFormatChapterTest {
         Element bookDivision = page.getChapter().selectFirst("div.ChapterContent_ms1__s_U5R");
         if (page.isPsalmWithBookDivision()) {
             assertEquals("&", bookDivision.text().substring(0, 1));
+            assertNotEquals("&@", bookDivision.text().substring(0, 2));
         } else {
             assertNull(bookDivision);
         }
@@ -276,5 +282,15 @@ class YouVersionFormatChapterTest {
         assertEquals(0, headersWithPsalmDivision.size());
         Elements headersWithCrosReferences = chapter.select("div.ChapterContent_r___3KRx");
         assertEquals(0, headersWithCrosReferences.size());
+    }
+
+    @ParameterizedTest
+    @MethodSource("provideTestData")
+    void shouldRemoveUnwantedSpaces(YouVersionFormatChapterTestHelper page) {
+        var chapter = page.getChapter();
+        Elements elements = chapter.getAllElements();
+        for (Element span : elements) {
+            assertFalse(span.wholeText().contains("\u200A"));
+        }
     }
 }

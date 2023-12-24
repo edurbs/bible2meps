@@ -24,10 +24,6 @@ public class YouVersionFormatChapter {
 
     private List<Element> footnotesElementList = new ArrayList<>();
     private Element chapter;
-    private String css = """
-            .ChapterContent_fqa__Xa2yn, .ChapterContent_tl__at1as { font-style: italic; }
-            ChapterContent_fk__ZzZlQ, scriptureNumberBold { font-weight: bold; }
-            """;
 
     public void execute() {
         extractChapter();
@@ -42,11 +38,35 @@ public class YouVersionFormatChapter {
         addDolarSignToSuperscription();
         addAmpersandToBookDivision();
         addPlusSignToHeadings();
-        page = Jsoup.parseBodyFragment(css + chapter.html());
+        removeUnwantedSpaces();
+        addStyles();
+        page = Jsoup.parseBodyFragment(chapter.html());
+    }
+
+    private void addStyles() {
+        Elements italics1 = page.select("span.ChapterContent_fqa__Xa2yn");
+        italics1.attr("style", "font-style: italic");
+        Elements italics2 = page.select("span.ChapterContent_tl__at1as");
+        italics2.attr("style", "font-style: italic");
+        Elements bolds1 = page.select("span.ChapterContent_fk__ZzZlQ");
+        bolds1.attr("style", "font-weight: bold");
+        Elements bolds2 = page.select("span.scriptureNumberBold");
+        bolds2.attr("style", "font-weight: bold");
+    }
+
+    private void removeUnwantedSpaces() {
+        Elements elements = chapter.getAllElements();
+        String _200A = "\u200A";
+        for (Element span : elements) {
+            span.html(span.html().replace(_200A, ""));
+            if (!span.hasText()) {
+                span.remove();
+            }
+        }
     }
 
     private void addAtSignToHeadings() {
-        Elements headings = chapter.select("span.ChapterContent_heading__xBDcs");
+        Elements headings = chapter.select("div.ChapterContent_s1__bNNaW");
         for (Element heading : headings) {
             heading.text("@" + heading.text());
         }
@@ -62,8 +82,9 @@ public class YouVersionFormatChapter {
 
     private void addAmpersandToBookDivision() {
         Element bookDivision = chapter.selectFirst("div.ChapterContent_ms1__s_U5R");
-        if (bookDivision == null)
+        if (bookDivision == null) {
             return;
+        }
         bookDivision.text("&" + bookDivision.text());
     }
 
@@ -106,8 +127,14 @@ public class YouVersionFormatChapter {
                         || sibling.classNames().contains("ChapterContent_p__dVKHb"))
                         && !sibling.text().matches("[@$&].*")
                         && sibling.previousElementSibling().text().matches("[@$&].*")) {
-                    Element startBlock = sibling.selectFirst("span.ChapterContent_verse__57FIw");
-                    startBlock.firstChild().before("+");
+                    // Element startBlock = sibling.selectFirst("span.ChapterContent_verse__57FIw");
+                    Elements siblingBlocks = sibling.select("span.ChapterContent_verse__57FIw");
+                    for (Element siblingBlock : siblingBlocks) {
+                        if (siblingBlock.hasText()) {
+                            siblingBlock.firstChild().before("+");
+                            break;
+                        }
+                    }
                 }
                 break;
             }
@@ -115,7 +142,7 @@ public class YouVersionFormatChapter {
     }
 
     private void moveChapterNumberNextToScriptureNumberOne() {
-        Elements scriptureNumbers = chapter.select("strong.scriptureNumberBold");
+        Elements scriptureNumbers = chapter.select("span.scriptureNumberBold");
         Element scriptureNumberOne = scriptureNumbers.get(0);
         Element chapterNumber = chapter.selectFirst("span.chapterNumber");
         String chapterNumberText = chapterNumber.wholeText();
@@ -126,7 +153,7 @@ public class YouVersionFormatChapter {
 
     private void removeScriptureNumberOne() {
         if (bookName.getNumberOfChapters() > 1) {
-            Elements scriptureNumbers = chapter.select("strong.scriptureNumberBold");
+            Elements scriptureNumbers = chapter.select("span.scriptureNumberBold");
             scriptureNumbers.get(0).text("");
         }
     }
@@ -150,7 +177,7 @@ public class YouVersionFormatChapter {
             if (scriptureText.startsWith(scriptureNumberText)) {
                 startSpace = "";
             }
-            Element scriptureNumberBoldWithSpace = new Element("strong")
+            Element scriptureNumberBoldWithSpace = new Element("span")
                     .addClass("scriptureNumberBold")
                     .text(startSpace + scriptureNumberText + " ");
             scriptureNumber.replaceWith(scriptureNumberBoldWithSpace);

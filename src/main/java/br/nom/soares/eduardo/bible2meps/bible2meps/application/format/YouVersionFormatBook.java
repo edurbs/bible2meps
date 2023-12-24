@@ -22,7 +22,7 @@ public class YouVersionFormatBook {
     @NonNull
     private BookName bookName;
 
-    private Element bookElement;
+    private Element book;
     private Elements bookChapters = new Elements();
     private String bookNameFromPage;
 
@@ -30,7 +30,7 @@ public class YouVersionFormatBook {
         for (String url : urls) {
             bookChapters.add(parsePage(url));
         }
-        bookElement = Jsoup.parseBodyFragment(bookChapters.outerHtml());
+        book = Jsoup.parseBodyFragment(bookChapters.outerHtml());
         addBookNameAtSecondLine();
         addBookCodeAtFirstLine();
     }
@@ -64,7 +64,7 @@ public class YouVersionFormatBook {
 
     private void addBookCodeAtFirstLine() {
         Element firstLine = new Element("div").addClass("bookCode").text("%29");
-        Element body = bookElement.selectFirst("body");
+        Element body = book.selectFirst("body");
         body.prependChild(firstLine);
     }
 
@@ -72,7 +72,7 @@ public class YouVersionFormatBook {
         Element bookNameDiv = new Element("div").addClass("bookName").text("%");
         Element bookNameBold = new Element("b").text(bookNameFromPage.toUpperCase());
         bookNameBold.appendTo(bookNameDiv);
-        Element body = bookElement.selectFirst("body");
+        Element body = book.selectFirst("body");
         body.prependChild(bookNameDiv);
     }
 }

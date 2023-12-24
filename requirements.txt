@@ -70,7 +70,7 @@ Step 4: Format the text
 
                 ✅ Note: in original chapters with superscription must add $ even if there is no superscription text on the translation
 
-            c.	✅Place an At sign (@) at the start of a line with any heading other than a ❌book division or ❌superscription.
+            c.	✅Place an At sign (@) at the start of a line with any heading other than a ✅book division or ✅superscription.
 
             d.	Add a soft return (Shift+Enter) at the end of each line with poetic text.
 

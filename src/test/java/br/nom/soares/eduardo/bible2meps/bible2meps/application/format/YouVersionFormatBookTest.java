@@ -33,19 +33,20 @@ public class YouVersionFormatBookTest {
 
     @AfterAll
     void tearDown() {
-        System.out.println(youVersionFormatBook.getBookElement().outerHtml());
+        String html = youVersionFormatBook.getBook().outerHtml();
+        System.out.println(html);
     }
 
     @Test
     void shouldAddTheBookCodeAtFirstLine() {
-        Element htmlBook = youVersionFormatBook.getBookElement();
+        Element htmlBook = youVersionFormatBook.getBook();
         String firstLine = htmlBook.selectFirst("div.bookCode").text();
         assertEquals("%29", firstLine);
     }
 
     @Test
     void shouldAddBibleBookNameAtSecondLine() {
-        Element htmlBook = youVersionFormatBook.getBookElement();
+        Element htmlBook = youVersionFormatBook.getBook();
         Element secondLine = htmlBook.selectFirst("div.bookName");
         Element bookNameDiv = new Element("div").addClass("bookName").text("%");
         Element bookNameBold = new Element("b").text("JOEL");
