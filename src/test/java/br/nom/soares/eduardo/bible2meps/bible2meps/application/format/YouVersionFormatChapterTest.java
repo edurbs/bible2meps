@@ -177,6 +177,17 @@ class YouVersionFormatChapterTest {
 
     @ParameterizedTest
     @MethodSource("provideTestData")
+    void shouldRemoveCommaFromFootnotesReferences(YouVersionFormatChapterTestHelper page) {
+        List<Element> footnotes = page.getFootnotesElementList();
+        for (Element footnote : footnotes) {
+            Element footnoteScriptureNumber = footnote.selectFirst("span.ChapterContent_fr__0KsID");
+            assertFalse(footnoteScriptureNumber.text().contains(","));
+        }
+
+    }
+
+    @ParameterizedTest
+    @MethodSource("provideTestData")
     void shouldRemoveScriptureNumberOne(YouVersionFormatChapterTestHelper page) {
         Elements scriptureNumbers = page.getChapter().select("span.scriptureNumberBold");
         scriptureNumbers.get(0).wholeText().equals("");

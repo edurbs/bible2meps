@@ -197,7 +197,8 @@ public class YouVersionFormatChapter {
         Element footnoteBody = footnote.selectFirst("span.ChapterContent_body__O3qjr");
         Element footnoteScriptureNumber = footnoteBody.selectFirst("span.ChapterContent_fr__0KsID");
         footnoteScriptureNumber.text("#" + footnoteScriptureNumber.text().replace(".", ":") + " ");
-        Element newFootnote = new Element("span");
+        handleMultipleScripturesFootnote(footnoteBody, footnoteScriptureNumber);
+        Element newFootnote = new Element("span").addClass("footnoteMeps");
         newFootnote.appendChild(footnoteScriptureNumber);
         Elements children = footnoteBody.children();
         for (Element child : children) {
@@ -205,6 +206,21 @@ public class YouVersionFormatChapter {
         }
         newFootnote.appendElement("br");
         footnotesElementList.add(newFootnote);
+    }
+
+    private void handleMultipleScripturesFootnote(Element footnoteBody, Element footnoteScriptureNumber) {
+        if (footnoteScriptureNumber.text().contains(",")) {
+            String[] scriptureNumbers = footnoteScriptureNumber.text().split(",");
+            footnoteScriptureNumber.text(scriptureNumbers[0] + " ");
+            Element newVideSpan = new Element("span").addClass("ChapterContent_body__O3qjr").text(" Vide ");
+            footnoteBody.appendChild(newVideSpan);
+            for (int i = 1; i < scriptureNumbers.length; i++) {
+                Element newSpan = new Element("span").addClass("ChapterContent_body__O3qjr");
+                boolean lastI = i == scriptureNumbers.length - 1;
+                newSpan.text(scriptureNumbers[i] + (lastI ? "." : ", "));
+                footnoteBody.appendChild(newSpan);
+            }
+        }
     }
 
     private void removeUnwantedNotes() {

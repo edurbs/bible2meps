@@ -1,6 +1,7 @@
 package br.nom.soares.eduardo.bible2meps.bible2meps.application.format;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.jsoup.Jsoup;
@@ -25,6 +26,7 @@ public class YouVersionFormatBook {
     private Element book;
     private Elements bookChapters = new Elements();
     private String bookNameFromPage;
+    private List<YouVersionFormatChapter> youVersionFormatChapters = new ArrayList<>();
 
     public void execute() {
         for (String url : urls) {
@@ -33,6 +35,20 @@ public class YouVersionFormatBook {
         book = Jsoup.parseBodyFragment(bookChapters.outerHtml());
         addBookNameAtSecondLine();
         addBookCodeAtFirstLine();
+        placeFootnotesAtEndOfBook();
+    }
+
+    private void placeFootnotesAtEndOfBook() {
+        Elements footnotesElementList = new Elements();
+        for (YouVersionFormatChapter chapter : youVersionFormatChapters) {
+            footnotesElementList.addAll(chapter.getFootnotesElementList());
+        }
+        Element footnoteDiv = new Element("div").addClass("footnoteDiv");
+        for (Element footnote : footnotesElementList) {
+            footnote.appendTo(footnoteDiv);
+        }
+        Element body = book.selectFirst("body");
+        footnoteDiv.appendTo(body);
     }
 
     private Element parsePage(String url) {
@@ -46,6 +62,7 @@ public class YouVersionFormatBook {
         setBookNameFromPage(page);
         var youVersionFormatChapter = new YouVersionFormatChapter(page, bookName);
         youVersionFormatChapter.execute();
+        youVersionFormatChapters.add(youVersionFormatChapter);
         return youVersionFormatChapter.getChapter();
     }
 

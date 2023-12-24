@@ -1,11 +1,13 @@
 package br.nom.soares.eduardo.bible2meps.bible2meps.application.format;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -52,5 +54,15 @@ public class YouVersionFormatBookTest {
         Element bookNameBold = new Element("b").text("JOEL");
         bookNameBold.appendTo(bookNameDiv);
         assertEquals(bookNameDiv.outerHtml(), secondLine.outerHtml());
+    }
+
+    @Test
+    void shouldAddFootnotesAtEndOfBook() {
+        Element body = youVersionFormatBook.getBook().selectFirst("body");
+        Elements divs = body.children();
+        Element lastDiv = divs.getLast();
+        assertTrue(lastDiv.className().equals("footnoteDiv"));
+        Element penultimateDiv = divs.get(divs.size() - 2);
+        assertTrue(penultimateDiv.className().equals("ChapterContent_chapter__uvbXo"));
     }
 }

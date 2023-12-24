@@ -11,11 +11,11 @@ Step 2:
 
         •	✅A hard return must appear at the end of the second line containing the Bible book name. The entire name must be on one line.
 
-    2.3.	On the third line, paste the book content:
+    2.3.	✅On the third line, paste the book content:
 
 Step 3: Clean the text
 
-    ➡️3.2.	Remove unwanted text such as introductions, comments, footers✅, cros references✅, and page numbers.
+    ✅3.2.	Remove unwanted text such as introductions, comments, footers✅, cros references✅, and page numbers.
         Note: Text such as headings, superscriptions, and footnotes should not be removed.
 
     3.3.	Remove unnecessary formatting such as bulleted list styles or hyperlinks.
@@ -39,7 +39,7 @@ Step 4: Format the text
 
         2.	✅ For books not containing chapters, add verse number one to the beginning of the first verse, if it has not been included in the pasted text.
 
-            Note: add chapter number 1 if it does not exists.
+            ✅Note: add chapter number 1 if it does not exists.
 
         3.	Chapter numbers:
 
@@ -60,7 +60,7 @@ Step 4: Format the text
         1.	Make sure that hard and soft returns appear where they should, as explained in the document How to handle formatting.
         Note: Soft returns should only appear in poetic text.
 
-            a.	Add a hard return at the end of each line containing a heading.
+            a.	✅Add a hard return at the end of each line containing a heading.
 
         2.	Add special formatting characters to the text, as explained in the document How to handle formatting.
 
@@ -81,7 +81,7 @@ Step 4: Format the text
             g. Place an Equals sign (=) before the first chapter or verse number where poetic text starts.
                 Note: If a Bible book begins with poetic text, place the Equals sign (=) at the beginning of the second verse containing poetic text instead. If poetic text starts in the middle of a verse, no Equals sign (=) is necessary.
 
-            h. Add a hard return at the end of each chapter and group of verses that form a paragraph.
+            h. ✅Add a hard return at the end of each chapter and group of verses that form a paragraph.
 
             i. ✅Place a Plus sign (+) at the start of a line when body text immediately follows poetic text or any type of heading.
 
