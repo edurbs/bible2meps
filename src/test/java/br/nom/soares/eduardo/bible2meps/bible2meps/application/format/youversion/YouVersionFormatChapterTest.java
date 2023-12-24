@@ -1,4 +1,4 @@
-package br.nom.soares.eduardo.bible2meps.bible2meps.application.format;
+package br.nom.soares.eduardo.bible2meps.bible2meps.application.format.youversion;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;

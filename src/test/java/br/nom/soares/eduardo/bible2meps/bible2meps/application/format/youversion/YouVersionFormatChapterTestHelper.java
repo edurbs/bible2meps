@@ -1,4 +1,4 @@
-package br.nom.soares.eduardo.bible2meps.bible2meps.application.format;
+package br.nom.soares.eduardo.bible2meps.bible2meps.application.format.youversion;
 
 import java.io.IOException;
 import java.util.List;

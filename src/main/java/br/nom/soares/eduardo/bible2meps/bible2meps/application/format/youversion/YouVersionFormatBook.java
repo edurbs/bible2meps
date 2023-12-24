@@ -1,4 +1,4 @@
-package br.nom.soares.eduardo.bible2meps.bible2meps.application.format;
+package br.nom.soares.eduardo.bible2meps.bible2meps.application.format.youversion;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -8,22 +8,18 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import br.nom.soares.eduardo.bible2meps.bible2meps.application.format.FormatBookAbstract;
 import br.nom.soares.eduardo.bible2meps.bible2meps.domain.enums.BookName;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
 
-@RequiredArgsConstructor
-@Data
-public class YouVersionFormatBook {
+@Getter
+public class YouVersionFormatBook extends FormatBookAbstract {
 
-    @NonNull
-    private List<String> urls;
+    public YouVersionFormatBook(@NonNull List<String> urls, @NonNull BookName bookName) {
+        super(urls, bookName);
+    }
 
-    @NonNull
-    private BookName bookName;
-
-    private Element book;
     private Elements bookChapters = new Elements();
     private String bookNameFromPage;
     private List<YouVersionFormatChapter> youVersionFormatChapters = new ArrayList<>();
@@ -92,4 +88,5 @@ public class YouVersionFormatBook {
         Element body = book.selectFirst("body");
         body.prependChild(bookNameDiv);
     }
+
 }
