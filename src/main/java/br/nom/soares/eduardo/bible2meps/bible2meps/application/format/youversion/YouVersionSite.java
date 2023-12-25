@@ -1,9 +1,8 @@
 package br.nom.soares.eduardo.bible2meps.bible2meps.application.format.youversion;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+import java.util.Optional;
 
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.ResponseEntity;
@@ -43,7 +42,7 @@ public class YouVersionSite {
         return languageRecords;
     }
 
-    public Map<String, String> listBibles(String languageTag) {
+    public List<TranslationRecord> getBibles(String languageTag) {
         /*
          * https://www.bible.com/api/bible/versions?language_tag=por&type=all
          * response{data{versions[{id, abbreviation, local_title}]}}
@@ -56,21 +55,35 @@ public class YouVersionSite {
                 .getAsJsonObject("response")
                 .getAsJsonObject("data")
                 .getAsJsonArray("versions");
-        Map<String, String> map = new HashMap<>();
+        List<TranslationRecord> translationRecords = new ArrayList<>();
         for (JsonElement versionElement : versions) {
             JsonObject versionObject = versionElement.getAsJsonObject();
             String id = versionObject.get("id").getAsString();
             String abbreviation = versionObject.get("abbreviation").getAsString();
             String name = versionObject.get("local_title").getAsString();
-            map.put(abbreviation, name);
+            translationRecords.add(new TranslationRecord(id, abbreviation, name));
         }
-        return map;
+        return translationRecords;
     }
 
     private String getJson(String apiUrl) {
         RestTemplate restTemplate = new RestTemplateBuilder().build();
         ResponseEntity<String> responseEntity = restTemplate.getForEntity(apiUrl, String.class);
         return responseEntity.getBody();
+    }
+
+    Optional<LanguageRecord> getLanguageByTag(List<LanguageRecord> languageRecords, String languageTag) {
+        return languageRecords.stream()
+                .filter(language -> language.languageTag().equals(languageTag))
+                .findFirst();
+
+    }
+
+    Optional<TranslationRecord> getTranslationById(List<TranslationRecord> translationRecords,
+            String id) {
+        return translationRecords.stream()
+                .filter(translation -> translation.id().equals(id))
+                .findFirst();
     }
 
 }
