@@ -6,11 +6,9 @@ import java.util.List;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-import org.springframework.stereotype.Component;
 import br.nom.soares.eduardo.bible2meps.domain.enums.BookName;
 import lombok.Getter;
 
-@Component
 public class YouVersionFormatBook {
 
     @Getter
