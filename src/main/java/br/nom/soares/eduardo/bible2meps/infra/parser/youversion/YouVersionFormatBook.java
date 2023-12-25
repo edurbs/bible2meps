@@ -8,23 +8,24 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.springframework.stereotype.Component;
 import br.nom.soares.eduardo.bible2meps.domain.enums.BookName;
+import lombok.Getter;
 
 @Component
 public class YouVersionFormatBook {
 
+    @Getter
     private Element book;
+
+    private String bookNameFromPage = "";
+
     private List<YouVersionFormatChapter> youVersionFormatChapters = new ArrayList<>();
 
     public String execute(List<String> urls, BookName bookName) {
         Elements bookChapters = new Elements();
-        String bookNameFromPage = "";
         for (String url : urls) {
             Element page = parsePage(url, bookName);
             if (page != null) {
                 bookChapters.add(page);
-            }
-            if (bookNameFromPage.isEmpty()) {
-                bookNameFromPage = getBookNameFromPage(page);
             }
         }
         book = Jsoup.parseBodyFragment(bookChapters.outerHtml());
@@ -51,19 +52,26 @@ public class YouVersionFormatBook {
         Element page;
         try {
             page = Jsoup.connect(url).get();
+            var youVersionFormatChapter = new YouVersionFormatChapter(page, bookName);
+            youVersionFormatChapter.execute();
+            if (bookNameFromPage.isEmpty()) {
+                bookNameFromPage = getBookNameFromPage(page);
+            }
+            youVersionFormatChapters.add(youVersionFormatChapter);
+            return youVersionFormatChapter.getChapter();
         } catch (IOException e) {
             e.printStackTrace();
             return null;
         }
 
-        var youVersionFormatChapter = new YouVersionFormatChapter(page, bookName);
-        youVersionFormatChapter.execute();
-        youVersionFormatChapters.add(youVersionFormatChapter);
-        return youVersionFormatChapter.getChapter();
     }
 
     private String getBookNameFromPage(Element page) {
-        String bookNameFromPage = page.selectFirst("h1").text();
+        Element bookNameElement = page.selectFirst("h1");
+        if (bookNameElement == null) {
+            return "";
+        }
+        String bookNameFromPage = bookNameElement.text();
         String[] nameSplited = bookNameFromPage.split(" ");
         bookNameFromPage = "";
         for (int i = 0; i < nameSplited.length - 1; i++) {

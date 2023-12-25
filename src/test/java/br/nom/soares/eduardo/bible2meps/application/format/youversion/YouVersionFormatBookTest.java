@@ -1,12 +1,12 @@
 package br.nom.soares.eduardo.bible2meps.application.format.youversion;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.util.ArrayList;
 import java.util.List;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -18,6 +18,7 @@ import br.nom.soares.eduardo.bible2meps.infra.parser.youversion.YouVersionFormat
 public class YouVersionFormatBookTest {
 
     private YouVersionFormatBook youVersionFormatBook;
+    String html = "";
 
     @BeforeAll
     void setup() {
@@ -27,15 +28,15 @@ public class YouVersionFormatBookTest {
         urls.add("https://www.bible.com/bible/2645/JOL.3.A21");
         BookName bookName = BookName._29_JOE;
 
-        youVersionFormatBook = new YouVersionFormatBook(urls, bookName);
-        youVersionFormatBook.execute();
+        youVersionFormatBook = new YouVersionFormatBook();
+        html = youVersionFormatBook.execute(urls, bookName);
     }
 
-    @AfterAll
-    void tearDown() {
-        String html = youVersionFormatBook.getBook().outerHtml();
-        System.out.println(html);
+    @Test
+    void shouldReturnAnHtmlBook() {
+        assertFalse(html.isBlank());
     }
+
 
     @Test
     void shouldAddTheBookCodeAtFirstLine() {
