@@ -3,11 +3,9 @@ package br.nom.soares.eduardo.bible2meps.bible2meps.application.format.youversio
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-
 import br.nom.soares.eduardo.bible2meps.bible2meps.application.format.FormatBookAbstract;
 import br.nom.soares.eduardo.bible2meps.bible2meps.domain.enums.BookName;
 import lombok.Getter;
@@ -26,7 +24,10 @@ public class YouVersionFormatBook extends FormatBookAbstract {
 
     public void execute() {
         for (String url : urls) {
-            bookChapters.add(parsePage(url));
+            Element page = parsePage(url);
+            if (page != null) {
+                bookChapters.add(page);
+            }
         }
         book = Jsoup.parseBodyFragment(bookChapters.outerHtml());
         addBookNameAtSecondLine();
