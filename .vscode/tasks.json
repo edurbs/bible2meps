@@ -1,0 +1,19 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+      {
+        "label": "Run Maven Build",
+        "type": "shell",
+        "command": "mvn",  // Use the correct path to Maven in your WSL environment
+        "args": ["clean", "jacoco:prepare-agent", "install", "jacoco:report"],
+        "group": {
+          "kind": "build",
+          "isDefault": true
+        },
+        "presentation": {
+          "reveal": "always",
+          "panel": "new"
+        }
+      }
+    ]
+  }
