@@ -2,7 +2,6 @@ package br.nom.soares.eduardo.bible2meps.application.format;
 
 import java.util.ArrayList;
 import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
 import br.nom.soares.eduardo.bible2meps.domain.Book;
 import br.nom.soares.eduardo.bible2meps.domain.enums.BookName;
 import lombok.NonNull;
@@ -12,9 +11,6 @@ import lombok.RequiredArgsConstructor;
 public class FormatBible {
     @NonNull
     private BibleParams params;
-
-    @Autowired
-    private ZipFile zipFile;
 
     public byte[] execute() {
         // TODO depedence injection to test
@@ -31,7 +27,7 @@ public class FormatBible {
             String bookHtml = siteParser.formatBook(urls, bookName);
             books.add(new Book(bookName, bookHtml));
         }
-        return zipFile.create(books, abbreviation + ".zip");
+        return params.zipFile().create(books, abbreviation + ".zip");
     }
 
 }

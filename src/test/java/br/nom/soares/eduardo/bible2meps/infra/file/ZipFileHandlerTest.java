@@ -20,7 +20,7 @@ public class ZipFileHandlerTest {
     @Test
     void createZipFile_shouldReturnZipFileByteArrayWithTwoFilesAndContents() {
         // Arrange
-        JavaZipFile zipFileHandler = new JavaZipFile();
+        JavaZipFileImpl zipFileHandler = new JavaZipFileImpl();
         List<Book> books = new ArrayList<>();
 
         // Add sample books to the list

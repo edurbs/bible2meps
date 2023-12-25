@@ -8,10 +8,11 @@ import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 import org.springframework.stereotype.Component;
+import br.nom.soares.eduardo.bible2meps.application.format.ZipFile;
 import br.nom.soares.eduardo.bible2meps.domain.Book;
 
 @Component
-public class JavaZipFile {
+public class JavaZipFileImpl implements ZipFile {
     public byte[] create(List<Book> books, String zipFilename) {
         try {
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
