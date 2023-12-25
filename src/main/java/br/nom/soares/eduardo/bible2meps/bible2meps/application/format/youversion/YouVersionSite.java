@@ -1,5 +1,6 @@
 package br.nom.soares.eduardo.bible2meps.bible2meps.application.format.youversion;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,46 +16,61 @@ import com.google.gson.JsonParser;
 
 public class YouVersionSite {
 
+    public record TranslationRecord(String id, String abbreviation, String localTitle) {
+    }
+
+    public record LanguageRecord(String name, String languageTag) {
+    }
+
     /**
      * @return Map<String languageTag, String languageName>
      */
-    public Map<String, String> getLanguagesMap() {
-        String jsonResponse = getJsonResponse();
+    public List<LanguageRecord> getLanguages() {
+        String jsonResponse = getJson("https://www.bible.com/api/bible/configuration");
         JsonElement jsonElement = JsonParser.parseString(jsonResponse);
         JsonObject jsonObject = jsonElement.getAsJsonObject();
         JsonArray defaultVersions = jsonObject
                 .getAsJsonObject("response")
                 .getAsJsonObject("data")
                 .getAsJsonArray("default_versions");
-        Map<String, String> map = new HashMap<>();
+        List<LanguageRecord> languageRecords = new ArrayList<>();
         for (JsonElement versionElement : defaultVersions) {
             JsonObject versionObject = versionElement.getAsJsonObject();
             String name = versionObject.get("name").getAsString();
             String languageTag = versionObject.get("language_tag").getAsString();
-            map.put(languageTag, name);
+            languageRecords.add(new LanguageRecord(name, languageTag));
         }
-
-        return map;
+        return languageRecords;
     }
 
-    private String getJsonResponse() {
-        /*
-         * https://www.bible.com/api/bible/configuration
-         * response{data{default_versions[{name, language_tag}]}}
-         * response.data.default_versions.0.language_tag -> languageCode
-         */
-        String apiUrl = "https://www.bible.com/api/bible/configuration";
-        RestTemplate restTemplate = new RestTemplateBuilder().build();
-        ResponseEntity<String> responseEntity = restTemplate.getForEntity(apiUrl, String.class);
-        return responseEntity.getBody();
-    }
-
-    public List<String> listBibles(String languageTag) {
+    public Map<String, String> listBibles(String languageTag) {
         /*
          * https://www.bible.com/api/bible/versions?language_tag=por&type=all
          * response{data{versions[{id, abbreviation, local_title}]}}
          */
-        return null;
+        String jsonResponse = getJson(
+                "https://www.bible.com/api/bible/versions?language_tag=" + languageTag + "&type=all");
+        JsonElement jsonElement = JsonParser.parseString(jsonResponse);
+        JsonObject jsonObject = jsonElement.getAsJsonObject();
+        JsonArray versions = jsonObject
+                .getAsJsonObject("response")
+                .getAsJsonObject("data")
+                .getAsJsonArray("versions");
+        Map<String, String> map = new HashMap<>();
+        for (JsonElement versionElement : versions) {
+            JsonObject versionObject = versionElement.getAsJsonObject();
+            String id = versionObject.get("id").getAsString();
+            String abbreviation = versionObject.get("abbreviation").getAsString();
+            String name = versionObject.get("local_title").getAsString();
+            map.put(abbreviation, name);
+        }
+        return map;
+    }
+
+    private String getJson(String apiUrl) {
+        RestTemplate restTemplate = new RestTemplateBuilder().build();
+        ResponseEntity<String> responseEntity = restTemplate.getForEntity(apiUrl, String.class);
+        return responseEntity.getBody();
     }
 
 }
