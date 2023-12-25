@@ -6,6 +6,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import br.nom.soares.eduardo.bible2meps.domain.enums.BookName;
+import br.nom.soares.eduardo.bible2meps.infra.parser.youversion.YouVersionSite;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class YouVersionSiteTest {

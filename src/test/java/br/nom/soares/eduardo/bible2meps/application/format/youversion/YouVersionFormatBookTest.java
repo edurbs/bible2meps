@@ -12,6 +12,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
 import br.nom.soares.eduardo.bible2meps.domain.enums.BookName;
+import br.nom.soares.eduardo.bible2meps.infra.parser.youversion.YouVersionFormatBook;
 
 @TestInstance(Lifecycle.PER_CLASS)
 public class YouVersionFormatBookTest {
