@@ -1,4 +1,4 @@
-package br.nom.soares.eduardo.bible2meps.application.format;
+package br.nom.soares.eduardo.bible2meps.infra.parser;
 
 import java.util.List;
 import org.jsoup.nodes.Element;

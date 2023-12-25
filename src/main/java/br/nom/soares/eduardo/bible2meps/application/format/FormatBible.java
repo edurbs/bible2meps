@@ -2,39 +2,36 @@ package br.nom.soares.eduardo.bible2meps.application.format;
 
 import java.util.ArrayList;
 import java.util.List;
-import org.jsoup.nodes.Element;
+import org.springframework.beans.factory.annotation.Autowired;
 import br.nom.soares.eduardo.bible2meps.domain.Book;
 import br.nom.soares.eduardo.bible2meps.domain.enums.BookName;
-import br.nom.soares.eduardo.bible2meps.infra.parser.youversion.YouVersionFormatBook;
-import br.nom.soares.eduardo.bible2meps.infra.parser.youversion.YouVersionSite;
-import lombok.Getter;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-@Getter
 public class FormatBible {
     @NonNull
-    private String bibleId;
+    private BibleParams params;
 
-    @NonNull
-    private String abbreviation;
-    List<Book> books = new ArrayList<>();
+    @Autowired
+    private ZipFile zipFile;
 
-    public void execute() {
+    public byte[] execute() {
         // TODO depedence injection to test
         // TODO add thread
         // TODO jsoup add proxy https://www.proxyrotator.com/free-proxy-list/
         // TODO handle jsoup http 503
         // TODO handle jsoup timeout
-        YouVersionSite youVersionSite = new YouVersionSite();
+
+        SiteParser siteParser = params.siteParser();
+        String abbreviation = params.abbreviation();
+        List<Book> books = new ArrayList<>();
         for (BookName bookName : BookName.values()) {
-            List<String> urls = youVersionSite.getUrls(bookName, bibleId, abbreviation);
-            var formatBook = new YouVersionFormatBook(urls, bookName);
-            formatBook.execute();
-            Element book = formatBook.getBook();
-            books.add(new Book(bookName, book.html()));
+            List<String> urls = siteParser.getUrls(bookName, params.bibleId(), abbreviation);
+            String bookHtml = siteParser.formatBook(urls, bookName);
+            books.add(new Book(bookName, bookHtml));
         }
+        return zipFile.create(books, abbreviation + ".zip");
     }
 
 }

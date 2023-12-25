@@ -20,7 +20,7 @@ public class ZipFileHandlerTest {
     @Test
     void createZipFile_shouldReturnZipFileByteArrayWithTwoFilesAndContents() {
         // Arrange
-        ZipFileHandler zipFileHandler = new ZipFileHandler();
+        JavaZipFile zipFileHandler = new JavaZipFile();
         List<Book> books = new ArrayList<>();
 
         // Add sample books to the list
@@ -30,7 +30,7 @@ public class ZipFileHandlerTest {
         books.add(book2);
 
         // Act
-        byte[] zipFileBytes = zipFileHandler.createZipFile(books, "test.zip");
+        byte[] zipFileBytes = zipFileHandler.create(books, "test.zip");
 
         // Assert
         assertNotNull(zipFileBytes);

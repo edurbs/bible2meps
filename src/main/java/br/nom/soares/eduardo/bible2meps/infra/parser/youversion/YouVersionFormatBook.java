@@ -6,33 +6,32 @@ import java.util.List;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-import br.nom.soares.eduardo.bible2meps.application.format.FormatBookAbstract;
+import org.springframework.stereotype.Component;
 import br.nom.soares.eduardo.bible2meps.domain.enums.BookName;
-import lombok.Getter;
-import lombok.NonNull;
 
-@Getter
-public class YouVersionFormatBook extends FormatBookAbstract {
+@Component
+public class YouVersionFormatBook {
 
-    public YouVersionFormatBook(@NonNull List<String> urls, @NonNull BookName bookName) {
-        super(urls, bookName);
-    }
-
-    private Elements bookChapters = new Elements();
-    private String bookNameFromPage;
+    private Element book;
     private List<YouVersionFormatChapter> youVersionFormatChapters = new ArrayList<>();
 
-    public void execute() {
+    public String execute(List<String> urls, BookName bookName) {
+        Elements bookChapters = new Elements();
+        String bookNameFromPage = "";
         for (String url : urls) {
-            Element page = parsePage(url);
+            Element page = parsePage(url, bookName);
             if (page != null) {
                 bookChapters.add(page);
             }
+            if (bookNameFromPage.isEmpty()) {
+                bookNameFromPage = getBookNameFromPage(page);
+            }
         }
         book = Jsoup.parseBodyFragment(bookChapters.outerHtml());
-        addBookNameAtSecondLine();
+        addBookNameAtSecondLine(bookNameFromPage);
         addBookCodeAtFirstLine();
         placeFootnotesAtEndOfBook();
+        return book.html();
     }
 
     private void placeFootnotesAtEndOfBook() {
@@ -48,7 +47,7 @@ public class YouVersionFormatBook extends FormatBookAbstract {
         footnoteDiv.appendTo(body);
     }
 
-    private Element parsePage(String url) {
+    private Element parsePage(String url, BookName bookName) {
         Element page;
         try {
             page = Jsoup.connect(url).get();
@@ -56,24 +55,21 @@ public class YouVersionFormatBook extends FormatBookAbstract {
             e.printStackTrace();
             return null;
         }
-        setBookNameFromPage(page);
+
         var youVersionFormatChapter = new YouVersionFormatChapter(page, bookName);
         youVersionFormatChapter.execute();
         youVersionFormatChapters.add(youVersionFormatChapter);
         return youVersionFormatChapter.getChapter();
     }
 
-    private void setBookNameFromPage(Element page) {
-        if (bookNameFromPage != null) {
-            return;
-        }
-        bookNameFromPage = page.selectFirst("h1").text();
+    private String getBookNameFromPage(Element page) {
+        String bookNameFromPage = page.selectFirst("h1").text();
         String[] nameSplited = bookNameFromPage.split(" ");
         bookNameFromPage = "";
         for (int i = 0; i < nameSplited.length - 1; i++) {
             bookNameFromPage += nameSplited[i] + " ";
         }
-        bookNameFromPage = bookNameFromPage.trim();
+        return bookNameFromPage.trim();
     }
 
     private void addBookCodeAtFirstLine() {
@@ -82,7 +78,7 @@ public class YouVersionFormatBook extends FormatBookAbstract {
         body.prependChild(firstLine);
     }
 
-    private void addBookNameAtSecondLine() {
+    private void addBookNameAtSecondLine(String bookNameFromPage) {
         Element bookNameDiv = new Element("div").addClass("bookName").text("%");
         Element bookNameBold = new Element("b").text(bookNameFromPage.toUpperCase());
         bookNameBold.appendTo(bookNameDiv);

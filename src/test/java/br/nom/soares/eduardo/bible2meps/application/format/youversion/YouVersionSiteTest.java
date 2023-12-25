@@ -6,20 +6,20 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import br.nom.soares.eduardo.bible2meps.domain.enums.BookName;
-import br.nom.soares.eduardo.bible2meps.infra.parser.youversion.YouVersionSite;
+import br.nom.soares.eduardo.bible2meps.infra.parser.youversion.YouVersionSiteParser;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class YouVersionSiteTest {
-    private static YouVersionSite youVersionSite;
+    private static YouVersionSiteParser youVersionSite;
 
     @BeforeAll
     public static void setup() {
-        youVersionSite = new YouVersionSite();
+        youVersionSite = new YouVersionSiteParser();
     }
 
     @Test
     void testGetLanguages() {
-        List<YouVersionSite.LanguageRecord> languages = youVersionSite.getLanguages();
+        List<YouVersionSiteParser.LanguageRecord> languages = youVersionSite.getLanguages();
         assertEquals("Portuguese (Brazil)",
                 youVersionSite.getLanguageByTag(languages, "por").get().name());
         assertEquals("English", youVersionSite.getLanguageByTag(languages, "eng").get().name());
@@ -27,7 +27,7 @@ public class YouVersionSiteTest {
 
     @Test
     void testGetBibles() {
-        List<YouVersionSite.TranslationRecord> bibles = youVersionSite.getBibles("por");
+        List<YouVersionSiteParser.TranslationRecord> bibles = youVersionSite.getBibles("por");
         assertEquals("Biblia Almeida Século 21",
                 youVersionSite.getTranslationById(bibles, "2645").get().localTitle());
         assertEquals("NVT", youVersionSite.getTranslationById(bibles, "1930").get().abbreviation());
