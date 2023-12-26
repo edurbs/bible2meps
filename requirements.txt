@@ -39,7 +39,10 @@ Step 4: Format the text
 
         2.	✅ For books not containing chapters, add verse number one to the beginning of the first verse, if it has not been included in the pasted text.
 
-            ✅Note: add chapter number 1 if it does not exists.
+            ❌Note: add chapter number 1 if it does not exists. (wrong information!!!!🐞)
+            😒Note: remove chapter number 1 if it exists.
+            😒add utf-8 at head
+                <head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"></meta></head>
 
         3.	Chapter numbers:
 
@@ -65,6 +68,7 @@ Step 4: Format the text
         2.	Add special formatting characters to the text, as explained in the document How to handle formatting.
 
             a.	✅ Place an Ampersand ➡️(&) at the start of a line with a book division.
+                🐞add headding of book division like (Salmos 1—41)
 
             b.	✅ Place a Dollar sign ($) at the start of a line with a superscription.
 
@@ -87,7 +91,8 @@ Step 4: Format the text
 
 Step 5 - Footnotes
 
-    1	✅Add a hard return at the end of each line with footnote text.
+    1	😒Add a hard return at the end of each line with footnote text.
+            🐞Clean footnote list at the book's end. (bug: apocalipse has the footnotes of entire Bible)
 
     2	✅Replace each footnote reference symbol with an Asterisk (*) in the body text.
 
