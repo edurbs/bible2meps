@@ -45,6 +45,7 @@ public class YouVersionFormatBook {
         addBookNameAtSecondLine(bookNameFromPage);
         addBookCodeAtFirstLine(bookName);
         placeFootnotesAtEndOfBook();
+        bookNameFromPage = "";
         return book.html();
     }
 
