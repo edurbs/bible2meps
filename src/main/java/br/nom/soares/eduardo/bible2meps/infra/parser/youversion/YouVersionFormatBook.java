@@ -43,7 +43,7 @@ public class YouVersionFormatBook {
         }
         book = Jsoup.parseBodyFragment(bookChapters.outerHtml());
         addBookNameAtSecondLine(bookNameFromPage);
-        addBookCodeAtFirstLine();
+        addBookCodeAtFirstLine(bookName);
         placeFootnotesAtEndOfBook();
         return book.html();
     }
@@ -87,8 +87,9 @@ public class YouVersionFormatBook {
         return bookNameFromPage.trim();
     }
 
-    private void addBookCodeAtFirstLine() {
-        Element firstLine = new Element("div").addClass("bookCode").text("%29");
+    private void addBookCodeAtFirstLine(BookName bookName) {
+        String bookCode = "";
+        Element firstLine = new Element("div").addClass("bookCode").text("%"+bookCode);
         Element body = book.selectFirst("body");
         body.prependChild(firstLine);
     }
