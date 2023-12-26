@@ -82,6 +82,11 @@ class YouVersionFormatChapterTest {
                 .footnoteExpectedText(
                         "<span class=\"ChapterContent_fr__0KsID\">#1:2 </span><span class=\"ft\">Ou </span><span class=\"ChapterContent_fqa__Xa2yn\">líderes.</span><br>")
                 .bookName(BookName._29_JOE).build().get());
+        pages.put("PSA.98.A21", YouVersionFormatChapterTestHelper.builder()
+                .url("https://www.bible.com/bible/2645/PSA.98.A21").chapterNumber("98")
+                .totalScriptureNumbers(9)
+                .footnoteExpectedSize(0)
+                .bookName(BookName._19_PSA).build().get());
     }
 
     Stream<Arguments> provideTestData() {
@@ -236,8 +241,8 @@ class YouVersionFormatChapterTest {
     void shouldAddAmpersandToBookDivision(YouVersionFormatChapterTestHelper page) {
         Element bookDivision = page.getChapter().selectFirst("div.ChapterContent_ms1__s_U5R");
         if (page.isPsalmWithBookDivision()) {
-            assertEquals("&", bookDivision.text().substring(0, 1));
-            assertNotEquals("&@", bookDivision.text().substring(0, 2));
+            assertEquals("@", bookDivision.text().substring(0, 1));
+            assertNotEquals("@@", bookDivision.text().substring(0, 2));
         } else {
             assertNull(bookDivision);
         }

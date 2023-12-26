@@ -5,6 +5,7 @@ import java.util.List;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import br.nom.soares.eduardo.bible2meps.domain.Superscription;
 import br.nom.soares.eduardo.bible2meps.domain.enums.BookName;
 import lombok.Getter;
 import lombok.NonNull;
@@ -83,7 +84,7 @@ public class YouVersionFormatChapter {
         if (bookDivision == null) {
             return;
         }
-        bookDivision.text("&" + bookDivision.text());
+        bookDivision.text("@" + bookDivision.text());
     }
 
     private void addDolarSignToSuperscription() {
@@ -93,19 +94,16 @@ public class YouVersionFormatChapter {
         String stringChapterNumber = chapter.selectFirst("span.chapterNumber").wholeText();
         stringChapterNumber = stringChapterNumber.replace("{", "").replace("}", "").trim();
         int chapterNumber = Integer.parseInt(stringChapterNumber);
-        boolean thisChapterHasSupercription = switch (chapterNumber) {
-            case 1, 2, 10, 33, 43, 71, 91, 93, 94, 95, 96, 97, 99, 104, 105, 106, 107, 111, 112, 113, 114, 115, 116, 117, 118, 119, 135, 136, 137, 146, 147, 148, 149, 150 -> false;
-            default -> true;
-        };
-        Element superscription = chapter.selectFirst("div.ChapterContent_d__OHSpy");
+        boolean thisChapterHasSupercription = Superscription.thisChapterHas(chapterNumber);
+        Element superscriptionElement = chapter.selectFirst("div.ChapterContent_d__OHSpy");
         if (thisChapterHasSupercription) {
-            if (superscription == null) {
-                superscription = new Element("div").addClass("ChapterContent_d__OHSpy");
+            if (superscriptionElement == null || superscriptionElement.text().isEmpty()) {
+                superscriptionElement = new Element("div").addClass("ChapterContent_d__OHSpy");
             }
-            superscription.text("$" + superscription.text());
+            superscriptionElement.text("$" + superscriptionElement.text());
         } else {
-            if (superscription != null) {
-                superscription.remove();
+            if (superscriptionElement != null) {
+                superscriptionElement.remove();
             }
         }
     }
