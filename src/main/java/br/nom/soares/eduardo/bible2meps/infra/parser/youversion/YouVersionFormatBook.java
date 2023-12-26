@@ -88,7 +88,7 @@ public class YouVersionFormatBook {
     }
 
     private void addBookCodeAtFirstLine(BookName bookName) {
-        String bookCode = "";
+        String bookCode = bookName.getMepsFormat().substring(0, 2);
         Element firstLine = new Element("div").addClass("bookCode").text("%"+bookCode);
         Element body = book.selectFirst("body");
         body.prependChild(firstLine);
