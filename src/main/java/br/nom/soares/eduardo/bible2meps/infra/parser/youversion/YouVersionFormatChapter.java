@@ -209,12 +209,12 @@ public class YouVersionFormatChapter {
             String[] scriptureNumbers = footnoteScriptureNumber.text().split(",");
             footnoteScriptureNumber.text(scriptureNumbers[0] + " ");
             Element newVideSpan =
-                    new Element("span").addClass("ChapterContent_body__O3qjr").text(" Vide ");
+                    new Element("span").addClass("ChapterContent_body__O3qjr").text(" [Vide ");
             footnoteBody.appendChild(newVideSpan);
             for (int i = 1; i < scriptureNumbers.length; i++) {
                 Element newSpan = new Element("span").addClass("ChapterContent_body__O3qjr");
                 boolean lastI = i == scriptureNumbers.length - 1;
-                newSpan.text(scriptureNumbers[i] + (lastI ? "." : ", "));
+                newSpan.text(scriptureNumbers[i] + (lastI ? ".]" : ", "));
                 footnoteBody.appendChild(newSpan);
             }
         }

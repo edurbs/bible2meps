@@ -90,9 +90,9 @@ Step 4: Format the text
 
 Step 5 - Footnotes
 
-    1	😒Add a hard return at the end of each line with footnote text.
+    1	✅Add a hard return at the end of each line with footnote text.
 
-            🐞Clean footnote list at the book's end. (bug: apocalipse has the footnotes of entire Bible)
+            ✅Clean footnote list at the book's end. (bug: apocalipse has the footnotes of entire Bible)
 
     2	✅Replace each footnote reference symbol with an Asterisk (*) in the body text.
 
@@ -101,6 +101,7 @@ Step 5 - Footnotes
     4   ✅Place all footnote text at the end of the Bible book.
 
     5   ✅Preseve formatting of footnotes
+
         😒Vide must have [] because it's an additional text
 
 
