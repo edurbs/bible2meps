@@ -115,7 +115,6 @@ public class YouVersionFormatChapter {
                         || sibling.classNames().contains("ChapterContent_p__dVKHb"))
                         && !sibling.text().matches("[@$&].*")
                         && sibling.previousElementSibling().text().matches("[@$&].*")) {
-                    // Element startBlock = sibling.selectFirst("span.ChapterContent_verse__57FIw");
                     Elements siblingBlocks = sibling.select("span.ChapterContent_verse__57FIw");
                     for (Element siblingBlock : siblingBlocks) {
                         if (siblingBlock.hasText()) {
