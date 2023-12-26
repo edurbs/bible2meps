@@ -32,7 +32,11 @@ public class YouVersionFormatBookTest {
         BookName bookName = BookName._29_JOE;
         ProxyListServer proxyListServer = new ProxyScrape(new RestTemplateBuilder().build());
         youVersionFormatBook = new YouVersionFormatBook(proxyListServer);
-        html = youVersionFormatBook.execute(urls, bookName);
+        html = youVersionFormatBook.execute(urls, bookName, this::mockProgress);
+    }
+
+    void mockProgress() {
+
     }
 
     @Test

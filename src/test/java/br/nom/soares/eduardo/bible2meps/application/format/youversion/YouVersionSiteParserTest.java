@@ -46,9 +46,9 @@ public class YouVersionSiteParserTest {
         urls.add("https://example.com/url2");
 
         String expectedOutput = "formatted book";
-        when(youVersionFormatBook.execute(urls, BookName._01_GEN)).thenReturn(expectedOutput);
+        when(youVersionFormatBook.execute(urls, BookName._01_GEN, null)).thenReturn(expectedOutput);
 
-        assertEquals(expectedOutput, youVersionSiteParser.formatBook(urls, BookName._01_GEN));
+        assertEquals(expectedOutput, youVersionSiteParser.formatBook(urls, BookName._01_GEN, null));
     }
 
     @Test

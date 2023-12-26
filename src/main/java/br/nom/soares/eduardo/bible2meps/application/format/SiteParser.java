@@ -12,5 +12,5 @@ public interface SiteParser {
 
     public List<Translation> getBibles(String languageTag);
 
-    public String formatBook(List<String> urls, BookName bookName);
+    public String formatBook(List<String> urls, BookName bookName, Runnable progress);
 }

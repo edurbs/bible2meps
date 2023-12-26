@@ -10,7 +10,6 @@ import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -30,14 +29,14 @@ public class FormatBibleTest {
     @Mock
     private JavaZipFileImpl zipFileMock;
 
-    @InjectMocks
     private FormatBible formatBible;
 
     @Test
     void testExecute() {
-        var urls = List.of(new String("some url"));
+        var urls = List.of(new String("some url"), new String("some url"), new String("some url"));
         when(siteParserMock.getUrls(Mockito.any(), eq("id"), eq("abbreviation"))).thenReturn(urls);
-        when(siteParserMock.formatBook(eq(urls), Mockito.any())).thenReturn("some html");
+        when(siteParserMock.formatBook(eq(urls), Mockito.any(), Mockito.any()))
+                .thenReturn("some html");
         when(zipFileMock.create(any(), eq("abbreviation.zip"))).thenReturn(new byte[0]);
         bibleParamsMock = new BibleParams("id", "abbreviation", siteParserMock, zipFileMock);
 
@@ -46,6 +45,7 @@ public class FormatBibleTest {
 
         assertNotNull(zip);
         verify(siteParserMock, times(66)).getUrls(Mockito.any(), eq("id"), eq("abbreviation"));
-        verify(siteParserMock, times(66)).formatBook(eq(urls), Mockito.any());
+        verify(siteParserMock, times(66)).formatBook(eq(urls), Mockito.any(), Mockito.any());
+        verify(zipFileMock, times(1)).create(any(), eq("abbreviation.zip"));
     }
 }

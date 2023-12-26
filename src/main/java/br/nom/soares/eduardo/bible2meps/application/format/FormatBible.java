@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import br.nom.soares.eduardo.bible2meps.domain.Book;
 import br.nom.soares.eduardo.bible2meps.domain.enums.BookName;
+import lombok.Getter;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 
@@ -12,26 +13,41 @@ public class FormatBible {
     @NonNull
     private BibleParams params;
 
+    @Getter
+    private int progress;
+    private int totalBibleChapters;
+
     public record BibleParams(String bibleId, String abbreviation, SiteParser siteParser,
             ZipFile zipFile) {
     }
 
     public byte[] execute() {
         // TODO add thread
-        // TODO jsoup add random proxy
-        // TODO handle jsoup http 503
-        // TODO handle jsoup timeout
-        // TODO try to use localhost first, and if null, then use proxy
+        totalBibleChapters = getTotalBibleChapters();
 
         SiteParser siteParser = params.siteParser();
         String abbreviation = params.abbreviation();
         List<Book> books = new ArrayList<>();
         for (BookName bookName : BookName.values()) {
             List<String> urls = siteParser.getUrls(bookName, params.bibleId(), abbreviation);
-            String bookHtml = siteParser.formatBook(urls, bookName);
+            String bookHtml = siteParser.formatBook(urls, bookName, this::updateProgress);
             books.add(new Book(bookName, bookHtml));
         }
         return params.zipFile().create(books, abbreviation + ".zip");
+    }
+
+    private int getTotalBibleChapters() {
+        int totalChapters = 0;
+        for (BookName bookName : BookName.values()) {
+            totalChapters += bookName.getNumberOfChapters();
+        }
+        return totalChapters;
+    }
+
+    protected void updateProgress() {
+        progress++;
+        float percentDone = ((float) progress / (float) totalBibleChapters) * 100;
+        System.out.println("Progress: " + percentDone);
     }
 
 }

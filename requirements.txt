@@ -96,6 +96,7 @@ Step 5 - Footnotes
     4   ✅Place all footnote text at the end of the Bible book.
 
     5   ✅Preseve formatting of footnotes
+        Vide must have [] because it's an additional text
 
 
 

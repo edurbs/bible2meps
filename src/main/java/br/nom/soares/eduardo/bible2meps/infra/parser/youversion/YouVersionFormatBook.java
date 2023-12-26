@@ -28,13 +28,15 @@ public class YouVersionFormatBook {
 
     private List<YouVersionFormatChapter> youVersionFormatChapters = new ArrayList<>();
 
-    public String execute(List<String> urls, BookName bookName) {
+    public String execute(List<String> urls, BookName bookName, Runnable progress) {
         Elements bookChapters = new Elements();
         for (String url : urls) {
+            System.out.println(url);
             Element page = parsePage(url, bookName);
             if (page != null) {
                 bookChapters.add(page);
             }
+            progress.run();
         }
         if (bookChapters.size() == 0) {
             return "";

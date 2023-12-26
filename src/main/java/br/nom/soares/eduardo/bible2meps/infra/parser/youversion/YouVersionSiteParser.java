@@ -25,8 +25,8 @@ public class YouVersionSiteParser implements SiteParser {
     private YouVersionFormatBook youVersionFormatBook;
 
     @Override
-    public String formatBook(List<String> urls, BookName bookName) {
-        return youVersionFormatBook.execute(urls, bookName);
+    public String formatBook(List<String> urls, BookName bookName, Runnable progress) {
+        return youVersionFormatBook.execute(urls, bookName, progress);
     }
 
     @Override

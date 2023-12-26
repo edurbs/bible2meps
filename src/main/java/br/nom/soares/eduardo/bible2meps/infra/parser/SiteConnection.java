@@ -23,6 +23,7 @@ public class SiteConnection {
             if (document == null) {
                 proxyListServer.removeProxy(proxy);
                 proxy = proxyListServer.getRandomProxy();
+                System.out.println("Proxy: " + proxy.host() + ":" + proxy.port());
             }
         }
         return document;
