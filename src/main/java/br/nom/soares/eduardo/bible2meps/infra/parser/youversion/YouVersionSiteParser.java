@@ -14,12 +14,19 @@ import br.nom.soares.eduardo.bible2meps.domain.Language;
 import br.nom.soares.eduardo.bible2meps.domain.Translation;
 import br.nom.soares.eduardo.bible2meps.domain.enums.BookName;
 import br.nom.soares.eduardo.bible2meps.domain.enums.YouVersionBookName;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 
+@RequiredArgsConstructor
 public class YouVersionSiteParser implements SiteParser {
+
+
+    @NonNull
+    private YouVersionFormatBook youVersionFormatBook;
 
     @Override
     public String formatBook(List<String> urls, BookName bookName) {
-        return new YouVersionFormatBook().execute(urls, bookName);
+        return youVersionFormatBook.execute(urls, bookName);
     }
 
     @Override

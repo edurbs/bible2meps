@@ -1,30 +1,54 @@
 package br.nom.soares.eduardo.bible2meps.application.format.youversion;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.mockito.Mockito.when;
+import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.boot.web.client.RestTemplateBuilder;
 import br.nom.soares.eduardo.bible2meps.domain.Language;
 import br.nom.soares.eduardo.bible2meps.domain.Translation;
 import br.nom.soares.eduardo.bible2meps.domain.enums.BookName;
+import br.nom.soares.eduardo.bible2meps.infra.parser.youversion.YouVersionFormatBook;
 import br.nom.soares.eduardo.bible2meps.infra.parser.youversion.YouVersionSiteParser;
+import br.nom.soares.eduardo.bible2meps.infra.proxy.ProxyScrape;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
+@ExtendWith(MockitoExtension.class)
 public class YouVersionSiteParserTest {
-    private static YouVersionSiteParser youVersionSiteParser;
+
+    @Mock
+    private YouVersionFormatBook youVersionFormatBook;
+
+    @Mock
+    private ProxyScrape proxyScrapeMock;
+
+    @InjectMocks
+    private YouVersionSiteParser youVersionSiteParser;
 
     @BeforeAll
-    public static void setup() {
-        youVersionSiteParser = new YouVersionSiteParser();
+    void setup() {
+        proxyScrapeMock = new ProxyScrape(new RestTemplateBuilder().build());
+        youVersionFormatBook = new YouVersionFormatBook(proxyScrapeMock);
+        youVersionSiteParser = new YouVersionSiteParser(youVersionFormatBook);
     }
 
     @Test
     void testFormatBook() {
-        String html = youVersionSiteParser
-                .formatBook(List.of("https://www.bible.com/bible/277/LEV.1.TB"), BookName._03_LEV);
-        assertFalse(html.isBlank());
+        List<String> urls = new ArrayList<>();
+        urls.add("https://example.com/url1");
+        urls.add("https://example.com/url2");
+
+        String expectedOutput = "formatted book";
+        when(youVersionFormatBook.execute(urls, BookName._01_GEN)).thenReturn(expectedOutput);
+
+        assertEquals(expectedOutput, youVersionSiteParser.formatBook(urls, BookName._01_GEN));
     }
 
     @Test

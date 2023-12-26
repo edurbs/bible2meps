@@ -1,15 +1,25 @@
 package br.nom.soares.eduardo.bible2meps.infra.parser.youversion;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import br.nom.soares.eduardo.bible2meps.application.format.ProxyListServer;
 import br.nom.soares.eduardo.bible2meps.domain.enums.BookName;
+import br.nom.soares.eduardo.bible2meps.infra.parser.SiteConnection;
 import lombok.Getter;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 
+@RequiredArgsConstructor
 public class YouVersionFormatBook {
+
+    @NonNull
+    private ProxyListServer proxyListServer;
+
+    private SiteConnection siteConnection = new SiteConnection(proxyListServer);
 
     @Getter
     private Element book;
@@ -25,6 +35,9 @@ public class YouVersionFormatBook {
             if (page != null) {
                 bookChapters.add(page);
             }
+        }
+        if (bookChapters.size() == 0) {
+            return "";
         }
         book = Jsoup.parseBodyFragment(bookChapters.outerHtml());
         addBookNameAtSecondLine(bookNameFromPage);
@@ -47,21 +60,14 @@ public class YouVersionFormatBook {
     }
 
     private Element parsePage(String url, BookName bookName) {
-        Element page;
-        try {
-            page = Jsoup.connect(url).get();
-            var youVersionFormatChapter = new YouVersionFormatChapter(page, bookName);
-            youVersionFormatChapter.execute();
-            if (bookNameFromPage.isEmpty()) {
-                bookNameFromPage = getBookNameFromPage(page);
-            }
-            youVersionFormatChapters.add(youVersionFormatChapter);
-            return youVersionFormatChapter.getChapter();
-        } catch (IOException e) {
-            e.printStackTrace();
-            return null;
+        Document document = siteConnection.getDocument(url);
+        var youVersionFormatChapter = new YouVersionFormatChapter(document, bookName);
+        youVersionFormatChapter.execute();
+        if (bookNameFromPage.isEmpty()) {
+            bookNameFromPage = getBookNameFromPage(document);
         }
-
+        youVersionFormatChapters.add(youVersionFormatChapter);
+        return youVersionFormatChapter.getChapter();
     }
 
     private String getBookNameFromPage(Element page) {

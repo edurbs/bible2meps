@@ -14,6 +14,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import br.nom.soares.eduardo.bible2meps.application.format.FormatBible.BibleParams;
 import br.nom.soares.eduardo.bible2meps.infra.file.JavaZipFileImpl;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
@@ -24,7 +25,7 @@ public class FormatBibleTest {
     private SiteParser siteParserMock;
 
     @Mock
-    private BibleParams bibleParamsMock;
+    private FormatBible.BibleParams bibleParamsMock;
 
     @Mock
     private JavaZipFileImpl zipFileMock;
@@ -44,6 +45,7 @@ public class FormatBibleTest {
         var zip = formatBible.execute();
 
         assertNotNull(zip);
+        verify(siteParserMock, times(66)).getUrls(Mockito.any(), eq("id"), eq("abbreviation"));
         verify(siteParserMock, times(66)).formatBook(eq(urls), Mockito.any());
     }
 }

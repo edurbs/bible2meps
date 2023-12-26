@@ -11,8 +11,11 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
+import org.springframework.boot.web.client.RestTemplateBuilder;
+import br.nom.soares.eduardo.bible2meps.application.format.ProxyListServer;
 import br.nom.soares.eduardo.bible2meps.domain.enums.BookName;
 import br.nom.soares.eduardo.bible2meps.infra.parser.youversion.YouVersionFormatBook;
+import br.nom.soares.eduardo.bible2meps.infra.proxy.ProxyScrape;
 
 @TestInstance(Lifecycle.PER_CLASS)
 public class YouVersionFormatBookTest {
@@ -27,16 +30,23 @@ public class YouVersionFormatBookTest {
         urls.add("https://www.bible.com/bible/2645/JOL.2.A21");
         urls.add("https://www.bible.com/bible/2645/JOL.3.A21");
         BookName bookName = BookName._29_JOE;
-
-        youVersionFormatBook = new YouVersionFormatBook();
+        ProxyListServer proxyListServer = new ProxyScrape(new RestTemplateBuilder().build());
+        youVersionFormatBook = new YouVersionFormatBook(proxyListServer);
         html = youVersionFormatBook.execute(urls, bookName);
+    }
+
+    @Test
+    void shouldGetDocumentoWithoutHostProxy() {
+        String url = "www.google.com.br";
+        String host = "";
+        String ip = "8080";
+
     }
 
     @Test
     void shouldReturnAnHtmlBook() {
         assertFalse(html.isBlank());
     }
-
 
     @Test
     void shouldAddTheBookCodeAtFirstLine() {
