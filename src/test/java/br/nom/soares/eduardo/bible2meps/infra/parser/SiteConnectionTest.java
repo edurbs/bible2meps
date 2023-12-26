@@ -8,7 +8,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 import br.nom.soares.eduardo.bible2meps.infra.proxy.ProxyScrape;
@@ -52,11 +51,12 @@ public class SiteConnectionTest {
 
     @Test
     void shouldGetDocumentNotNullWhenProxyIsValid() {
-        // String mockResponse = "162.248.225.230:80";
-        // when(restTemplateMock.getForEntity(apiUrl, String.class))
-        // .thenReturn(ResponseEntity.ok(mockResponse));
-        // proxyScrapeMock = new ProxyScrape(restTemplateMock);
-        proxyScrapeMock = new ProxyScrape(new RestTemplateBuilder().build());
+        String mockResponse =
+                "47.88.3.19:8080\n127.0.0.1:0\n195.114.209.50:80\n189.240.60.168:9090";
+        when(restTemplateMock.getForEntity(apiUrl, String.class))
+                .thenReturn(ResponseEntity.ok(mockResponse));
+        proxyScrapeMock = new ProxyScrape(restTemplateMock);
+        // proxyScrapeMock = new ProxyScrape(new RestTemplateBuilder().build());
         siteConnection = new SiteConnection(proxyScrapeMock);
         assertNotNull(siteConnection.getDocument("https://www.google.com.br"));
     }

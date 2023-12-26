@@ -36,14 +36,6 @@ public class YouVersionFormatBookTest {
     }
 
     @Test
-    void shouldGetDocumentoWithoutHostProxy() {
-        String url = "www.google.com.br";
-        String host = "";
-        String ip = "8080";
-
-    }
-
-    @Test
     void shouldReturnAnHtmlBook() {
         assertFalse(html.isBlank());
     }

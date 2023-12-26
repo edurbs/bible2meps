@@ -27,7 +27,7 @@ public class ProxyScrape implements ProxyListServer {
 
     public void removeProxy(Proxy proxy) {
         proxies.remove(proxy);
-        System.out.println("removed proxy: " + proxy);
+        // TODO make tests
     }
 
     public void readApi() {
