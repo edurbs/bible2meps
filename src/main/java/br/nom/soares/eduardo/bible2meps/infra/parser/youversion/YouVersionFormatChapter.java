@@ -21,7 +21,7 @@ public class YouVersionFormatChapter {
     @NonNull
     private BookName bookName;
 
-    private List<Element> footnotesElementList = new ArrayList<>();
+    private List<Element> chapterFootnotes = new ArrayList<>();
     private Element chapter;
 
     public void execute() {
@@ -194,14 +194,13 @@ public class YouVersionFormatChapter {
         Element footnoteScriptureNumber = footnoteBody.selectFirst("span.ChapterContent_fr__0KsID");
         footnoteScriptureNumber.text("#" + footnoteScriptureNumber.text().replace(".", ":") + " ");
         handleMultipleScripturesFootnote(footnoteBody, footnoteScriptureNumber);
-        Element newFootnote = new Element("span").addClass("footnoteMeps");
+        Element newFootnote = new Element("div").addClass("footnoteMeps");
         newFootnote.appendChild(footnoteScriptureNumber);
         Elements children = footnoteBody.children();
         for (Element child : children) {
             newFootnote.appendChild(child);
         }
-        newFootnote.appendElement("br");
-        footnotesElementList.add(newFootnote);
+        chapterFootnotes.add(newFootnote);
     }
 
     private void handleMultipleScripturesFootnote(Element footnoteBody,

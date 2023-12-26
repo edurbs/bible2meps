@@ -38,7 +38,7 @@ public class YouVersionFormatChapterTestHelper {
             youVersionFormatChapter.execute();
             this.youVersionFormatChapter = youVersionFormatChapter;
             this.chapter = youVersionFormatChapter.getChapter();
-            this.footnotesElementList = youVersionFormatChapter.getFootnotesElementList();
+            this.footnotesElementList = youVersionFormatChapter.getChapterFootnotes();
             return this;
         } catch (IOException e) {
             e.printStackTrace();

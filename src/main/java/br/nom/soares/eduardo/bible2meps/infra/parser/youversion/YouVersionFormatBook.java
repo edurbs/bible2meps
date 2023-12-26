@@ -55,12 +55,14 @@ public class YouVersionFormatBook {
     }
 
     private void placeFootnotesAtEndOfBook() {
-        Elements footnotesElementList = new Elements();
+        Elements bookFootnotes = new Elements();
         for (YouVersionFormatChapter chapter : youVersionFormatChapters) {
-            footnotesElementList.addAll(chapter.getFootnotesElementList());
+            List<Element> chapterFootnotes = chapter.getChapterFootnotes();
+            bookFootnotes.addAll(chapterFootnotes);
+            chapterFootnotes.clear();
         }
         Element footnoteDiv = new Element("div").addClass("footnoteDiv");
-        for (Element footnote : footnotesElementList) {
+        for (Element footnote : bookFootnotes) {
             footnote.appendTo(footnoteDiv);
         }
         Element body = book.selectFirst("body");

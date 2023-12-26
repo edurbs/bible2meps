@@ -40,6 +40,13 @@ public class YouVersionFormatBookTest {
     }
 
     @Test
+    void shouldReturnTheCorrentNumberOfFoonotes() {
+        Element book = youVersionFormatBook.getBook();
+        Elements footnoteMeps = book.select("div.footnoteMeps");
+        assertEquals(5, footnoteMeps.size());
+    }
+
+    @Test
     void shouldAddMetaCharset() {
         assertTrue(html.contains("<meta charset=\"utf-8\">"));
     }
