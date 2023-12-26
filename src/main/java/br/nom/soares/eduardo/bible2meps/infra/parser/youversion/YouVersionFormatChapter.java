@@ -136,6 +136,9 @@ public class YouVersionFormatChapter {
         Elements scriptureNumbers = chapter.select("span.scriptureNumberBold");
         Element scriptureNumberOne = scriptureNumbers.get(0);
         Element chapterNumber = chapter.selectFirst("span.chapterNumber");
+        if (chapterNumber == null) {
+            return;
+        }
         String chapterNumberText = chapterNumber.wholeText();
         chapterNumber.remove();
         Element newChapterNumber =
@@ -152,6 +155,13 @@ public class YouVersionFormatChapter {
 
     private void addCurlyBracketsToChapterNumber() {
         Element chapterNumber = chapter.selectFirst("div.ChapterContent_label__R2PLt");
+        if (chapterNumber == null) {
+            return;
+        }
+        if(bookName.getNumberOfChapters() == 1) {
+            chapterNumber.text("");
+            return;
+        }
         String formatedChapterNumber = "{" + chapterNumber.text() + "} ";
         Element newChapterNumberElement =
                 new Element("span").addClass("chapterNumber").text(formatedChapterNumber);

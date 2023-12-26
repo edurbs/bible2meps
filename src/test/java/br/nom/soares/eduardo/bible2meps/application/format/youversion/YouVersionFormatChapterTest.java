@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -12,6 +13,7 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -71,8 +73,11 @@ class YouVersionFormatChapterTest {
                 .psalmWithSuperscription(true).totalScriptureNumbers(11).footnoteExpectedSize(0)
                 .psalmWithBookDivision(true).bookName(BookName._19_PSA).build().get());
         pages.put("OBA.1.A21", YouVersionFormatChapterTestHelper.builder()
-                .url("https://www.bible.com/bible/2645/OBA.1.A21").chapterNumber("1")
-                .totalScriptureNumbers(21).footnoteExpectedSize(1).footnoteExpectedPosition(0)
+                .url("https://www.bible.com/bible/2645/OBA.1.A21")
+                .chapterNumber("1")
+                .totalScriptureNumbers(21)
+                .footnoteExpectedSize(1)
+                .footnoteExpectedPosition(0)
                 .footnoteExpectedText(
                         "<span class=\"ChapterContent_fr__0KsID\">#1:15 </span><span class=\"ft\">Lit., </span><span class=\"ChapterContent_fqa__Xa2yn\">sobre a tua cabeça.</span><br>")
                 .bookName(BookName._31_OBA).build().get());
@@ -87,15 +92,34 @@ class YouVersionFormatChapterTest {
                 .totalScriptureNumbers(9)
                 .footnoteExpectedSize(0)
                 .bookName(BookName._19_PSA).build().get());
+
     }
 
     Stream<Arguments> provideTestData() {
         return pages.entrySet().stream().map(entry -> Arguments.of(entry.getValue()));
     }
 
-    @ParameterizedTest
-    @MethodSource("provideTestData")
-    void shouldAddScriptureOneForBooksWithJustOneChapter(YouVersionFormatChapterTestHelper page) {
+    @Test
+    void shouldRemoveChapterOneIfItIsTheOnlyOne() {
+        var page = YouVersionFormatChapterTestHelper.builder()
+                .url("https://www.bible.com/bible/2645/3JN.1.A21").chapterNumber("1")
+                .totalScriptureNumbers(15)
+                .footnoteExpectedSize(0)
+                .bookName(BookName._64_3JO).build().get();
+        int totalChapters = page.getBookName().getNumberOfChapters();
+        String chapterNumberExpected=page.getChapter().selectFirst("div.ChapterContent_label__R2PLt").text();
+        if (totalChapters == 1) {
+            assertFalse(chapterNumberExpected.contains("{1}"));
+        }
+    }
+
+    @Test
+    void shouldAddScriptureOneForBooksWithJustOneChapter() {
+        var page = YouVersionFormatChapterTestHelper.builder()
+                .url("https://www.bible.com/bible/2645/3JN.1.A21").chapterNumber("1")
+                .totalScriptureNumbers(15)
+                .footnoteExpectedSize(0)
+                .bookName(BookName._64_3JO).build().get();
         int totalChapters = page.getBookName().getNumberOfChapters();
         if (totalChapters == 1) {
             assertEquals(
@@ -158,6 +182,10 @@ class YouVersionFormatChapterTest {
     @ParameterizedTest
     @MethodSource("provideTestData")
     void shouldMoveChapterNumberNextToScriptureNumberOne(YouVersionFormatChapterTestHelper page) {
+        if (page.getBookName().getNumberOfChapters() == 1) {
+            assertTrue(true);
+            return;
+        }
         Element chapter = page.getChapter();
         Element scriptureNumberOne = chapter.select("span.scriptureNumberBold").get(0);
         String chapterNumber = chapter.selectFirst("span.chapterNumber").wholeText();
@@ -196,6 +224,10 @@ class YouVersionFormatChapterTest {
     @ParameterizedTest
     @MethodSource("provideTestData")
     void shouldAddCurlyBracketsToChapterNumber(YouVersionFormatChapterTestHelper page) {
+        if (page.getBookName().getNumberOfChapters() == 1) {
+            assertTrue(true);
+            return;
+        }
         String chapterNumberExpected = String.format("{%s} ", page.getChapterNumber());
         assertEquals(chapterNumberExpected,
                 page.getChapter().selectFirst("span.chapterNumber").wholeText());
@@ -239,6 +271,7 @@ class YouVersionFormatChapterTest {
     @ParameterizedTest
     @MethodSource("provideTestData")
     void shouldAddAmpersandToBookDivision(YouVersionFormatChapterTestHelper page) {
+        // actually it is a At Sign
         Element bookDivision = page.getChapter().selectFirst("div.ChapterContent_ms1__s_U5R");
         if (page.isPsalmWithBookDivision()) {
             assertEquals("@", bookDivision.text().substring(0, 1));

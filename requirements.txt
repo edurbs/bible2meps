@@ -39,8 +39,7 @@ Step 4: Format the text
 
         2.	✅ For books not containing chapters, add verse number one to the beginning of the first verse, if it has not been included in the pasted text.
 
-            ❌Note: add chapter number 1 if it does not exists. (wrong information!!!!🐞)
-            😒Note: remove chapter number 1 if it exists.
+            ✅remove chapter number 1 if it exists.
             😒add utf-8 at head
                 <head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"></meta></head>
 
