@@ -17,13 +17,13 @@ public class SiteConnection {
 
     public Document getDocument(String url) {
         Document document = null;
+        var proxy = new Proxy("", 0);
         while (document == null) {
-            Proxy proxy = proxyListServer.getRandomProxy();
             document = tryToGetDocument(url, proxy.host(), proxy.port());
             if (document == null) {
                 proxyListServer.removeProxy(proxy);
+                proxy = proxyListServer.getRandomProxy();
             }
-
         }
         return document;
     }
@@ -33,7 +33,7 @@ public class SiteConnection {
         if (port == 0 || host.isEmpty() || host == null) {
             connection = Jsoup.connect(url);
         } else {
-            connection = Jsoup.connect(url).proxy(host, port).timeout(3 * 1000);
+            connection = Jsoup.connect(url).proxy(host, port).timeout(5 * 1000);
         }
         try {
             return connection.get();

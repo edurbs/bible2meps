@@ -21,6 +21,7 @@ public class FormatBible {
         // TODO jsoup add random proxy
         // TODO handle jsoup http 503
         // TODO handle jsoup timeout
+        // TODO try to use localhost first, and if null, then use proxy
 
         SiteParser siteParser = params.siteParser();
         String abbreviation = params.abbreviation();

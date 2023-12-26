@@ -19,7 +19,7 @@ public class YouVersionFormatBook {
     @NonNull
     private ProxyListServer proxyListServer;
 
-    private SiteConnection siteConnection = new SiteConnection(proxyListServer);
+    private SiteConnection siteConnection;
 
     @Getter
     private Element book;
@@ -60,6 +60,7 @@ public class YouVersionFormatBook {
     }
 
     private Element parsePage(String url, BookName bookName) {
+        siteConnection = new SiteConnection(proxyListServer);
         Document document = siteConnection.getDocument(url);
         var youVersionFormatChapter = new YouVersionFormatChapter(document, bookName);
         youVersionFormatChapter.execute();

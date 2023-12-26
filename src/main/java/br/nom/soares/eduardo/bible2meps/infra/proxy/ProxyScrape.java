@@ -30,7 +30,6 @@ public class ProxyScrape implements ProxyListServer {
     }
 
     private void addProxyFromTxtFile() {
-        // read a file from resources and add each line as proxy to the proxies list
         try {
             InputStream inputStream =
                     ProxyScrape.class.getClassLoader().getResourceAsStream("proxyList.txt");
@@ -42,17 +41,15 @@ public class ProxyScrape implements ProxyListServer {
             }
             reader.close();
         } catch (IOException e) {
-            // handle exception
+            e.getMessage();
         }
-
     }
 
     public void removeProxy(Proxy proxy) {
         proxies.remove(proxy);
-        // TODO make tests
     }
 
-    public void readApi() {
+    private void readApi() {
         String apiUrl =
                 "https://api.proxyscrape.com/v2/?request=displayproxies&protocol=http&timeout=1000&country=all&ssl=all&anonymity=elite";
         String text = getText(apiUrl);
@@ -62,7 +59,6 @@ public class ProxyScrape implements ProxyListServer {
             Proxy proxy = new Proxy(parts[0], Integer.parseInt(parts[1]));
             proxies.add(proxy);
         }
-        proxies.add(new Proxy("", 0));
         addProxyFromTxtFile();
     }
 
