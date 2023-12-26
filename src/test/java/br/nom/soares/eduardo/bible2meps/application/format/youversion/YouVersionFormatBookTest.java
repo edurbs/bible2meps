@@ -40,6 +40,11 @@ public class YouVersionFormatBookTest {
     }
 
     @Test
+    void shouldAddMetaCharset() {
+        assertTrue(html.contains("<meta charset=\"utf-8\">"));
+    }
+
+    @Test
     void shouldReturnAnHtmlBook() {
         assertFalse(html.isBlank());
     }

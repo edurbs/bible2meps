@@ -5,6 +5,7 @@ import java.util.List;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
+import org.jsoup.parser.Tag;
 import org.jsoup.select.Elements;
 import br.nom.soares.eduardo.bible2meps.application.format.ProxyListServer;
 import br.nom.soares.eduardo.bible2meps.domain.enums.BookName;
@@ -22,7 +23,7 @@ public class YouVersionFormatBook {
     private SiteConnection siteConnection;
 
     @Getter
-    private Element book;
+    private Document book;
 
     private String bookNameFromPage = "";
 
@@ -38,14 +39,18 @@ public class YouVersionFormatBook {
             }
             progress.run();
         }
-        if (bookChapters.size() == 0) {
-            return "";
-        }
         book = Jsoup.parseBodyFragment(bookChapters.outerHtml());
         addBookNameAtSecondLine(bookNameFromPage);
         addBookCodeAtFirstLine(bookName);
         placeFootnotesAtEndOfBook();
         bookNameFromPage = "";
+        return generateFinalHtml(book);
+    }
+
+    private String generateFinalHtml(Document book) {
+        Element metaCharset = new Element(Tag.valueOf("meta"), "")
+                .attr("charset", "utf-8");
+        book.head().prependChild(metaCharset);
         return book.html();
     }
 
