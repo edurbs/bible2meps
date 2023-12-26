@@ -67,7 +67,7 @@ Step 4: Format the text
         2.	Add special formatting characters to the text, as explained in the document How to handle formatting.
 
             a.	✅ Place an Ampersand ➡️(&) at the start of a line with a book division.
-                🐞add headding of book division like (Salmos 1—41)
+                ✅add headding of book division like (Salmos 1—41)
 
             b.	✅ Place a Dollar sign ($) at the start of a line with a superscription.
 

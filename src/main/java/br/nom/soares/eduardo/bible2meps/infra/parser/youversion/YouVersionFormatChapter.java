@@ -65,16 +65,13 @@ public class YouVersionFormatChapter {
     }
 
     private void addAtSignToHeadings() {
-        Elements headings = chapter.select("div.ChapterContent_s1__bNNaW");
+        Elements headings = chapter.select("div.ChapterContent_s1__bNNaW, div.ChapterContent_mr__Vxus8");
         for (Element heading : headings) {
             heading.text("@" + heading.text());
         }
     }
 
     private void removeUnwantedHeaders() {
-        Elements headersWithPsalmDivision = chapter.select("div.ChapterContent_mr__Vxus8");
-        headersWithPsalmDivision.remove();
-
         Elements headersWithCrosReferences = chapter.select("div.ChapterContent_r___3KRx");
         headersWithCrosReferences.remove();
     }

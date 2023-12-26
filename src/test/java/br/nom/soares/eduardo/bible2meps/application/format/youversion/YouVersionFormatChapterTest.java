@@ -195,8 +195,8 @@ class YouVersionFormatChapterTest {
 
     @ParameterizedTest
     @MethodSource("provideTestData")
-    void shouldAddAtSighBeforeHeadings(YouVersionFormatChapterTestHelper page) {
-        Elements headings = page.getChapter().select("div.ChapterContent_s1__bNNaW");
+    void shouldAddAtSignBeforeHeadings(YouVersionFormatChapterTestHelper page) {
+        Elements headings = page.getChapter().select("div.ChapterContent_s1__bNNaW, div.ChapterContent_mr__Vxus8");
         for (Element heading : headings) {
             assertEquals("@", heading.text().substring(0, 1));
         }
@@ -238,7 +238,7 @@ class YouVersionFormatChapterTest {
     void shouldAddPlusSignAtNextLineThatFollowsHeading(YouVersionFormatChapterTestHelper page) {
         Element chapter = page.getChapter();
         Elements headings = chapter.select(
-                "div.ChapterContent_s1__bNNaW, div.ChapterContent_d__OHSpy, ChapterContent_ms1__s_U5R");
+                "div.ChapterContent_s1__bNNaW, div.ChapterContent_d__OHSpy, ChapterContent_ms1__s_U5R, ChapterContent_mr__Vxus8");
         for (Element heading : headings) {
             Elements nextSiblingElements = heading.nextElementSiblings();
             for (Element sibling : nextSiblingElements) {
@@ -285,8 +285,6 @@ class YouVersionFormatChapterTest {
     @MethodSource("provideTestData")
     void shouldRemoveUnwantedHeaders(YouVersionFormatChapterTestHelper page) {
         var chapter = page.getChapter();
-        Elements headersWithPsalmDivision = chapter.select("div.ChapterContent_mr__Vxus8");
-        assertEquals(0, headersWithPsalmDivision.size());
         Elements headersWithCrosReferences = chapter.select("div.ChapterContent_r___3KRx");
         assertEquals(0, headersWithCrosReferences.size());
     }
