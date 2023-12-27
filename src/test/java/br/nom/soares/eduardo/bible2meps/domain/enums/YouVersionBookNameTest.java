@@ -15,6 +15,6 @@ public class YouVersionBookNameTest {
     public void testFromString() {
         assertEquals(YouVersionBookName._GEN, YouVersionBookName.fromString("_01_GEN"));
         assertEquals(YouVersionBookName._JAS,
-                YouVersionBookName.fromString(BookName._59_JAM.name()));
+                YouVersionBookName.fromString(BookName.BOOK_59_JAM.name()));
     }
 }

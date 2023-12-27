@@ -40,7 +40,7 @@ class YouVersionFormatChapterTest {
                         "<span class=\"ChapterContent_fr__0KsID\">#1:26 </span><span class=\"ft\">Cf. a </span><span class=\"ChapterContent_fqa__Xa2yn\">Versão siríaca.</span>")
                 .footnoteExpectedPosition(1)
                 .footnoteExpectedSize(2)
-                .bookName(BookName._01_GEN)
+                .bookName(BookName.BOOK_01_GEN)
                 .build().get());
         pages.put("GEN.2.A21", YouVersionFormatChapterTestHelper.builder()
                 .url("https://www.bible.com/bible/2645/GEN.2.A21")
@@ -50,7 +50,7 @@ class YouVersionFormatChapterTest {
                         "<span class=\"ChapterContent_fr__0KsID\">#2:23 </span><span class=\"ft\">No hebr., há um jogo de palavras: <span class=\"ChapterContent_tl__at1as\">varoa</span> (</span><span class=\"ChapterContent_fk__ZzZlQ\">mulher</span><span class=\"ft\">) e <span class=\"ChapterContent_tl__at1as\">varão</span> (</span><span class=\"ChapterContent_fk__ZzZlQ\">homem</span><span class=\"ft\">).</span>")
                 .footnoteExpectedPosition(0)
                 .footnoteExpectedSize(1)
-                .bookName(BookName._01_GEN)
+                .bookName(BookName.BOOK_01_GEN)
                 .build().get());
         pages.put("PSA.1.A21", YouVersionFormatChapterTestHelper.builder()
                 .url("https://www.bible.com/bible/2645/PSA.1.A21")
@@ -62,7 +62,7 @@ class YouVersionFormatChapterTest {
                 .footnoteExpectedPosition(0)
                 .footnoteExpectedSize(1)
                 .psalmWithBookDivision(true)
-                .bookName(BookName._19_PSA).build().get());
+                .bookName(BookName.BOOK_19_PSA).build().get());
         pages.put("PSA.2.A21", YouVersionFormatChapterTestHelper.builder()
                 .url("https://www.bible.com/bible/2645/PSA.2.A21")
                 .chapterNumber("2")
@@ -72,7 +72,7 @@ class YouVersionFormatChapterTest {
                         "<span class=\"ChapterContent_fr__0KsID\">#2:12 </span><span class=\"ft\">I.e., </span><span class=\"ChapterContent_fqa__Xa2yn\">dai honra ao. </span><span class=\"ft\">Algumas versões trazem </span><span class=\"ChapterContent_fqa__Xa2yn\">Beijai os pés do.</span>")
                 .footnoteExpectedPosition(2)
                 .footnoteExpectedSize(3)
-                .bookName(BookName._19_PSA)
+                .bookName(BookName.BOOK_19_PSA)
                 .build().get());
         pages.put("PSA.4.A21", YouVersionFormatChapterTestHelper.builder()
                 .url("https://www.bible.com/bible/2645/PSA.4.A21")
@@ -84,7 +84,7 @@ class YouVersionFormatChapterTest {
                         "<span class=\"ChapterContent_fr__0KsID\">#4:5 </span><span class=\"ft\">I.e., </span><span class=\"ChapterContent_fqa__Xa2yn\">sacrifícios exigidos.</span>")
                 .footnoteExpectedPosition(0)
                 .footnoteExpectedSize(1)
-                .bookName(BookName._19_PSA)
+                .bookName(BookName.BOOK_19_PSA)
                 .build().get());
         pages.put("PSA.42.A21", YouVersionFormatChapterTestHelper.builder()
                 .url("https://www.bible.com/bible/2645/PSA.42.A21")
@@ -93,7 +93,7 @@ class YouVersionFormatChapterTest {
                 .totalScriptureNumbers(11)
                 .footnoteExpectedSize(0)
                 .psalmWithBookDivision(true)
-                .bookName(BookName._19_PSA)
+                .bookName(BookName.BOOK_19_PSA)
                 .build().get());
         pages.put("OBA.1.A21", YouVersionFormatChapterTestHelper.builder()
                 .url("https://www.bible.com/bible/2645/OBA.1.A21")
@@ -103,7 +103,7 @@ class YouVersionFormatChapterTest {
                 .footnoteExpectedPosition(0)
                 .footnoteExpectedText(
                         "<span class=\"ChapterContent_fr__0KsID\">#1:15 </span><span class=\"ft\">Lit., </span><span class=\"ChapterContent_fqa__Xa2yn\">sobre a tua cabeça.</span>")
-                .bookName(BookName._31_OBA).build().get());
+                .bookName(BookName.BOOK_31_OBA).build().get());
         pages.put("JOL.1.A21", YouVersionFormatChapterTestHelper.builder()
                 .url("https://www.bible.com/bible/2645/JOL.1.A21")
                 .chapterNumber("1")
@@ -112,21 +112,21 @@ class YouVersionFormatChapterTest {
                 .footnoteExpectedPosition(0)
                 .footnoteExpectedText(
                         "<span class=\"ChapterContent_fr__0KsID\">#1:2 </span><span class=\"ft\">Ou </span><span class=\"ChapterContent_fqa__Xa2yn\">líderes.</span>")
-                .bookName(BookName._29_JOE).build().get());
+                .bookName(BookName.BOOK_29_JOE).build().get());
         pages.put("PSA.98.A21", YouVersionFormatChapterTestHelper.builder()
                 .url("https://www.bible.com/bible/2645/PSA.98.A21")
                 .chapterNumber("98")
                 .totalScriptureNumbers(9)
                 .footnoteExpectedSize(0)
                 .psalmWithSuperscription(true)
-                .bookName(BookName._19_PSA).build().get());
+                .bookName(BookName.BOOK_19_PSA).build().get());
         pages.put("3JN.1.A21", YouVersionFormatChapterTestHelper.builder()
                 .url("https://www.bible.com/bible/2645/3JN.1.A21")
                 .chapterNumber("1")
                 .totalScriptureNumbers(14)
                 .footnoteExpectedSize(0)
                 .psalmWithSuperscription(false)
-                .bookName(BookName._64_3JO).build().get());
+                .bookName(BookName.BOOK_64_3JO).build().get());
     }
 
     Stream<Arguments> provideTestData() {

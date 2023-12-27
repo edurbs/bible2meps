@@ -46,9 +46,9 @@ public class YouVersionSiteParserTest {
         urls.add("https://example.com/url2");
 
         String expectedOutput = "formatted book";
-        when(youVersionFormatBook.execute(urls, BookName._01_GEN, null)).thenReturn(expectedOutput);
+        when(youVersionFormatBook.execute(urls, BookName.BOOK_01_GEN, null)).thenReturn(expectedOutput);
 
-        assertEquals(expectedOutput, youVersionSiteParser.formatBook(urls, BookName._01_GEN, null));
+        assertEquals(expectedOutput, youVersionSiteParser.formatBook(urls, BookName.BOOK_01_GEN, null));
     }
 
     @Test
@@ -69,7 +69,7 @@ public class YouVersionSiteParserTest {
     @Test
     void testGetUrls() {
         // https://www.bible.com/bible/277/LEV.1.TB
-        List<String> urls = youVersionSiteParser.getUrls(BookName._03_LEV, "277", "TB");
+        List<String> urls = youVersionSiteParser.getUrls(BookName.BOOK_03_LEV, "277", "TB");
         assertEquals(27, urls.size());
         assertEquals("https://www.bible.com/bible/277/LEV.1.TB", urls.get(0));
     }

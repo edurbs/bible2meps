@@ -7,8 +7,8 @@ public class BookNameTest {
 
     @Test
     void testGetMepsFormat() {
-        Assertions.assertEquals("01_GEN", BookName._01_GEN.getMepsFormat());
-        Assertions.assertEquals("40_MAT", BookName._40_MAT.getMepsFormat());
+        Assertions.assertEquals("01_GEN", BookName.BOOK_01_GEN.getMepsFormat());
+        Assertions.assertEquals("40_MAT", BookName.BOOK_40_MAT.getMepsFormat());
     }
 
     @Test
@@ -24,27 +24,27 @@ public class BookNameTest {
 
     @Test
     void testGetNumberOfScriptures() {
-        Assertions.assertEquals(176, BookName._19_PSA.getNumberOfScriptures(119));
+        Assertions.assertEquals(176, BookName.BOOK_19_PSA.getNumberOfScriptures(119));
     }
 
     @Test
     void testGetOrdinalValueByName() {
-        Assertions.assertEquals(40, BookName._01_GEN.getOrdinalValue("_40_MAT"));
+        Assertions.assertEquals(40, BookName.BOOK_01_GEN.getOrdinalValue("BOOK_40_MAT"));
     }
 
     @Test
     void testGetOrdinalValue() {
-        Assertions.assertEquals(40, BookName._40_MAT.getOrdinalValue());
+        Assertions.assertEquals(40, BookName.BOOK_40_MAT.getOrdinalValue());
     }
 
     @Test
     void testGetScriptures() {
-        Assertions.assertEquals(150, BookName._19_PSA.getScriptures().length);
+        Assertions.assertEquals(150, BookName.BOOK_19_PSA.getScriptures().length);
     }
 
     @Test
     void testValueOf() {
-        Assertions.assertEquals(BookName._19_PSA, BookName.valueOf("_19_PSA"));
+        Assertions.assertEquals(BookName.BOOK_19_PSA, BookName.valueOf("BOOK_19_PSA"));
     }
 
     @Test

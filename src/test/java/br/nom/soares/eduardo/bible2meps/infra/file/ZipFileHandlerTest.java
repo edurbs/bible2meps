@@ -24,8 +24,8 @@ public class ZipFileHandlerTest {
         List<Book> books = new ArrayList<>();
 
         // Add sample books to the list
-        var book1 = new Book(BookName._01_GEN, "some html");
-        var book2 = new Book(BookName._02_EXO, "some html");
+        var book1 = new Book(BookName.BOOK_01_GEN, "some html");
+        var book2 = new Book(BookName.BOOK_02_EXO, "some html");
         books.add(book1);
         books.add(book2);
 

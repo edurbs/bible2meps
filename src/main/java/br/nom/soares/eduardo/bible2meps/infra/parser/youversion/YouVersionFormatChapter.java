@@ -128,7 +128,7 @@ public class YouVersionFormatChapter {
     }
 
     private void addDolarSignToSuperscription() {
-        if (bookName != BookName._19_PSA) {
+        if (bookName != BookName.BOOK_19_PSA) {
             return;
         }
         int chapterNumber = getChapterNumber();

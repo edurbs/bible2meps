@@ -29,7 +29,7 @@ public class YouVersionFormatBookTest {
         urls.add("https://www.bible.com/bible/2645/JOL.1.A21");
         urls.add("https://www.bible.com/bible/2645/JOL.2.A21");
         urls.add("https://www.bible.com/bible/2645/JOL.3.A21");
-        BookName bookName = BookName._29_JOE;
+        BookName bookName = BookName.BOOK_29_JOE;
         ProxyListServer proxyListServer = new ProxyScrape(new RestTemplateBuilder().build());
         youVersionFormatBook = new YouVersionFormatBook(proxyListServer);
         html = youVersionFormatBook.execute(urls, bookName, this::mockProgress);
