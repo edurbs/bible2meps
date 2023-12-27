@@ -1,4 +1,4 @@
 -------------------------------------------------------------------------------
 Test set: br.nom.soares.eduardo.bible2meps.infra.proxy.ProxyScrapeTest
 -------------------------------------------------------------------------------
-Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.685 s -- in br.nom.soares.eduardo.bible2meps.infra.proxy.ProxyScrapeTest
+Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.630 s -- in br.nom.soares.eduardo.bible2meps.infra.proxy.ProxyScrapeTest
