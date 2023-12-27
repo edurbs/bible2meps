@@ -102,8 +102,10 @@ Step 5 - Footnotes
 
     5   ✅Preseve formatting of footnotes
 
-        😒Vide must have [] because it's an additional text
+        ✅Vide must have [] because it's an additional text
 
 
 
-
+BUGs
+🐞 3 João - verse 15 excedes verse limit
+🐞 16 98 102 143 must have superscription

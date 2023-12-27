@@ -96,6 +96,7 @@ public class YouVersionFormatChapter {
         if (thisChapterHasSupercription) {
             if (superscriptionElement == null || superscriptionElement.text().isEmpty()) {
                 superscriptionElement = new Element("div").addClass("ChapterContent_d__OHSpy");
+                chapter.prependChild(superscriptionElement);
             }
             superscriptionElement.text("$" + superscriptionElement.text());
         } else {

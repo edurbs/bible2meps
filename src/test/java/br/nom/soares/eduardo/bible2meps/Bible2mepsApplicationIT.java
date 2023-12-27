@@ -7,6 +7,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,6 +56,7 @@ public class Bible2mepsApplicationIT {
     }
 
     @Test
+    @Tag("integration")
     void shouldFormatA21Translation() throws IOException {
 
         RestTemplate restTemplate = new RestTemplateBuilder().build();

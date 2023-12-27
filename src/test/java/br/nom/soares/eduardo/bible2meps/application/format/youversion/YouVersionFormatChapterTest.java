@@ -50,6 +50,7 @@ class YouVersionFormatChapterTest {
         pages.put("PSA.1.A21", YouVersionFormatChapterTestHelper.builder()
                 .url("https://www.bible.com/bible/2645/PSA.1.A21").chapterNumber("1")
                 .totalScriptureNumbers(6)
+                .psalmWithSuperscription(false)
                 .footnoteExpectedText(
                         "<span class=\"ChapterContent_fr__0KsID\">#1:6 </span><span class=\"ft\">Lit., </span><span class=\"ChapterContent_fqa__Xa2yn\">conhece.</span>")
                 .footnoteExpectedPosition(0).footnoteExpectedSize(1).psalmWithBookDivision(true)
@@ -57,6 +58,7 @@ class YouVersionFormatChapterTest {
         pages.put("PSA.2.A21", YouVersionFormatChapterTestHelper.builder()
                 .url("https://www.bible.com/bible/2645/PSA.2.A21").chapterNumber("2")
                 .totalScriptureNumbers(12)
+                .psalmWithSuperscription(false)
                 .footnoteExpectedText(
                         "<span class=\"ChapterContent_fr__0KsID\">#2:12 </span><span class=\"ft\">I.e., </span><span class=\"ChapterContent_fqa__Xa2yn\">dai honra ao. </span><span class=\"ft\">Algumas versões trazem </span><span class=\"ChapterContent_fqa__Xa2yn\">Beijai os pés do.</span>")
                 .footnoteExpectedPosition(2).footnoteExpectedSize(3).bookName(BookName._19_PSA)
@@ -64,6 +66,7 @@ class YouVersionFormatChapterTest {
         pages.put("PSA.4.A21", YouVersionFormatChapterTestHelper.builder()
                 .url("https://www.bible.com/bible/2645/PSA.4.A21").chapterNumber("4")
                 .psalmWithSuperscription(true).totalScriptureNumbers(8)
+                .psalmWithSuperscription(true)
                 .footnoteExpectedText(
                         "<span class=\"ChapterContent_fr__0KsID\">#4:5 </span><span class=\"ft\">I.e., </span><span class=\"ChapterContent_fqa__Xa2yn\">sacrifícios exigidos.</span>")
                 .footnoteExpectedPosition(0).footnoteExpectedSize(1).bookName(BookName._19_PSA)
@@ -91,6 +94,7 @@ class YouVersionFormatChapterTest {
                 .url("https://www.bible.com/bible/2645/PSA.98.A21").chapterNumber("98")
                 .totalScriptureNumbers(9)
                 .footnoteExpectedSize(0)
+                .psalmWithSuperscription(true)
                 .bookName(BookName._19_PSA).build().get());
 
     }
@@ -261,8 +265,11 @@ class YouVersionFormatChapterTest {
     void shouldAddDolarSignToSuperscription(YouVersionFormatChapterTestHelper page) {
         Element superscription = page.getChapter().selectFirst("div.ChapterContent_d__OHSpy");
         if (page.isPsalmWithSuperscription()) {
-            assertEquals("$", superscription.text().substring(0, 1));
-            assertNotEquals("$@", superscription.text().substring(0, 2));
+            String superscriptionText = superscription.text();
+            assertEquals("$", superscriptionText.substring(0, 1));
+            if(superscriptionText.length() > 1) {
+                assertNotEquals("$$", superscriptionText.substring(0, 2));
+            }
         } else {
             assertNull(superscription);
         }
