@@ -40,37 +40,21 @@ public class YouVersionFormatChapter {
         addAmpersandToBookDivision();
         addPlusSignToHeadings();
         removeUnwantedSpaces();
-        removeExtraScriptures();
+        handleDivergentNumberOfScriptures();
         addStyles();
         page = Jsoup.parseBodyFragment(chapter.html());
     }
 
-    private void removeExtraScriptures() {
+    private void handleDivergentNumberOfScriptures() {
         int chapterNumber = getChapterNumber();
         int totalScriptureNumbers = bookName.getNumberOfScriptures(chapterNumber);
         Elements scriptureNumbersInPage = chapter.select(SPAN_SCRIPTURE_NUMBER_BOLD);
         int totalScriptureNumbersInPage = scriptureNumbersInPage.size();
         int diff = totalScriptureNumbersInPage - totalScriptureNumbers;
-        convertLastOnesToSuperscript(diff, scriptureNumbersInPage);
-    }
-
-    private void convertLastOnesToSuperscript(int diff, Elements listScriptures) {
         if (diff > 0) {
-            convertLastScripturesToSuperscript(listScriptures, diff);
+            convertLastScripturesToSuperscript(scriptureNumbersInPage, diff);
         } else if (diff < 0) {
-            addBlankScriptureAfter(listScriptures, diff);
-        }
-    }
-
-    private void addBlankScriptureAfter(Elements listScriptures, int diff) {
-        int scriptureNumber = listScriptures.size();
-        int stop = diff * -1;
-        Element last = listScriptures.last();
-        if(last != null) {
-            for (int i = 1; i <= stop; i++) {
-                Element blankScripture = new Element("b").text(scriptureNumber+" —— ");
-                last.after(blankScripture);
-            }
+            addBlankScriptureAfter(scriptureNumbersInPage, diff);
         }
     }
 
@@ -82,6 +66,25 @@ public class YouVersionFormatChapter {
             Element scriptureToConvert = listScriptures.get(i);
             Element superscriptElement = new Element("sup").text(scriptureToConvert.text());
             scriptureToConvert.replaceWith(superscriptElement);
+        }
+    }
+
+    private void addBlankScriptureAfter(Elements listScriptures, int diff) {
+        int scriptureNumber = listScriptures.size();
+        int stop = diff * -1;
+        Element last = listScriptures.last();
+        if(last != null) {
+            for (int i = 1; i <= stop; i++) {
+                Element space = new Element("span").text(" ");
+                Element blankScripture = new Element("span")
+                        .text(scriptureNumber + i + " ")
+                        .addClass("scriptureNumberBold")
+                        .attr("style", "font-weight: bold");
+                Element dash = new Element("span").text(" —— ");
+                last.parent().after(space);
+                last.parent().after(blankScripture);
+                last.parent().after(dash);
+            }
         }
     }
 

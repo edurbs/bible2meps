@@ -26,7 +26,7 @@ class YouVersionFormatChapterTest {
 
     @AfterAll
     void tearDown() {
-        String html = pages.get("PSA.1.A21").getChapter().outerHtml();
+        String html = pages.get("2CO.13.A21").getChapter().outerHtml();
         System.out.println(html);
     }
 
@@ -127,6 +127,13 @@ class YouVersionFormatChapterTest {
                 .footnoteExpectedSize(0)
                 .psalmWithSuperscription(false)
                 .bookName(BookName.BOOK_64_3JO).build().get());
+        pages.put("2CO.13.A21", YouVersionFormatChapterTestHelper.builder()
+                .url("https://www.bible.com/bible/2645/2CO.13.A21")
+                .chapterNumber("13")
+                .totalScriptureNumbers(14)
+                .footnoteExpectedSize(0)
+                .psalmWithSuperscription(false)
+                .bookName(BookName.BOOK_47_2CO).build().get());
     }
 
     Stream<Arguments> provideTestData() {
