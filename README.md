@@ -1,5 +1,5 @@
 # bible2meps
-Converts Bible.com scriptures to MEPS proprietary format
+Backend api that reads the Bible.com webpages and converts the scriptures to MEPS proprietary format
 ## Status
 - ![Coverage](.github/badges/jacoco.svg)
 - Under development :warning:
