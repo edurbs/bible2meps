@@ -15,6 +15,8 @@ import lombok.RequiredArgsConstructor;
 @Getter
 public class YouVersionFormatChapter {
 
+    private static final String SPAN_SCRIPTURE_NUMBER_BOLD = "span.scriptureNumberBold";
+
     @NonNull
     private Element page;
 
@@ -38,8 +40,49 @@ public class YouVersionFormatChapter {
         addAmpersandToBookDivision();
         addPlusSignToHeadings();
         removeUnwantedSpaces();
+        removeExtraScriptures();
         addStyles();
         page = Jsoup.parseBodyFragment(chapter.html());
+    }
+
+    private void removeExtraScriptures() {
+        int chapterNumber = getChapterNumber();
+        int totalScriptureNumbers = bookName.getNumberOfScriptures(chapterNumber);
+        Elements scriptureNumbersInPage = chapter.select(SPAN_SCRIPTURE_NUMBER_BOLD);
+        int totalScriptureNumbersInPage = scriptureNumbersInPage.size();
+        int diff = totalScriptureNumbersInPage - totalScriptureNumbers;
+        convertLastOnesToSuperscript(diff, scriptureNumbersInPage);
+    }
+
+    private void convertLastOnesToSuperscript(int diff, Elements listScriptures) {
+        if (diff > 0) {
+            convertLastScripturesToSuperscript(listScriptures, diff);
+        } else if (diff < 0) {
+            addBlankScriptureAfter(listScriptures, diff);
+        }
+    }
+
+    private void addBlankScriptureAfter(Elements listScriptures, int diff) {
+        int scriptureNumber = listScriptures.size();
+        int stop = diff * -1;
+        Element last = listScriptures.last();
+        if(last != null) {
+            for (int i = 1; i <= stop; i++) {
+                Element blankScripture = new Element("b").text(scriptureNumber+" —— ");
+                last.after(blankScripture);
+            }
+        }
+    }
+
+    private void convertLastScripturesToSuperscript(Elements listScriptures, int diff) {
+        int size = listScriptures.size();
+        int listEnd = size - 1;
+        int listStop = listEnd - diff;
+        for (int i = listEnd; i > listStop; i--) {
+            Element scriptureToConvert = listScriptures.get(i);
+            Element superscriptElement = new Element("sup").text(scriptureToConvert.text());
+            scriptureToConvert.replaceWith(superscriptElement);
+        }
     }
 
     private void addStyles() {
@@ -49,7 +92,7 @@ public class YouVersionFormatChapter {
         italics2.attr("style", "font-style: italic");
         Elements bolds1 = page.select("span.ChapterContent_fk__ZzZlQ");
         bolds1.attr("style", "font-weight: bold");
-        Elements bolds2 = page.select("span.scriptureNumberBold");
+        Elements bolds2 = page.select(SPAN_SCRIPTURE_NUMBER_BOLD);
         bolds2.attr("style", "font-weight: bold");
     }
 
@@ -88,9 +131,7 @@ public class YouVersionFormatChapter {
         if (bookName != BookName._19_PSA) {
             return;
         }
-        String stringChapterNumber = chapter.selectFirst("span.chapterNumber").wholeText();
-        stringChapterNumber = stringChapterNumber.replace("{", "").replace("}", "").trim();
-        int chapterNumber = Integer.parseInt(stringChapterNumber);
+        int chapterNumber = getChapterNumber();
         boolean thisChapterHasSupercription = Superscription.thisChapterHas(chapterNumber);
         Element superscriptionElement = chapter.selectFirst("div.ChapterContent_d__OHSpy");
         if (thisChapterHasSupercription) {
@@ -104,6 +145,19 @@ public class YouVersionFormatChapter {
                 superscriptionElement.remove();
             }
         }
+    }
+
+    private int getChapterNumber() {
+        Element elementChapterNumber = chapter.selectFirst("span.chapterNumber");
+        if (elementChapterNumber != null) {
+            String stringChapterNumber = elementChapterNumber.wholeText();
+            stringChapterNumber = stringChapterNumber.replace("{", "").replace("}", "").trim();
+            return Integer.parseInt(stringChapterNumber);
+        }
+        if(bookName.getNumberOfChapters() == 1) {
+            return 1;
+        }
+        return 0;
     }
 
     private void addPlusSignToHeadings() {
@@ -130,7 +184,7 @@ public class YouVersionFormatChapter {
     }
 
     private void moveChapterNumberNextToScriptureNumberOne() {
-        Elements scriptureNumbers = chapter.select("span.scriptureNumberBold");
+        Elements scriptureNumbers = chapter.select(SPAN_SCRIPTURE_NUMBER_BOLD);
         Element scriptureNumberOne = scriptureNumbers.get(0);
         Element chapterNumber = chapter.selectFirst("span.chapterNumber");
         if (chapterNumber == null) {
@@ -145,7 +199,7 @@ public class YouVersionFormatChapter {
 
     private void removeScriptureNumberOne() {
         if (bookName.getNumberOfChapters() > 1) {
-            Elements scriptureNumbers = chapter.select("span.scriptureNumberBold");
+            Elements scriptureNumbers = chapter.select(SPAN_SCRIPTURE_NUMBER_BOLD);
             scriptureNumbers.get(0).text("");
         }
     }

@@ -13,7 +13,6 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -34,47 +33,68 @@ class YouVersionFormatChapterTest {
     @BeforeAll
     void setup() {
         pages.put("GEN.1.A21", YouVersionFormatChapterTestHelper.builder()
-                .url("https://www.bible.com/bible/2645/GEN.1.A21").chapterNumber("1")
+                .url("https://www.bible.com/bible/2645/GEN.1.A21")
+                .chapterNumber("1")
                 .totalScriptureNumbers(31)
                 .footnoteExpectedText(
                         "<span class=\"ChapterContent_fr__0KsID\">#1:26 </span><span class=\"ft\">Cf. a </span><span class=\"ChapterContent_fqa__Xa2yn\">Versão siríaca.</span>")
-                .footnoteExpectedPosition(1).footnoteExpectedSize(2).bookName(BookName._01_GEN)
+                .footnoteExpectedPosition(1)
+                .footnoteExpectedSize(2)
+                .bookName(BookName._01_GEN)
                 .build().get());
         pages.put("GEN.2.A21", YouVersionFormatChapterTestHelper.builder()
-                .url("https://www.bible.com/bible/2645/GEN.2.A21").chapterNumber("2")
+                .url("https://www.bible.com/bible/2645/GEN.2.A21")
+                .chapterNumber("2")
                 .totalScriptureNumbers(25)
                 .footnoteExpectedText(
                         "<span class=\"ChapterContent_fr__0KsID\">#2:23 </span><span class=\"ft\">No hebr., há um jogo de palavras: <span class=\"ChapterContent_tl__at1as\">varoa</span> (</span><span class=\"ChapterContent_fk__ZzZlQ\">mulher</span><span class=\"ft\">) e <span class=\"ChapterContent_tl__at1as\">varão</span> (</span><span class=\"ChapterContent_fk__ZzZlQ\">homem</span><span class=\"ft\">).</span>")
-                .footnoteExpectedPosition(0).footnoteExpectedSize(1).bookName(BookName._01_GEN)
+                .footnoteExpectedPosition(0)
+                .footnoteExpectedSize(1)
+                .bookName(BookName._01_GEN)
                 .build().get());
         pages.put("PSA.1.A21", YouVersionFormatChapterTestHelper.builder()
-                .url("https://www.bible.com/bible/2645/PSA.1.A21").chapterNumber("1")
+                .url("https://www.bible.com/bible/2645/PSA.1.A21")
+                .chapterNumber("1")
                 .totalScriptureNumbers(6)
                 .psalmWithSuperscription(false)
                 .footnoteExpectedText(
                         "<span class=\"ChapterContent_fr__0KsID\">#1:6 </span><span class=\"ft\">Lit., </span><span class=\"ChapterContent_fqa__Xa2yn\">conhece.</span>")
-                .footnoteExpectedPosition(0).footnoteExpectedSize(1).psalmWithBookDivision(true)
+                .footnoteExpectedPosition(0)
+                .footnoteExpectedSize(1)
+                .psalmWithBookDivision(true)
                 .bookName(BookName._19_PSA).build().get());
         pages.put("PSA.2.A21", YouVersionFormatChapterTestHelper.builder()
-                .url("https://www.bible.com/bible/2645/PSA.2.A21").chapterNumber("2")
+                .url("https://www.bible.com/bible/2645/PSA.2.A21")
+                .chapterNumber("2")
                 .totalScriptureNumbers(12)
                 .psalmWithSuperscription(false)
                 .footnoteExpectedText(
                         "<span class=\"ChapterContent_fr__0KsID\">#2:12 </span><span class=\"ft\">I.e., </span><span class=\"ChapterContent_fqa__Xa2yn\">dai honra ao. </span><span class=\"ft\">Algumas versões trazem </span><span class=\"ChapterContent_fqa__Xa2yn\">Beijai os pés do.</span>")
-                .footnoteExpectedPosition(2).footnoteExpectedSize(3).bookName(BookName._19_PSA)
+                .footnoteExpectedPosition(2)
+                .footnoteExpectedSize(3)
+                .bookName(BookName._19_PSA)
                 .build().get());
         pages.put("PSA.4.A21", YouVersionFormatChapterTestHelper.builder()
-                .url("https://www.bible.com/bible/2645/PSA.4.A21").chapterNumber("4")
-                .psalmWithSuperscription(true).totalScriptureNumbers(8)
+                .url("https://www.bible.com/bible/2645/PSA.4.A21")
+                .chapterNumber("4")
+                .psalmWithSuperscription(true)
+                .totalScriptureNumbers(8)
                 .psalmWithSuperscription(true)
                 .footnoteExpectedText(
                         "<span class=\"ChapterContent_fr__0KsID\">#4:5 </span><span class=\"ft\">I.e., </span><span class=\"ChapterContent_fqa__Xa2yn\">sacrifícios exigidos.</span>")
-                .footnoteExpectedPosition(0).footnoteExpectedSize(1).bookName(BookName._19_PSA)
+                .footnoteExpectedPosition(0)
+                .footnoteExpectedSize(1)
+                .bookName(BookName._19_PSA)
                 .build().get());
         pages.put("PSA.42.A21", YouVersionFormatChapterTestHelper.builder()
-                .url("https://www.bible.com/bible/2645/PSA.42.A21").chapterNumber("42")
-                .psalmWithSuperscription(true).totalScriptureNumbers(11).footnoteExpectedSize(0)
-                .psalmWithBookDivision(true).bookName(BookName._19_PSA).build().get());
+                .url("https://www.bible.com/bible/2645/PSA.42.A21")
+                .chapterNumber("42")
+                .psalmWithSuperscription(true)
+                .totalScriptureNumbers(11)
+                .footnoteExpectedSize(0)
+                .psalmWithBookDivision(true)
+                .bookName(BookName._19_PSA)
+                .build().get());
         pages.put("OBA.1.A21", YouVersionFormatChapterTestHelper.builder()
                 .url("https://www.bible.com/bible/2645/OBA.1.A21")
                 .chapterNumber("1")
@@ -85,45 +105,53 @@ class YouVersionFormatChapterTest {
                         "<span class=\"ChapterContent_fr__0KsID\">#1:15 </span><span class=\"ft\">Lit., </span><span class=\"ChapterContent_fqa__Xa2yn\">sobre a tua cabeça.</span>")
                 .bookName(BookName._31_OBA).build().get());
         pages.put("JOL.1.A21", YouVersionFormatChapterTestHelper.builder()
-                .url("https://www.bible.com/bible/2645/JOL.1.A21").chapterNumber("1")
-                .totalScriptureNumbers(20).footnoteExpectedSize(3).footnoteExpectedPosition(0)
+                .url("https://www.bible.com/bible/2645/JOL.1.A21")
+                .chapterNumber("1")
+                .totalScriptureNumbers(20)
+                .footnoteExpectedSize(3)
+                .footnoteExpectedPosition(0)
                 .footnoteExpectedText(
                         "<span class=\"ChapterContent_fr__0KsID\">#1:2 </span><span class=\"ft\">Ou </span><span class=\"ChapterContent_fqa__Xa2yn\">líderes.</span>")
                 .bookName(BookName._29_JOE).build().get());
         pages.put("PSA.98.A21", YouVersionFormatChapterTestHelper.builder()
-                .url("https://www.bible.com/bible/2645/PSA.98.A21").chapterNumber("98")
+                .url("https://www.bible.com/bible/2645/PSA.98.A21")
+                .chapterNumber("98")
                 .totalScriptureNumbers(9)
                 .footnoteExpectedSize(0)
                 .psalmWithSuperscription(true)
                 .bookName(BookName._19_PSA).build().get());
-
+        pages.put("3JN.1.A21", YouVersionFormatChapterTestHelper.builder()
+                .url("https://www.bible.com/bible/2645/3JN.1.A21")
+                .chapterNumber("1")
+                .totalScriptureNumbers(14)
+                .footnoteExpectedSize(0)
+                .psalmWithSuperscription(false)
+                .bookName(BookName._64_3JO).build().get());
     }
 
     Stream<Arguments> provideTestData() {
         return pages.entrySet().stream().map(entry -> Arguments.of(entry.getValue()));
     }
 
-    @Test
-    void shouldRemoveChapterOneIfItIsTheOnlyOne() {
-        var page = YouVersionFormatChapterTestHelper.builder()
-                .url("https://www.bible.com/bible/2645/3JN.1.A21").chapterNumber("1")
-                .totalScriptureNumbers(15)
-                .footnoteExpectedSize(0)
-                .bookName(BookName._64_3JO).build().get();
+    @ParameterizedTest
+    @MethodSource("provideTestData")
+    void shouldHaveTheRightNumberOfScriptures(YouVersionFormatChapterTestHelper page) {
+        assertEquals(page.getTotalScriptureNumbers(), page.getChapter().select("span.scriptureNumberBold").size());
+    }
+
+    @ParameterizedTest
+    @MethodSource("provideTestData")
+    void shouldRemoveChapterOneIfItIsTheOnlyOne(YouVersionFormatChapterTestHelper page) {
         int totalChapters = page.getBookName().getNumberOfChapters();
-        String chapterNumberExpected=page.getChapter().selectFirst("div.ChapterContent_label__R2PLt").text();
         if (totalChapters == 1) {
+            String chapterNumberExpected=page.getChapter().selectFirst("div.ChapterContent_label__R2PLt").text();
             assertFalse(chapterNumberExpected.contains("{1}"));
         }
     }
 
-    @Test
-    void shouldAddScriptureOneForBooksWithJustOneChapter() {
-        var page = YouVersionFormatChapterTestHelper.builder()
-                .url("https://www.bible.com/bible/2645/3JN.1.A21").chapterNumber("1")
-                .totalScriptureNumbers(15)
-                .footnoteExpectedSize(0)
-                .bookName(BookName._64_3JO).build().get();
+    @ParameterizedTest
+    @MethodSource("provideTestData")
+    void shouldAddScriptureOneForBooksWithJustOneChapter(YouVersionFormatChapterTestHelper page) {
         int totalChapters = page.getBookName().getNumberOfChapters();
         if (totalChapters == 1) {
             assertEquals(
@@ -278,7 +306,7 @@ class YouVersionFormatChapterTest {
     @ParameterizedTest
     @MethodSource("provideTestData")
     void shouldAddAmpersandToBookDivision(YouVersionFormatChapterTestHelper page) {
-        // actually it is a At Sign
+        // actually it's an At Sign
         Element bookDivision = page.getChapter().selectFirst("div.ChapterContent_ms1__s_U5R");
         if (page.isPsalmWithBookDivision()) {
             assertEquals("@", bookDivision.text().substring(0, 1));

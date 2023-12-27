@@ -108,4 +108,4 @@ Step 5 - Footnotes
 
 BUGs
 🐞 3 João - verse 15 excedes verse limit
-🐞 16 98 102 143 must have superscription
+✅ 16 98 102 143 must have superscription
