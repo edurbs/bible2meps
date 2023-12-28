@@ -1,4 +1,0 @@
--------------------------------------------------------------------------------
-Test set: br.nom.soares.eduardo.bible2meps.application.format.youversion.YouVersionFormatChapterTest
--------------------------------------------------------------------------------
-Tests run: 209, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.862 s -- in br.nom.soares.eduardo.bible2meps.application.format.youversion.YouVersionFormatChapterTest
