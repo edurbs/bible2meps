@@ -1,0 +1,41 @@
+{
+    "java.compile.nullAnalysis.mode": "automatic",
+    "java.dependency.packagePresentation": "hierarchical",
+    "java.configuration.updateBuildConfiguration": "automatic",
+    "java.project.explorer.showNonJavaResources": true,
+    "sonarlint.connectedMode.project": {
+        "connectionId": "edurbs",
+        "projectKey": "edurbs_bible2meps"
+    },
+    "java.configuration.runtimes": [],
+    "java.checkstyle.version": "10.12.6",
+    "java.debug.settings.onBuildFailureProceed": true,
+    "editor.codeActionsOnSave": {
+        "source.fixAll": "explicit",
+        "source.organizeImports": "explicit"
+    },
+    "java.test.config": [
+        {
+            "name": "only unit tests",
+            "workingDirectory": "${workspaceFolder}",
+            "testKind": "junit",
+            "filters": {
+                "tags": [
+                    "!integration",
+                    "!e2e"
+                ]
+            }
+        },
+        {
+            "name": "integration tests",
+            "workingDirectory": "${workspaceFolder}",
+            "testKind": "junit",
+            "filters": {
+                "tags": [
+                    "integration",
+                    "e2e"
+                ]
+            }
+        },
+    ]
+}

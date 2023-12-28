@@ -4,7 +4,7 @@
       {
         "label": "Run Maven Build",
         "type": "shell",
-        "command": "mvn",  // Use the correct path to Maven in your WSL environment
+        "command": "mvn",
         "args": ["clean", "jacoco:prepare-agent", "install", "jacoco:report"],
         "group": {
           "kind": "build",
