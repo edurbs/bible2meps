@@ -13,6 +13,8 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -158,10 +160,30 @@ class YouVersionFormatChapterTest {
 
     @ParameterizedTest
     @MethodSource("provideTestData")
-    void shouldAddSoftEnterAtEachLineOfPoeticText(YouVersionFormatChapterTestHelper page) {
+    void shouldAddSoftReturnAtEachLineOfPoeticText(YouVersionFormatChapterTestHelper page) {
         Elements wrongPoeticlines = page.getChapter().select("div.ChapterContent_q__EZOnh");
         assertEquals(0, wrongPoeticlines.size());
     }
+
+    @Test
+    @DisplayName("When poetic text starts in the middle of a verse, add a soft return (Shift+Enter) to the end of the line preceding the poetic text.")
+    void shouldAddSoftReturnToEndOfLinePrecedingPoeticTextWhenPoeticTextStartsInMiddleOfVerse() {
+        var page = YouVersionFormatChapterTestHelper.builder()
+                .url("https://www.bible.com/bible/1840/GEN.2.NAA")
+                .chapterNumber("2")
+                .totalScriptureNumbers(25)
+                .footnoteExpectedSize(2)
+                .footnoteExpectedPosition(0)
+                .footnoteExpectedText(
+                        "<span class=\"ChapterContent_fr__0KsID\">#2:7 </span><span class=\"ft\">Em hebraico a palavra “terra” (<span class=\"ChapterContent_tl__at1as\">adama</span>) soa parecido com “homem” (<span class=\"ChapterContent_tl__at1as\">adam</span>)</span>")
+                .psalmWithSuperscription(false)
+                .bookName(BookName.BOOK_01_GEN)
+                .build().get();
+        Elements poeticText = page.getChapter().select("span.ChapterContent_q__EZOnh");
+        assertEquals(5, poeticText.size());
+
+    }
+
 
     @ParameterizedTest
     @MethodSource("provideTestData")

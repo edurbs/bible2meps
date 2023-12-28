@@ -39,22 +39,62 @@ public class YouVersionFormatChapter {
         addDolarSignToSuperscription();
         addAmpersandToBookDivision();
         addPlusSignToHeadings();
-        addSoftEnterAtEachLineOfPoeticText();
+        addSoftReturnAtEachLineOfPoeticText();
+        addSoftReturnToEndOfLinePrecedingPoeticTextWhenStartsInMiddleOfVerse();
         removeUnwantedSpaces();
         handleDivergentNumberOfScriptures();
         addStyles();
         page = Jsoup.parseBodyFragment(chapter.html());
     }
 
-    private void addSoftEnterAtEachLineOfPoeticText() {
-        Elements divPoeticlines = chapter.select("div.ChapterContent_q__EZOnh");
-        for (Element divPoeticline : divPoeticlines) {
-            Element span = new Element("span").addClass("ChapterContent_q__EZOnh");
-            divPoeticline.append("<br>");
-            span.html(divPoeticline.html());
-            divPoeticline.replaceWith(span);
+    private void addSoftReturnToEndOfLinePrecedingPoeticTextWhenStartsInMiddleOfVerse() {
+
+        Element firstPoeticText = chapter.selectFirst("span.ChapterContent_q__EZOnh");
+        if (firstPoeticText == null) {
+            return;
         }
-        Element lastDiv = divPoeticlines.last();
+        Element spanUsfm = firstPoeticText.selectFirst("span[data-usfm]");
+        String usfmValueOfFirstPoeticLine = spanUsfm.attr("data-usfm");
+        Elements previousElementSiblings = firstPoeticText.previousElementSiblings();
+        for (Element previousElementSibling : previousElementSiblings){
+            Elements previousUsfms = previousElementSibling.select("span[data-usfm]");
+            if(previousUsfms.isEmpty()) {
+                continue;
+            }
+            String previousUsfmValue = previousUsfms.last().attr("data-usfm");
+            if (!previousElementSibling.text().isBlank() && previousUsfmValue.equals(usfmValueOfFirstPoeticLine)) {
+                Element pointToAddTheParagraph = previousElementSibling.previousElementSibling();
+                Element paragraph = new Element("p");
+                pointToAddTheParagraph.after(paragraph);
+                Element span = new Element("span").addClass("ChapterContent_q__EZOnh");
+                span.html(previousElementSibling.html());
+                previousElementSibling.replaceWith(span);
+                Elements poeticsTexts = chapter.select("span.ChapterContent_q__EZOnh");
+                for (Element poeticText : poeticsTexts) {
+                    if (poeticText.equals(poeticsTexts.first())) {
+                        poeticText.append("<br>");
+                    }
+                    paragraph.appendChild(poeticText.clone());
+                    poeticText.remove();
+                }
+            }
+        }
+    }
+
+    private void addSoftReturnAtEachLineOfPoeticText() {
+        Elements divPoeticLines = chapter.select("div.ChapterContent_q__EZOnh");
+        Element lastDiv = divPoeticLines.last();
+        if(lastDiv == null) {
+            return;
+        }
+        for (Element divPoeticLine : divPoeticLines) {
+            Element span = new Element("span").addClass("ChapterContent_q__EZOnh");
+            if (!divPoeticLine.equals(lastDiv)) {
+                divPoeticLine.append("<br>");
+            }
+            span.html(divPoeticLine.html());
+            divPoeticLine.replaceWith(span);
+        }
     }
 
     private void handleDivergentNumberOfScriptures() {
@@ -130,7 +170,7 @@ public class YouVersionFormatChapter {
     }
 
     private void removeUnwantedHeaders() {
-        Elements headersWithCrosReferences = chapter.select("div.ChapterContent_r___3KRx");
+        Elements headersWithCrosReferences = chapter.select("div.ChapterContent_r___3KRx, div.ChapterContent_b__BLNfi");
         headersWithCrosReferences.remove();
     }
 

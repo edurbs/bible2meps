@@ -113,3 +113,4 @@ BUGs
 ✅ 3 João - verse 15 excedes verse limit
 ✅ 16 98 102 143 must have superscription
 ✅ fix NUM 16,17,29,30 and 2CO 13
+SENHOR style="font-variant: small-caps;"
