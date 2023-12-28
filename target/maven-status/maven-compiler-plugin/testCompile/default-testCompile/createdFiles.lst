@@ -1,0 +1,13 @@
+br/nom/soares/eduardo/bible2meps/application/format/youversion/YouVersionFormatBookTest.class
+br/nom/soares/eduardo/bible2meps/Bible2mepsApplicationIT.class
+br/nom/soares/eduardo/bible2meps/Bible2mepsApplicationTests.class
+br/nom/soares/eduardo/bible2meps/application/format/FormatBibleTest.class
+br/nom/soares/eduardo/bible2meps/domain/enums/BookNameTest.class
+br/nom/soares/eduardo/bible2meps/application/format/youversion/YouVersionFormatChapterTestHelper.class
+br/nom/soares/eduardo/bible2meps/application/format/youversion/YouVersionFormatChapterTest.class
+br/nom/soares/eduardo/bible2meps/infra/parser/SiteConnectionTest.class
+br/nom/soares/eduardo/bible2meps/infra/file/ZipFileHandlerTest.class
+br/nom/soares/eduardo/bible2meps/application/format/youversion/YouVersionFormatChapterTestHelper$YouVersionFormatChapterTestHelperBuilder.class
+br/nom/soares/eduardo/bible2meps/domain/enums/YouVersionBookNameTest.class
+br/nom/soares/eduardo/bible2meps/infra/proxy/ProxyScrapeTest.class
+br/nom/soares/eduardo/bible2meps/application/format/youversion/YouVersionSiteParserTest.class
