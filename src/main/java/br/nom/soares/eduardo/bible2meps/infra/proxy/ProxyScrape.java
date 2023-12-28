@@ -9,8 +9,8 @@ import java.util.List;
 import java.util.Random;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
-import br.nom.soares.eduardo.bible2meps.application.format.Proxy;
 import br.nom.soares.eduardo.bible2meps.application.format.ProxyListServer;
+import br.nom.soares.eduardo.bible2meps.domain.Proxy;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 

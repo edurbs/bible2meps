@@ -4,8 +4,8 @@ import java.io.IOException;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import br.nom.soares.eduardo.bible2meps.application.format.Proxy;
 import br.nom.soares.eduardo.bible2meps.application.format.ProxyListServer;
+import br.nom.soares.eduardo.bible2meps.domain.Proxy;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 
