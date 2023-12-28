@@ -39,10 +39,22 @@ public class YouVersionFormatChapter {
         addDolarSignToSuperscription();
         addAmpersandToBookDivision();
         addPlusSignToHeadings();
+        addSoftEnterAtEachLineOfPoeticText();
         removeUnwantedSpaces();
         handleDivergentNumberOfScriptures();
         addStyles();
         page = Jsoup.parseBodyFragment(chapter.html());
+    }
+
+    private void addSoftEnterAtEachLineOfPoeticText() {
+        Elements divPoeticlines = chapter.select("div.ChapterContent_q__EZOnh");
+        for (Element divPoeticline : divPoeticlines) {
+            Element span = new Element("span").addClass("ChapterContent_q__EZOnh");
+            divPoeticline.append("<br>");
+            span.html(divPoeticline.html());
+            divPoeticline.replaceWith(span);
+        }
+        Element lastDiv = divPoeticlines.last();
     }
 
     private void handleDivergentNumberOfScriptures() {

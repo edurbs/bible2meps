@@ -26,7 +26,7 @@ class YouVersionFormatChapterTest {
 
     @AfterAll
     void tearDown() {
-        String html = pages.get("2CO.13.A21").getChapter().outerHtml();
+        String html = pages.get("GEN.2.NAA").getChapter().outerHtml();
         System.out.println(html);
     }
 
@@ -134,10 +134,33 @@ class YouVersionFormatChapterTest {
                 .footnoteExpectedSize(0)
                 .psalmWithSuperscription(false)
                 .bookName(BookName.BOOK_47_2CO).build().get());
+        pages.put("GEN.1.NAA", YouVersionFormatChapterTestHelper.builder()
+                .url("https://www.bible.com/bible/1840/GEN.1.NAA")
+                .chapterNumber("1")
+                .totalScriptureNumbers(31)
+                .footnoteExpectedSize(0)
+                .psalmWithSuperscription(false)
+                .bookName(BookName.BOOK_01_GEN).build().get());
+        pages.put("GEN.2.NAA", YouVersionFormatChapterTestHelper.builder()
+                .url("https://www.bible.com/bible/1840/GEN.2.NAA")
+                .chapterNumber("2")
+                .totalScriptureNumbers(25)
+                .footnoteExpectedSize(2)
+                .footnoteExpectedPosition(0)
+                .footnoteExpectedText("<span class=\"ChapterContent_fr__0KsID\">#2:7 </span><span class=\"ft\">Em hebraico a palavra “terra” (<span class=\"ChapterContent_tl__at1as\">adama</span>) soa parecido com “homem” (<span class=\"ChapterContent_tl__at1as\">adam</span>)</span>")
+                .psalmWithSuperscription(false)
+                .bookName(BookName.BOOK_01_GEN).build().get());
     }
 
     Stream<Arguments> provideTestData() {
         return pages.entrySet().stream().map(entry -> Arguments.of(entry.getValue()));
+    }
+
+    @ParameterizedTest
+    @MethodSource("provideTestData")
+    void shouldAddSoftEnterAtEachLineOfPoeticText(YouVersionFormatChapterTestHelper page) {
+        Elements wrongPoeticlines = page.getChapter().select("div.ChapterContent_q__EZOnh");
+        assertEquals(0, wrongPoeticlines.size());
     }
 
     @ParameterizedTest
@@ -288,7 +311,7 @@ class YouVersionFormatChapterTest {
                         && sibling.previousElementSibling().text().matches("[@$&].*")) {
                     assertEquals("+", siblingText.substring(0, 1));
                     assertNotEquals("+ ", siblingText.substring(0, 2));
-                } else {
+                } else if(!siblingText.isBlank()) {
                     assertNotEquals("+", siblingText.substring(0, 1));
                 }
             }
