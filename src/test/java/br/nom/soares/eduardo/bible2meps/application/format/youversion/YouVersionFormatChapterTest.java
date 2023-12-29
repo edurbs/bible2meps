@@ -157,7 +157,7 @@ class YouVersionFormatChapterTest {
                 .chapterNumber("11")
                 .totalScriptureNumbers(30)
                 .psalmWithSuperscription(false)
-                .bookName(BookName.BOOK_01_GEN).build().get());
+                .bookName(BookName.BOOK_40_MAT).build().get());
     }
 
     Stream<Arguments> provideTestData() {
@@ -280,7 +280,11 @@ class YouVersionFormatChapterTest {
     @MethodSource("provideTestData")
     void shouldRemoveScriptureNumberOne(YouVersionFormatChapterTestHelper page) {
         Elements scriptureNumbers = page.getChapter().select("span.scriptureNumberBold");
-        assertEquals("", scriptureNumbers.get(0).wholeText());
+        if(page.getBookName().getNumberOfChapters() > 1) {
+            assertEquals("", scriptureNumbers.get(0).wholeText());
+        } else {
+            assertEquals("1 ", scriptureNumbers.get(0).wholeText());
+        }
     }
 
     @ParameterizedTest

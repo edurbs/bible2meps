@@ -45,10 +45,10 @@ public class YouVersionFormatChapter {
         addDolarSignToSuperscription();
         addAmpersandToBookDivision();
         addPlusSignToHeadings();
+        handleDivergentNumberOfScriptures();
         addSoftReturnAtEachLineOfPoeticText();
         addSoftReturnToEndOfLinePrecedingPoeticTextWhenStartsInMiddleOfVerse();
         removeUnwantedSpaces();
-        handleDivergentNumberOfScriptures();
         addStyles();
         page = Jsoup.parseBodyFragment(chapter.html());
     }
@@ -157,40 +157,6 @@ public class YouVersionFormatChapter {
                 }
             }
         }
-
-
-        /* Elements poeticsTexts =
-                chapter.select("span.ChapterContent_q__EZOnh, span.ChapterContent_q2__Z9WWu");
-        if(poeticsTexts.isEmpty()) {
-            return;
-        }
-        Element firstPoeticText = poeticsTexts.first();
-        Element spanUsfm = firstPoeticText.selectFirst("span[data-usfm]");
-        String usfmValueOfFirstPoeticLine = spanUsfm.attr("data-usfm");
-        Elements previousElementSiblings = firstPoeticText.previousElementSiblings();
-        for (Element previousElementSibling : previousElementSiblings){
-            Elements previousUsfms = previousElementSibling.select("span[data-usfm]");
-            if(previousUsfms.isEmpty()) {
-                continue;
-            }
-            String previousUsfmValue = previousUsfms.last().attr("data-usfm");
-            if (!previousElementSibling.text().isBlank() && previousUsfmValue.equals(usfmValueOfFirstPoeticLine)) {
-                Element pointToAddTheParagraph = previousElementSibling.previousElementSibling();
-                Element paragraph = new Element("p");
-                pointToAddTheParagraph.after(paragraph);
-                Element span = new Element("span").addClass("ChapterContent_q__EZOnh");
-                span.html(previousElementSibling.html());
-                previousElementSibling.replaceWith(span);
-                Elements newPoeticsTexts = chapter.select("span.ChapterContent_q__EZOnh");
-                for (Element poeticText : newPoeticsTexts) {
-                    if (poeticText.equals(newPoeticsTexts.first())) {
-                        poeticText.append("<br>");
-                    }
-                    paragraph.appendChild(poeticText.clone());
-                    poeticText.remove();
-                }
-            }
-        } */
     }
 
     private void addSoftReturnAtEachLineOfPoeticText() {
@@ -288,7 +254,7 @@ public class YouVersionFormatChapter {
 
     private void addAmpersandToBookDivision() {
         //Element bookDivision = chapter.selectFirst("div.ChapterContent_ms1__s_U5R");
-        Element bookDivision = chapter.selectFirst("div.ChapterContent_ms*");
+        Element bookDivision = chapter.selectFirst("div.ChapterContent_ms1__s_U5R, div.ChapterContent_ms__Z16Ky");
         if (bookDivision == null) {
             return;
         }
