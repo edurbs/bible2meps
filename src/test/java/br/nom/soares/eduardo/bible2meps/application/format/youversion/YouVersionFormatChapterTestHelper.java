@@ -15,11 +15,17 @@ import lombok.Getter;
 public class YouVersionFormatChapterTestHelper {
     private String url;
     private Element chapter;
-    private String chapterNumber;
+
+    @Builder.Default
+    private String chapterNumber = "";
+
     private YouVersionFormatChapter youVersionFormatChapter;
     private int totalScriptureNumbers;
     private List<Element> footnotesElementList;
-    private String footnoteExpectedText;
+
+    @Builder.Default
+    private String footnoteExpectedText = "";
+
     private int footnoteExpectedPosition;
     private int footnoteExpectedSize;
     private BookName bookName;
