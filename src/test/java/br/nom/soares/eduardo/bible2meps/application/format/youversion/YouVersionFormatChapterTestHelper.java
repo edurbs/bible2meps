@@ -23,6 +23,7 @@ public class YouVersionFormatChapterTestHelper {
     private int footnoteExpectedPosition;
     private int footnoteExpectedSize;
     private BookName bookName;
+    private int poeticTextSize;
 
     @Builder.Default
     private boolean psalmWithSuperscription = false;

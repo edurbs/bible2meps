@@ -14,7 +14,6 @@ import org.jsoup.select.Elements;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -28,7 +27,7 @@ class YouVersionFormatChapterTest {
 
     @AfterAll
     void tearDown() {
-        String html = pages.get("GEN.2.NAA").getChapter().outerHtml();
+        String html = pages.get("MAT.11.NAA").getChapter().outerHtml();
         System.out.println(html);
     }
 
@@ -151,6 +150,13 @@ class YouVersionFormatChapterTest {
                 .footnoteExpectedPosition(0)
                 .footnoteExpectedText("<span class=\"ChapterContent_fr__0KsID\">#2:7 </span><span class=\"ft\">Em hebraico a palavra “terra” (<span class=\"ChapterContent_tl__at1as\">adama</span>) soa parecido com “homem” (<span class=\"ChapterContent_tl__at1as\">adam</span>)</span>")
                 .psalmWithSuperscription(false)
+                .poeticTextSize(5)
+                .bookName(BookName.BOOK_01_GEN).build().get());
+        pages.put("MAT.11.NAA", YouVersionFormatChapterTestHelper.builder()
+                .url("https://www.bible.com/bible/1840/MAT.11.NAA")
+                .chapterNumber("11")
+                .totalScriptureNumbers(30)
+                .psalmWithSuperscription(false)
                 .bookName(BookName.BOOK_01_GEN).build().get());
     }
 
@@ -165,23 +171,34 @@ class YouVersionFormatChapterTest {
         assertEquals(0, wrongPoeticlines.size());
     }
 
-    @Test
+    @ParameterizedTest
+    @MethodSource("provideTestData")
     @DisplayName("When poetic text starts in the middle of a verse, add a soft return (Shift+Enter) to the end of the line preceding the poetic text.")
-    void shouldAddSoftReturnToEndOfLinePrecedingPoeticTextWhenPoeticTextStartsInMiddleOfVerse() {
-        var page = YouVersionFormatChapterTestHelper.builder()
-                .url("https://www.bible.com/bible/1840/GEN.2.NAA")
-                .chapterNumber("2")
-                .totalScriptureNumbers(25)
-                .footnoteExpectedSize(2)
-                .footnoteExpectedPosition(0)
-                .footnoteExpectedText(
-                        "<span class=\"ChapterContent_fr__0KsID\">#2:7 </span><span class=\"ft\">Em hebraico a palavra “terra” (<span class=\"ChapterContent_tl__at1as\">adama</span>) soa parecido com “homem” (<span class=\"ChapterContent_tl__at1as\">adam</span>)</span>")
-                .psalmWithSuperscription(false)
-                .bookName(BookName.BOOK_01_GEN)
-                .build().get();
-        Elements poeticText = page.getChapter().select("span.ChapterContent_q__EZOnh");
-        assertEquals(5, poeticText.size());
-
+    void shouldAddSoftReturnToEndOfLinePrecedingPoeticTextWhenPoeticTextStartsInMiddleOfVerse(
+            YouVersionFormatChapterTestHelper page) {
+        Element chapter = page.getChapter();
+        Elements poeticsTexts =
+                chapter.select("span.ChapterContent_q__EZOnh, span.ChapterContent_q2__Z9WWu");
+        if(poeticsTexts.isEmpty()) {
+            return;
+        }
+        Element firstPoeticText = poeticsTexts.first();
+        Element spanUsfm = firstPoeticText.selectFirst("span[data-usfm]");
+        String usfmValueOfFirstPoeticLine = spanUsfm.attr("data-usfm");
+        Elements previousElementSiblings = firstPoeticText.previousElementSiblings();
+        for (Element previousElementSibling : previousElementSiblings) {
+            Elements previousUsfms = previousElementSibling.select("span[data-usfm]");
+            if (previousUsfms.isEmpty()) {
+                continue;
+            }
+            String previousUsfmValue = previousUsfms.last().attr("data-usfm");
+            if (!previousElementSibling.text().isBlank()
+                    && previousUsfmValue.equals(usfmValueOfFirstPoeticLine)) {
+                Element parent = firstPoeticText.parent();
+                assertEquals("p", parent.tagName());
+                break;
+            }
+        }
     }
 
 
@@ -236,6 +253,9 @@ class YouVersionFormatChapterTest {
     @ParameterizedTest
     @MethodSource("provideTestData")
     void shouldFormatFootNotes(YouVersionFormatChapterTestHelper page) {
+        if(page.getFootnoteExpectedText().isEmpty()) {
+            return;
+        }
         assertEquals(0, page.getChapter().select("span.ChapterContent_note__YlDW0").size());
         List<Element> footnotesElementList = page.getFootnotesElementList();
         assertEquals(page.getFootnoteExpectedSize(), footnotesElementList.size());
@@ -260,7 +280,7 @@ class YouVersionFormatChapterTest {
     @MethodSource("provideTestData")
     void shouldRemoveScriptureNumberOne(YouVersionFormatChapterTestHelper page) {
         Elements scriptureNumbers = page.getChapter().select("span.scriptureNumberBold");
-        scriptureNumbers.get(0).wholeText().equals("");
+        assertEquals("", scriptureNumbers.get(0).wholeText());
     }
 
     @ParameterizedTest

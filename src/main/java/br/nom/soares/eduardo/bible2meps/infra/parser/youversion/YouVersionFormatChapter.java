@@ -48,11 +48,36 @@ public class YouVersionFormatChapter {
     }
 
     private void addSoftReturnToEndOfLinePrecedingPoeticTextWhenStartsInMiddleOfVerse() {
+        /*
+         * lê todos DIVISORES ChapterContent_b__BLNfi
+         *      se o próximo sibling for um texto poético
+         *          se o código usfm do do sibling não estiver vazio (texto poético começou no meio)
+         *              colocar num <P>:
+         *                  o sibling anterior ao DIVISOR e
+         *                  todos siblings até o próximo DIVISOR
+         *          senão (é porque o texto poético começa no começo do versículo)
+         *              colocar num <P>:
+         *                  todos sibling até o próximo DIVISOR
+         *              se for um versículo maior que 1
+         *                  colocar um sinal de = antes do versículo
+         *              se for o versículo 1
+         *                  se for o capitulo maior que 1
+         *                      colocar um sinal de = antes do capítulo
+         *                  se for o capítulo 1
+         *                      se o versículo 2 também for poético
+         *                          colocar um sinal de = antes do versículo 2
+         *
+         *
+         */
 
-        Element firstPoeticText = chapter.selectFirst("span.ChapterContent_q__EZOnh");
-        if (firstPoeticText == null) {
+
+
+        /* Elements poeticsTexts =
+                chapter.select("span.ChapterContent_q__EZOnh, span.ChapterContent_q2__Z9WWu");
+        if(poeticsTexts.isEmpty()) {
             return;
         }
+        Element firstPoeticText = poeticsTexts.first();
         Element spanUsfm = firstPoeticText.selectFirst("span[data-usfm]");
         String usfmValueOfFirstPoeticLine = spanUsfm.attr("data-usfm");
         Elements previousElementSiblings = firstPoeticText.previousElementSiblings();
@@ -69,16 +94,16 @@ public class YouVersionFormatChapter {
                 Element span = new Element("span").addClass("ChapterContent_q__EZOnh");
                 span.html(previousElementSibling.html());
                 previousElementSibling.replaceWith(span);
-                Elements poeticsTexts = chapter.select("span.ChapterContent_q__EZOnh");
-                for (Element poeticText : poeticsTexts) {
-                    if (poeticText.equals(poeticsTexts.first())) {
+                Elements newPoeticsTexts = chapter.select("span.ChapterContent_q__EZOnh");
+                for (Element poeticText : newPoeticsTexts) {
+                    if (poeticText.equals(newPoeticsTexts.first())) {
                         poeticText.append("<br>");
                     }
                     paragraph.appendChild(poeticText.clone());
                     poeticText.remove();
                 }
             }
-        }
+        } */
     }
 
     private void addSoftReturnAtEachLineOfPoeticText() {
