@@ -23,7 +23,6 @@ public class SiteConnection {
             if (document == null) {
                 proxyListServer.removeProxy(proxy);
                 proxy = proxyListServer.getRandomProxy();
-                System.out.println("Proxy: " + proxy.host() + ":" + proxy.port());
             }
         }
         return document;
@@ -31,7 +30,7 @@ public class SiteConnection {
 
     private Document tryToGetDocument(String url, String host, int port) {
         Connection connection;
-        if (port == 0 || host.isEmpty() || host == null) {
+        if (port == 0 || host.isEmpty()) {
             connection = Jsoup.connect(url);
         } else {
             connection = Jsoup.connect(url).proxy(host, port).timeout(5 * 1000);
