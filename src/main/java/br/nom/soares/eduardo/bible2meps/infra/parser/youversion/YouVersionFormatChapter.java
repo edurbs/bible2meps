@@ -79,19 +79,14 @@ public class YouVersionFormatChapter {
         boolean poeticTextStartedInTheBeginning = poeticTextStartedInTheBeginning(div);
         int childrenSize = paragraph.childrenSize();
         int chapterNumber = getChapterNumber();
-        if (childrenSize == 0 && poeticTextStartedInTheBeginning ) {
-            if (chapterNumber > 1 || scriptureNumber > 0) {
-                div.prependText("=");
-            }
-            // else if(chapterNumber == 1 && scriptureNumber == 1) { {
-            //     divPreviousWasPoetic = true;
-            // }
+        if (childrenSize == 0 && poeticTextStartedInTheBeginning && (chapterNumber > 1 || scriptureNumber > 0) ){
+            //div.prependText("=");
+            addSignBeforeScriptureNumber("=", div);
         }
         chapterNumber = getChapterNumber(paragraph);
-        //if(chapterNumber == 1 && scriptureNumber == 2 && divPreviousWasPoetic) {
         if(chapterNumber == 1 && scriptureNumber == 2 && poeticTextStartedInTheBeginning) {
-            div.prependText("=");
-            //divPreviousWasPoetic = false;
+            //div.prependText("=");
+            addSignBeforeScriptureNumber("=", div);
         }
         if(div.tagName().equals("div")){
             Element span = createPoeticSpan(div);
@@ -295,12 +290,7 @@ public class YouVersionFormatChapter {
         for (Element child : chapterChildren) {
             Element previous = child.previousElementSibling();
             if (shouldAddPlusSign(child, previous)) {
-                Elements verseBlocks = child.select("span.ChapterContent_verse__57FIw");
-                if (!verseBlocks.isEmpty()) {
-                    addPlusSignBeforeFirstChild(verseBlocks);
-                } else {
-                    child.prependText("+");
-                }
+                addSignBeforeScriptureNumber("+",child);
             }
         }
     }
@@ -311,15 +301,19 @@ public class YouVersionFormatChapter {
                 || (previous != null && previous.hasClass("paragraph") && !child.text().matches("[@$&=].*"));
     }
 
-    private void addPlusSignBeforeFirstChild(Elements verseBlocks) {
-        for (Element block : verseBlocks) {
-            if (block.hasText()) {
-                block.firstChild().before("+");
-                break;
+    private void addSignBeforeScriptureNumber(String sign, Element div) {
+        Elements verseBlocks = div.select("span.ChapterContent_verse__57FIw");
+        if (!verseBlocks.isEmpty()) {
+            for (Element block : verseBlocks) {
+                if (block.hasText()) {
+                    block.firstChild().before(sign);
+                    break;
+                }
             }
+        } else {
+            div.prependText(sign);
         }
     }
-
     private void moveChapterNumberNextToScriptureNumberOne() {
         Elements scriptureNumbers = chapter.select(SPAN_SCRIPTURE_NUMBER_BOLD);
         Element scriptureNumberOne = scriptureNumbers.get(0);
