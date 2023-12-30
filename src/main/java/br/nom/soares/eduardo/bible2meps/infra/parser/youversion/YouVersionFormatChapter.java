@@ -15,17 +15,19 @@ import lombok.RequiredArgsConstructor;
 @Getter
 public class YouVersionFormatChapter {
 
+    private static final String CHAPTER_NUMBER_NEW = "chapterNumber";
+    private static final String SPAN_CHAPTER_NUMBER_NEW = "span.chapterNumber";
+    private static final String CHAPTER_CONTENT_BODY = "ChapterContent_body__O3qjr";
+    private static final String SCRIPTURE_NUMBER_BOLD = "scriptureNumberBold";
     private static final String STYLE = "style";
     private static final String FONT_WEIGHT_BOLD = "font-weight: bold";
     private static final String PARAGRAPH = "paragraph";
-    private static final String COMMOM_CONTENT2 = "ChapterContent_m__3AINJ";
     private static final String SUPERSCRIPTION = "ChapterContent_d__OHSpy";
     private static final String DIVISOR_FOR_POETIC_TEXT = "ChapterContent_b__BLNfi";
     private static final String POETIC_TEXT_2 = "ChapterContent_q2__Z9WWu";
     private static final String POETIC_TEXT_1 = "ChapterContent_q__EZOnh";
     private static final String SPAN_SCRIPTURE_NUMBER_BOLD = "span.scriptureNumberBold";
-    private static final String COMMOM_CONTENT = "ChapterContent_p__dVKHb";
-    private static final String CHAPTER_NUMBER = "ChapterContent_label__R2PLt";
+    private static final String CHAPTER_NUMBER_ORIGINAL = "ChapterContent_label__R2PLt";
     private static final String HEADER = "ChapterContent_s1__bNNaW";
 
     @NonNull
@@ -81,7 +83,7 @@ public class YouVersionFormatChapter {
         int scriptureNumber = getFirstScriptureNumberFromDiv(div);
         boolean poeticTextStartedInTheBeginning = poeticTextStartedInTheBeginning(div);
         int childrenSize = paragraph.childrenSize();
-        int chapterNumber = getChapterNumber();
+        int chapterNumber = getChapterNumberOriginal();
         if (childrenSize == 0 && poeticTextStartedInTheBeginning && (chapterNumber > 1 || scriptureNumber > 0) ){
             addSignBeforeScriptureNumber("=", div);
         }
@@ -130,7 +132,7 @@ public class YouVersionFormatChapter {
     private boolean poeticTextStartedInTheBeginning(Element div) {
         Element usfmElement = div.selectFirst("span[data-usfm]");
         return (usfmElement != null && usfmElement.text().isBlank() && isPoetic(div))
-        || (isPoetic(div) && getFirstScriptureNumberFromDiv(div) == 1 && getChapterNumber() > 1);
+        || (isPoetic(div) && getFirstScriptureNumberFromDiv(div) == 1 && getChapterNumberOriginal() > 1);
     }
 
     private boolean poeticTextStartedInMiddle(Element div) {
@@ -163,7 +165,7 @@ public class YouVersionFormatChapter {
     }
 
     private void handleDivergentNumberOfScriptures() {
-        int chapterNumber = getChapterNumber();
+        int chapterNumber = getChapterNumberOriginal();
         int totalScriptureNumbers = bookName.getNumberOfScriptures(chapterNumber);
         Elements scriptureNumbersInPage = chapter.select(SPAN_SCRIPTURE_NUMBER_BOLD);
         int totalScriptureNumbersInPage = scriptureNumbersInPage.size();
@@ -196,7 +198,7 @@ public class YouVersionFormatChapter {
                 Element space = new Element("span").text(" ");
                 Element blankScripture = new Element("span")
                         .text(scriptureNumber + i + " ")
-                        .addClass("scriptureNumberBold")
+                        .addClass(SCRIPTURE_NUMBER_BOLD)
                         .attr(STYLE, FONT_WEIGHT_BOLD);
                 Element dash = new Element("span").text(" —— ");
                 newScripture.appendChild(space);
@@ -222,9 +224,9 @@ public class YouVersionFormatChapter {
 
     private void removeUnwantedSpaces() {
         Elements elements = chapter.getAllElements();
-        String _200A = "\u200A";
+        String utf200a = "\u200A";
         for (Element span : elements) {
-            span.html(span.html().replace(_200A, ""));
+            span.html(span.html().replace(utf200a, ""));
             if (!span.hasText()) {
                 span.remove();
             }
@@ -232,14 +234,14 @@ public class YouVersionFormatChapter {
     }
 
     private void addAtSignToHeadings() {
-        Elements headings = chapter.select("div.ChapterContent_s1__bNNaW, div.ChapterContent_mr__Vxus8");
+        Elements headings = chapter.select("div."+HEADER+", div.ChapterContent_mr__Vxus8");
         for (Element heading : headings) {
             heading.text("@" + heading.text());
         }
     }
 
     private void removeUnwantedHeaders() {
-        Elements unWantedHeaders = chapter.select("div.ChapterContent_r___3KRx, div.ChapterContent_b__BLNfi");
+        Elements unWantedHeaders = chapter.select("div.ChapterContent_r___3KRx, div."+DIVISOR_FOR_POETIC_TEXT);
         unWantedHeaders.remove();
     }
 
@@ -255,7 +257,7 @@ public class YouVersionFormatChapter {
         if (bookName != BookName.BOOK_19_PSA) {
             return;
         }
-        int chapterNumber = getChapterNumber();
+        int chapterNumber = getChapterNumberOriginal();
         boolean thisChapterHasSupercription = Superscription.thisChapterHas(chapterNumber);
         Element superscriptionElement = chapter.selectFirst("div."+SUPERSCRIPTION);
         if (thisChapterHasSupercription) {
@@ -272,7 +274,7 @@ public class YouVersionFormatChapter {
     }
 
     private int getChapterNumber(Element chapter) {
-        Element elementChapterNumber = chapter.selectFirst("span.chapterNumber");
+        Element elementChapterNumber = chapter.selectFirst(SPAN_CHAPTER_NUMBER_NEW);
         if (elementChapterNumber != null) {
             String stringChapterNumber = elementChapterNumber.wholeText();
             stringChapterNumber = stringChapterNumber.replace("{", "").replace("}", "").trim();
@@ -284,7 +286,7 @@ public class YouVersionFormatChapter {
         return 0;
     }
 
-    private int getChapterNumber() {
+    private int getChapterNumberOriginal() {
         return getChapterNumber(chapter);
     }
 
@@ -313,21 +315,19 @@ public class YouVersionFormatChapter {
                     break;
                 }
             }
-        } else {
-            div.prependText(sign);
         }
     }
     private void moveChapterNumberNextToScriptureNumberOne() {
         Elements scriptureNumbers = chapter.select(SPAN_SCRIPTURE_NUMBER_BOLD);
         Element scriptureNumberOne = scriptureNumbers.get(0);
-        Element chapterNumber = chapter.selectFirst("span.chapterNumber");
+        Element chapterNumber = chapter.selectFirst("span."+CHAPTER_NUMBER_NEW);
         if (chapterNumber == null) {
             return;
         }
         String chapterNumberText = chapterNumber.wholeText();
         chapterNumber.remove();
         Element newChapterNumber =
-                new Element("span").addClass("chapterNumber").text(chapterNumberText);
+                new Element("span").addClass(CHAPTER_NUMBER_NEW).text(chapterNumberText);
         scriptureNumberOne.before(newChapterNumber);
     }
 
@@ -339,22 +339,19 @@ public class YouVersionFormatChapter {
     }
 
     private void addCurlyBracketsToChapterNumber() {
-        Element chapterNumber = chapter.selectFirst("div."+CHAPTER_NUMBER);
-        if (chapterNumber == null) {
-            return;
-        }
+        Element chapterNumber = chapter.selectFirst("div."+CHAPTER_NUMBER_ORIGINAL);
         if(bookName.getNumberOfChapters() == 1) {
             chapterNumber.text("");
             return;
         }
         String formatedChapterNumber = "{" + chapterNumber.text() + "} ";
         Element newChapterNumberElement =
-                new Element("span").addClass("chapterNumber").text(formatedChapterNumber);
+                new Element("span").addClass(CHAPTER_NUMBER_NEW).text(formatedChapterNumber);
         chapterNumber.replaceWith(newChapterNumberElement);
     }
 
     private void formatScriptureNumberAsBold() {
-        Elements scriptureNumbers = chapter.select("span."+CHAPTER_NUMBER);
+        Elements scriptureNumbers = chapter.select("span."+CHAPTER_NUMBER_ORIGINAL);
         for (int i = 0; i < scriptureNumbers.size(); i++) {
             Element scriptureNumber = scriptureNumbers.get(i);
             String scriptureNumberText = scriptureNumber.text();
@@ -364,7 +361,7 @@ public class YouVersionFormatChapter {
                 startSpace = "";
             }
             Element scriptureNumberBoldWithSpace = new Element("span")
-                    .addClass("scriptureNumberBold").text(startSpace + scriptureNumberText + " ");
+                    .addClass(SCRIPTURE_NUMBER_BOLD).text(startSpace + scriptureNumberText + " ");
             scriptureNumber.replaceWith(scriptureNumberBoldWithSpace);
         }
     }
@@ -398,10 +395,10 @@ public class YouVersionFormatChapter {
             String[] scriptureNumbers = footnoteScriptureNumber.text().split(",");
             footnoteScriptureNumber.text(scriptureNumbers[0] + " ");
             Element newVideSpan =
-                    new Element("span").addClass("ChapterContent_body__O3qjr").text(" [Vide ");
+                    new Element("span").addClass(CHAPTER_CONTENT_BODY).text(" [Vide ");
             footnoteBody.appendChild(newVideSpan);
             for (int i = 1; i < scriptureNumbers.length; i++) {
-                Element newSpan = new Element("span").addClass("ChapterContent_body__O3qjr");
+                Element newSpan = new Element("span").addClass(CHAPTER_CONTENT_BODY);
                 boolean lastI = i == scriptureNumbers.length - 1;
                 newSpan.text(scriptureNumbers[i] + (lastI ? ".]" : ", "));
                 footnoteBody.appendChild(newSpan);

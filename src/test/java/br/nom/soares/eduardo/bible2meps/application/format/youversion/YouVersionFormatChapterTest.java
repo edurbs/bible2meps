@@ -17,11 +17,13 @@ import org.jsoup.select.Elements;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import br.nom.soares.eduardo.bible2meps.domain.enums.BookName;
+import br.nom.soares.eduardo.bible2meps.infra.parser.youversion.YouVersionFormatChapter;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class YouVersionFormatChapterTest {
@@ -445,5 +447,17 @@ class YouVersionFormatChapterTest {
         for (Element span : elements) {
             assertFalse(span.wholeText().contains("\u200A"));
         }
+    }
+
+    @Test
+    void testGetConstructorFields() {
+        Element mockPage = new Element("b");
+        YouVersionFormatChapter sut = new YouVersionFormatChapter(mockPage, BookName.BOOK_01_GEN);
+        Element expectedPage = new Element("b");
+
+        Element actualPage = sut.getPage();
+
+        assertEquals(expectedPage.html(), actualPage.html());
+        assertEquals(BookName.BOOK_01_GEN, sut.getBookName());
     }
 }

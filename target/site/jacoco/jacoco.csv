@@ -1,6 +1,6 @@
 GROUP,PACKAGE,CLASS,INSTRUCTION_MISSED,INSTRUCTION_COVERED,BRANCH_MISSED,BRANCH_COVERED,LINE_MISSED,LINE_COVERED,COMPLEXITY_MISSED,COMPLEXITY_COVERED,METHOD_MISSED,METHOD_COVERED
 bible2meps,br.nom.soares.eduardo.bible2meps.infra.proxy,ProxyScrape,9,141,2,6,2,29,2,8,0,6
-bible2meps,br.nom.soares.eduardo.bible2meps.infra.parser.youversion,YouVersionFormatChapter,99,961,43,87,31,243,34,60,2,27
+bible2meps,br.nom.soares.eduardo.bible2meps.infra.parser.youversion,YouVersionFormatChapter,17,1137,15,133,1,269,16,98,1,39
 bible2meps,br.nom.soares.eduardo.bible2meps.infra.parser.youversion,YouVersionFormatBook,7,275,3,13,1,62,3,14,0,9
 bible2meps,br.nom.soares.eduardo.bible2meps.infra.parser.youversion,YouVersionSiteParser,5,200,1,7,0,42,1,9,0,6
 bible2meps,br.nom.soares.eduardo.bible2meps.infra.parser,SiteConnection,40,39,7,5,7,10,5,4,0,3
