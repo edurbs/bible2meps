@@ -5,6 +5,9 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -26,9 +29,20 @@ class YouVersionFormatChapterTest {
     private Map<String, YouVersionFormatChapterTestHelper> pages = new HashMap<>();
 
     @AfterAll
-    void tearDown() {
-        String html = pages.get("MAT.11.NAA").getChapter().outerHtml();
-        System.out.println(html);
+    void tearDown() throws IOException {
+        StringBuilder html = new StringBuilder();
+        html.append("<html><head><meta chatset=\"utf-8\"></meta></head><body>");
+        html.append("<h1>Mateus 11</h1>"+pages.get("MAT.11.NAA").getChapter().outerHtml());
+        html.append("<h1>Isaías 1</h1>"+pages.get("ISA.1.NAA").getChapter().outerHtml());
+        html.append("<h1>Genesis 2</h1>"+pages.get("GEN.2.NAA").getChapter().outerHtml());
+        html.append("<h1>Provérbios 1</h1>" + pages.get("PRO.1.NAA").getChapter().outerHtml());
+        html.append("</body></html>");
+
+        Path tempFilePath = Path.of("/tmp/testtempfile.html");
+        // Write HTML content to the temporary file
+        FileWriter writer = new FileWriter(tempFilePath.toFile());
+        writer.write(html.toString());
+        writer.close();
     }
 
     @BeforeAll
@@ -158,6 +172,18 @@ class YouVersionFormatChapterTest {
                 .totalScriptureNumbers(30)
                 .psalmWithSuperscription(false)
                 .bookName(BookName.BOOK_40_MAT).build().get());
+        pages.put("PRO.1.NAA", YouVersionFormatChapterTestHelper.builder()
+                .url("https://www.bible.com/bible/1840/PRO.1.NAA")
+                .chapterNumber("1")
+                .totalScriptureNumbers(33)
+                .psalmWithSuperscription(false)
+                .bookName(BookName.BOOK_20_PRO).build().get());
+        pages.put("ISA.1.NAA", YouVersionFormatChapterTestHelper.builder()
+                .url("https://www.bible.com/bible/1840/ISA.1.NAA")
+                .chapterNumber("1")
+                .totalScriptureNumbers(31)
+                .psalmWithSuperscription(false)
+                .bookName(BookName.BOOK_23_ISA).build().get());
     }
 
     Stream<Arguments> provideTestData() {
@@ -396,8 +422,8 @@ class YouVersionFormatChapterTest {
     @MethodSource("provideTestData")
     void shouldRemoveUnwantedHeaders(YouVersionFormatChapterTestHelper page) {
         var chapter = page.getChapter();
-        Elements headersWithCrosReferences = chapter.select("div.ChapterContent_r___3KRx");
-        assertEquals(0, headersWithCrosReferences.size());
+        Elements unWantedHeaders = chapter.select("div.ChapterContent_r___3KRx, div.ChapterContent_b__BLNfi");
+        assertEquals(0, unWantedHeaders.size());
     }
 
     @ParameterizedTest

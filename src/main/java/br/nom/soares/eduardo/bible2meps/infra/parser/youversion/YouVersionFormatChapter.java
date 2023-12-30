@@ -2,6 +2,7 @@ package br.nom.soares.eduardo.bible2meps.infra.parser.youversion;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
@@ -15,13 +16,14 @@ import lombok.RequiredArgsConstructor;
 @Getter
 public class YouVersionFormatChapter {
 
+    private static final String SUPERSCRIPTION = "ChapterContent_d__OHSpy";
     private static final String DIVISOR_FOR_POETIC_TEXT = "ChapterContent_b__BLNfi";
-
     private static final String POETIC_TEXT_2 = "ChapterContent_q2__Z9WWu";
-
     private static final String POETIC_TEXT_1 = "ChapterContent_q__EZOnh";
-
     private static final String SPAN_SCRIPTURE_NUMBER_BOLD = "span.scriptureNumberBold";
+    private static final String COMMOM_CONTENT = "ChapterContent_p__dVKHb";
+    private static final String CHAPTER_NUMBER = "ChapterContent_label__R2PLt";
+    private static final String HEADER = "ChapterContent_s1__bNNaW";
 
     @NonNull
     private Element page;
@@ -55,12 +57,15 @@ public class YouVersionFormatChapter {
 
     private void addSoftReturnToEndOfLinePrecedingPoeticTextWhenStartsInMiddleOfVerse() {
         /*
-         * lê todos DIVISORES ChapterContent_b__BLNfi
-         *      se o próximo sibling for um texto poético
-         *          criar um <P> como primeiro filhosdo DIVISOR
-         *          colocar num <P> todos siblings até o próximo DIVISOR
-         *          se o código usfm do do sibling não estiver vazio (texto poético começou no meio)
-         *              colocar num <P> o sibling anterior ao DIVISOR
+         * cria novo parent
+         * lê todos div do capítulo
+         *
+         *      se o div [próximo sibling] for um texto poético
+         *          criar um <P> [como primeiro filho do DIVISOR]
+         *          mover para o <P> todos div que são poéticos até o próximo div que não é poético [siblings até o próximo DIVISOR]
+         *          adiciona o <P> antes do primeiro texto poético.
+         *          se o código usfm do primeiro div poético [sibling] não estiver vazio (texto poético começou no meio)
+         *              mover para o <P> o div [sibling] anterior ao div [DIVISOR] atual se ele existir
          *          senão (é porque o texto poético começa no começo do versículo)
          *              se for um versículo maior que 1
          *                  colocar um sinal de = antes do versículo
@@ -72,12 +77,110 @@ public class YouVersionFormatChapter {
          *                          colocar um sinal de = antes do versículo 2
          */
         // reads all divisors
-        Elements divisors = chapter.select("div." + DIVISOR_FOR_POETIC_TEXT);
-        if(divisors.isEmpty()) {
-            // psalm 1, 2, etc... (all verses are poetics)
-            return;
+        Element newPage = new Element("div").addClass("ChapterContent_chapter__uvbXo");
+        Element paragraph = new Element("div");
+        Elements divs = chapter.children();
+        for (Element div : divs) {
+            if (isPoetic(div) || poeticTextStartedInMiddle(div)) {
+                //addEqualsSign(div);
+                paragraph = formatPoeticDiv(newPage, paragraph, div);
+            } else {
+                newPage.appendChild(div.clone());
+            }
+            div.remove();
         }
-        for (Element divisor : divisors) {
+        chapter.remove();
+        this.page = newPage;
+        extractChapter();
+
+        //         Element firstDiv = div;
+        //         Element scriptureElement = firstDiv.selectFirst(SPAN_SCRIPTURE_NUMBER_BOLD);
+        //         int scriptureNumber = 0;
+        //         if(scriptureElement != null && !scriptureElement.text().isEmpty()) {
+        //             scriptureNumber = Integer.parseInt(scriptureElement.text());
+        //         }
+        //         Element paragraph = new Element("p");
+        //         //div.before(paragraph);
+        //         Node previousDiv = div.previousSibling();
+        //         Element usfm = div.selectFirst("span[data-usfm]");
+        //         String usfmText = "";
+        //         if(usfm!=null){
+        //             usfmText=usfm.text();
+        //         }
+        //         Node beforePreviousChild = null;
+        //         if(previousDiv != null){
+        //             beforePreviousChild = previousDiv.previousSibling();
+        //         }
+        //         if (!usfmText.isBlank()) { // poetic text started in the middle
+        //             paragraph.appendChild(previousDiv);
+        //         }
+        //         while(div.tagName().equals("span")
+        //                 && (div.hasClass(POETIC_TEXT_1) || div.hasClass(POETIC_TEXT_2))) {
+        //             Element child = divs.get(i);
+        //             paragraph.appendChild(child);
+        //             i++;
+        //             if(i >= divs.size()) {
+        //                 break;
+        //             }
+        //             div = divs.get(i);
+        //         }
+        //         if (usfmText.isEmpty()) { // poetical text started at the beginning
+        //             if (scriptureNumber == 0) {
+        //                 if (previousDiv != null) {
+        //                     previousDiv.after(paragraph);
+        //                 } else {
+        //                     chapter.prependChild(paragraph);
+        //                 }
+        //             }else if (scriptureNumber > 1) {
+        //                 if (beforePreviousChild != null) {
+        //                     beforePreviousChild.after(paragraph);
+        //                 } else if (previousDiv != null) {
+        //                     previousDiv.after(paragraph);
+        //                 } else {
+        //                     chapter.prependChild(paragraph);
+        //                 }
+        //                 if (scriptureElement != null) {
+        //                     scriptureElement.prependText("=");
+        //                 }
+        //             } else if (scriptureNumber == 1) {
+        //                 chapter.prependChild(paragraph);
+        //                 int chapterNumber = getChapterNumber();
+        //                 if (chapterNumber > 1) {
+        //                     Element chapterElement =
+        //                             chapter.selectFirst("span.ChapterContent_label__R2PLt");
+        //                     if (chapterElement == null) {
+        //                         continue;
+        //                     }
+        //                     chapterElement.prependText("=");
+        //                 } else if (chapterNumber == 1) {
+        //                     Elements scripturesElements =
+        //                             chapter.select(SPAN_SCRIPTURE_NUMBER_BOLD);
+        //                     for (Element scripture : scripturesElements) {
+        //                         // if the scripture is 2
+        //                         if (scripture.text().equals("2")){
+        //                             Element scriptureParent = scripture.parent();
+        //                             if (scriptureParent == null) {
+        //                                 continue;
+        //                             }
+        //                             Element scriptureGrandParent = scriptureParent.parent();
+        //                             // if the scripture 2 is poetic
+        //                             if(scriptureGrandParent != null
+        //                                 && ( scriptureGrandParent.hasClass(POETIC_TEXT_1)
+        //                                             || scriptureGrandParent
+        //                                                     .hasClass(POETIC_TEXT_2))) {
+        //                                 scripture.prependText("=");
+        //                             }
+        //                         }
+        //                     }
+        //                 }
+        //             }
+        //         }
+        //     }
+        // }
+
+
+        /*
+        for (Element divisor : divs) {
             Element nextSibling = divisor.nextElementSibling();
             if (nextSibling == null) {
                 continue;
@@ -156,7 +259,90 @@ public class YouVersionFormatChapter {
                     }
                 }
             }
+        }*/
+    }
+
+    private void addEqualsSign(Element div) {
+        /*
+         *              se for um versículo maior que 1
+         *                  colocar um sinal de = antes do versículo
+         *              se for o versículo 1
+         *                  se for o capitulo maior que 1
+         *                      colocar um sinal de = antes do capítulo
+         *                  se for o capítulo 1
+         *                      se o versículo 2 também for poético
+         *                          colocar um sinal de = antes do versículo 2
+         */
+        Element scriptureElement = div.selectFirst(SPAN_SCRIPTURE_NUMBER_BOLD);
+        if (scriptureElement != null) {
+            int scriptureNumber = Integer.parseInt(scriptureElement.text());
+            if (scriptureNumber > 1) {
+                scriptureElement.prependText("=");
+            } else if (scriptureNumber == 1) {
+                handlePoeticTextInScriptureOne();
+            }
         }
+    }
+
+    private void handlePoeticTextInScriptureOne() {
+        int chapterNumber = getChapterNumber();
+        if (chapterNumber > 1) {
+            Optional.of(chapter.selectFirst("span.ChapterContent_label__R2PLt")).get()
+                    .prependText("=");
+        } else if (chapterNumber == 1) {
+            chapter.select(SPAN_SCRIPTURE_NUMBER_BOLD).forEach(this::analyzeToAddEqualsSign);
+        }
+    }
+
+    private void analyzeToAddEqualsSign(Element scripture) {
+        if (scripture.text().equals("2")){
+            Element scriptureParent = Optional.of(scripture.parent()).get();
+            Element scriptureGrandParent = Optional.of(scriptureParent.parent()).get();
+            if( scriptureGrandParent.hasClass(POETIC_TEXT_1)
+                    || scriptureGrandParent.hasClass(POETIC_TEXT_2)) {
+                scripture.prependText("=");
+            }
+        }
+    }
+
+    private Element formatPoeticDiv(Element newPage, Element paragraph, Element div) {
+        if(isNotHeader(div) && div.tagName().equals("div")){
+            Element span = createPoeticSpan(div);
+            paragraph.appendChild(span.clone());
+        } else {
+            paragraph.appendChild(div.clone());
+        }
+        Element nextDiv = div.nextElementSibling();
+        if (nextDiv == null || !isPoetic(nextDiv)) {
+            newPage.appendChild(paragraph.clone());
+            paragraph = new Element("div");
+        }
+        return paragraph;
+    }
+
+    private Element createPoeticSpan(Element div) {
+        Element span = new Element("span").addClass(POETIC_TEXT_1);
+        div.append("<br>");
+        span.html(div.html());
+        return span;
+    }
+
+
+    private boolean isNotHeader(Element div) {
+        return !div.hasClass(HEADER) && !div.hasClass(SUPERSCRIPTION);
+    }
+
+    private boolean poeticTextStartedInMiddle(Element div) {
+        Element nextDiv = div.nextElementSibling();
+        if (nextDiv != null && isPoetic(nextDiv)) {
+            Element usfmElement = nextDiv.selectFirst("span[data-usfm]");
+            return usfmElement != null && !usfmElement.text().isBlank();
+        }
+        return false;
+    }
+
+    private boolean isPoetic(Element div) {
+        return (div.hasClass(POETIC_TEXT_1) || div.hasClass(POETIC_TEXT_2));
     }
 
     private void addSoftReturnAtEachLineOfPoeticText() {
@@ -227,6 +413,8 @@ public class YouVersionFormatChapter {
         bolds1.attr("style", "font-weight: bold");
         Elements bolds2 = page.select(SPAN_SCRIPTURE_NUMBER_BOLD);
         bolds2.attr("style", "font-weight: bold");
+        Elements smallCaps = page.select("span.ChapterContent_nd__ECPAf");
+        smallCaps.attr("style", "font-variant: small-caps");
     }
 
     private void removeUnwantedSpaces() {
@@ -248,8 +436,8 @@ public class YouVersionFormatChapter {
     }
 
     private void removeUnwantedHeaders() {
-        Elements headersWithCrosReferences = chapter.select("div.ChapterContent_r___3KRx");
-        headersWithCrosReferences.remove();
+        Elements unWantedHeaders = chapter.select("div.ChapterContent_r___3KRx, div.ChapterContent_b__BLNfi");
+        unWantedHeaders.remove();
     }
 
     private void addAmpersandToBookDivision() {
@@ -267,10 +455,10 @@ public class YouVersionFormatChapter {
         }
         int chapterNumber = getChapterNumber();
         boolean thisChapterHasSupercription = Superscription.thisChapterHas(chapterNumber);
-        Element superscriptionElement = chapter.selectFirst("div.ChapterContent_d__OHSpy");
+        Element superscriptionElement = chapter.selectFirst("div."+SUPERSCRIPTION);
         if (thisChapterHasSupercription) {
             if (superscriptionElement == null || superscriptionElement.text().isEmpty()) {
-                superscriptionElement = new Element("div").addClass("ChapterContent_d__OHSpy");
+                superscriptionElement = new Element("div").addClass(SUPERSCRIPTION);
                 chapter.prependChild(superscriptionElement);
             }
             superscriptionElement.text("$" + superscriptionElement.text());
@@ -339,7 +527,7 @@ public class YouVersionFormatChapter {
     }
 
     private void addCurlyBracketsToChapterNumber() {
-        Element chapterNumber = chapter.selectFirst("div.ChapterContent_label__R2PLt");
+        Element chapterNumber = chapter.selectFirst("div."+CHAPTER_NUMBER);
         if (chapterNumber == null) {
             return;
         }
@@ -354,7 +542,7 @@ public class YouVersionFormatChapter {
     }
 
     private void formatScriptureNumberAsBold() {
-        Elements scriptureNumbers = chapter.select("span.ChapterContent_label__R2PLt");
+        Elements scriptureNumbers = chapter.select("span."+CHAPTER_NUMBER);
         for (int i = 0; i < scriptureNumbers.size(); i++) {
             Element scriptureNumber = scriptureNumbers.get(i);
             String scriptureNumberText = scriptureNumber.text();
@@ -419,5 +607,7 @@ public class YouVersionFormatChapter {
     private void extractChapter() {
         chapter = page.selectFirst("div.ChapterContent_chapter__uvbXo");
     }
+
+
 
 }
