@@ -1,4 +1,4 @@
-package br.nom.soares.eduardo.bible2meps.application.format.youversion;
+package br.nom.soares.eduardo.bible2meps.infra.parser.youversion;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -14,11 +14,10 @@ import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import br.nom.soares.eduardo.bible2meps.application.format.ProxyListServer;
 import br.nom.soares.eduardo.bible2meps.domain.enums.BookName;
-import br.nom.soares.eduardo.bible2meps.infra.parser.youversion.YouVersionFormatBook;
 import br.nom.soares.eduardo.bible2meps.infra.proxy.ProxyScrape;
 
 @TestInstance(Lifecycle.PER_CLASS)
-public class YouVersionFormatBookTest {
+class YouVersionFormatBookTest {
 
     private YouVersionFormatBook youVersionFormatBook;
     String html = "";

@@ -1,4 +1,4 @@
-package br.nom.soares.eduardo.bible2meps.application.format.youversion;
+package br.nom.soares.eduardo.bible2meps.infra.parser.youversion;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
@@ -15,8 +15,6 @@ import org.springframework.boot.web.client.RestTemplateBuilder;
 import br.nom.soares.eduardo.bible2meps.domain.Language;
 import br.nom.soares.eduardo.bible2meps.domain.Translation;
 import br.nom.soares.eduardo.bible2meps.domain.enums.BookName;
-import br.nom.soares.eduardo.bible2meps.infra.parser.youversion.YouVersionFormatBook;
-import br.nom.soares.eduardo.bible2meps.infra.parser.youversion.YouVersionSiteParser;
 import br.nom.soares.eduardo.bible2meps.infra.proxy.ProxyScrape;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)

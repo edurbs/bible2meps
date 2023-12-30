@@ -1,4 +1,4 @@
-package br.nom.soares.eduardo.bible2meps.application.format.youversion;
+package br.nom.soares.eduardo.bible2meps.infra.parser.youversion;
 
 import java.io.IOException;
 import java.util.List;
@@ -6,7 +6,6 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import br.nom.soares.eduardo.bible2meps.domain.enums.BookName;
-import br.nom.soares.eduardo.bible2meps.infra.parser.youversion.YouVersionFormatChapter;
 import lombok.Builder;
 import lombok.Getter;
 

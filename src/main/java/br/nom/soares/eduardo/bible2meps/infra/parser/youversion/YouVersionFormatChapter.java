@@ -29,6 +29,7 @@ public class YouVersionFormatChapter {
     private static final String SPAN_SCRIPTURE_NUMBER_BOLD = "span.scriptureNumberBold";
     private static final String CHAPTER_NUMBER_ORIGINAL = "ChapterContent_label__R2PLt";
     private static final String HEADER = "ChapterContent_s1__bNNaW";
+    private static final String HEADER2 = "ChapterContent_s2__l6Ny0";
 
     @NonNull
     private Element page;
@@ -234,14 +235,14 @@ public class YouVersionFormatChapter {
     }
 
     private void addAtSignToHeadings() {
-        Elements headings = chapter.select("div."+HEADER+", div.ChapterContent_mr__Vxus8");
+        Elements headings = chapter.select("div."+HEADER+", div."+HEADER2+", div.ChapterContent_mr__Vxus8, div.ChapterContent_qa__RzTnv");
         for (Element heading : headings) {
             heading.text("@" + heading.text());
         }
     }
 
     private void removeUnwantedHeaders() {
-        Elements unWantedHeaders = chapter.select("div.ChapterContent_r___3KRx, div."+DIVISOR_FOR_POETIC_TEXT);
+        Elements unWantedHeaders = chapter.select("div.ChapterContent_r___3KRx, div.ChapterContent_sr__1YDDW, div."+DIVISOR_FOR_POETIC_TEXT);
         unWantedHeaders.remove();
     }
 

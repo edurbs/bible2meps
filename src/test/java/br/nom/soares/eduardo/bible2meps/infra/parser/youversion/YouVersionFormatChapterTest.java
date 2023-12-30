@@ -1,4 +1,4 @@
-package br.nom.soares.eduardo.bible2meps.application.format.youversion;
+package br.nom.soares.eduardo.bible2meps.infra.parser.youversion;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -23,7 +23,6 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import br.nom.soares.eduardo.bible2meps.domain.enums.BookName;
-import br.nom.soares.eduardo.bible2meps.infra.parser.youversion.YouVersionFormatChapter;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class YouVersionFormatChapterTest {
@@ -199,6 +198,12 @@ class YouVersionFormatChapterTest {
                 .totalScriptureNumbers(12)
                 .psalmWithSuperscription(false)
                 .bookName(BookName.BOOK_19_PSA).build().get());
+        pages.put("MAT.5.NAA", YouVersionFormatChapterTestHelper.builder()
+                .url("https://www.bible.com/bible/1840/MAT.5.NAA")
+                .chapterNumber("5")
+                .totalScriptureNumbers(48)
+                .psalmWithSuperscription(false)
+                .bookName(BookName.BOOK_40_MAT).build().get());
     }
 
     Stream<Arguments> provideTestData() {
@@ -345,7 +350,7 @@ class YouVersionFormatChapterTest {
     @ParameterizedTest
     @MethodSource("provideTestData")
     void shouldAddAtSignBeforeHeadings(YouVersionFormatChapterTestHelper page) {
-        Elements headings = page.getChapter().select("div.ChapterContent_s1__bNNaW, div.ChapterContent_mr__Vxus8");
+        Elements headings = page.getChapter().select("div.ChapterContent_s1__bNNaW, div.ChapterContent_s2__l6Ny0, div.ChapterContent_mr__Vxus8, div.ChapterContent_qa__RzTnv, div.ChapterContent_sr__1YDDW");
         for (Element heading : headings) {
             assertEquals("@", heading.text().substring(0, 1));
         }

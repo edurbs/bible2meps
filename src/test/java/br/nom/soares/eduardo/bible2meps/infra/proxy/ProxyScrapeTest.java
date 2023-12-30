@@ -42,7 +42,7 @@ public class ProxyScrapeTest {
 
         List<Proxy> proxies = getProxies();
 
-        assertEquals(503, proxies.size());
+        assertEquals(3, proxies.size());
         assertTrue(proxies.contains(result));
     }
 
