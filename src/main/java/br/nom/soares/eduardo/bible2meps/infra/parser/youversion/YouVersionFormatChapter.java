@@ -15,6 +15,9 @@ import lombok.RequiredArgsConstructor;
 @Getter
 public class YouVersionFormatChapter {
 
+    private static final String STYLE = "style";
+    private static final String FONT_WEIGHT_BOLD = "font-weight: bold";
+    private static final String PARAGRAPH = "paragraph";
     private static final String COMMOM_CONTENT2 = "ChapterContent_m__3AINJ";
     private static final String SUPERSCRIPTION = "ChapterContent_d__OHSpy";
     private static final String DIVISOR_FOR_POETIC_TEXT = "ChapterContent_b__BLNfi";
@@ -58,7 +61,7 @@ public class YouVersionFormatChapter {
 
     private void addSoftReturnToEndOfLinePrecedingPoeticTextWhenStartsInMiddleOfVerse() {
         Element newPage = new Element("div").addClass("ChapterContent_chapter__uvbXo");
-        Element paragraph = new Element("div").addClass("paragraph");
+        Element paragraph = new Element("div").addClass(PARAGRAPH);
         Elements divs = chapter.children();
         for (Element div : divs) {
             if (isNotHeader(div) && (isPoetic(div) || poeticTextStartedInMiddle(div))) {
@@ -80,12 +83,10 @@ public class YouVersionFormatChapter {
         int childrenSize = paragraph.childrenSize();
         int chapterNumber = getChapterNumber();
         if (childrenSize == 0 && poeticTextStartedInTheBeginning && (chapterNumber > 1 || scriptureNumber > 0) ){
-            //div.prependText("=");
             addSignBeforeScriptureNumber("=", div);
         }
         chapterNumber = getChapterNumber(paragraph);
         if(chapterNumber == 1 && scriptureNumber == 2 && poeticTextStartedInTheBeginning) {
-            //div.prependText("=");
             addSignBeforeScriptureNumber("=", div);
         }
         if(div.tagName().equals("div")){
@@ -97,7 +98,7 @@ public class YouVersionFormatChapter {
         Element nextDiv = div.nextElementSibling();
         if (nextDiv == null || !isPoetic(nextDiv)) {
             newPage.appendChild(paragraph.clone());
-            paragraph = new Element("div").addClass("paragraph");
+            paragraph = new Element("div").addClass(PARAGRAPH);
         }
         return paragraph;
     }
@@ -191,30 +192,32 @@ public class YouVersionFormatChapter {
         Element last = listScriptures.last();
         if(last != null) {
             for (int i = 1; i <= stop; i++) {
+                Element newScripture = new Element("span");
                 Element space = new Element("span").text(" ");
                 Element blankScripture = new Element("span")
                         .text(scriptureNumber + i + " ")
                         .addClass("scriptureNumberBold")
-                        .attr("style", "font-weight: bold");
+                        .attr(STYLE, FONT_WEIGHT_BOLD);
                 Element dash = new Element("span").text(" —— ");
-                last.parent().after(space);
-                last.parent().after(blankScripture);
-                last.parent().after(dash);
+                newScripture.appendChild(space);
+                newScripture.appendChild(blankScripture);
+                newScripture.appendChild(dash);
+                last.parent().after(newScripture);
             }
         }
     }
 
     private void addStyles() {
         Elements italics1 = page.select("span.ChapterContent_fqa__Xa2yn");
-        italics1.attr("style", "font-style: italic");
+        italics1.attr(STYLE, "font-style: italic");
         Elements italics2 = page.select("span.ChapterContent_tl__at1as");
-        italics2.attr("style", "font-style: italic");
+        italics2.attr(STYLE, "font-style: italic");
         Elements bolds1 = page.select("span.ChapterContent_fk__ZzZlQ");
-        bolds1.attr("style", "font-weight: bold");
+        bolds1.attr(STYLE, FONT_WEIGHT_BOLD);
         Elements bolds2 = page.select(SPAN_SCRIPTURE_NUMBER_BOLD);
-        bolds2.attr("style", "font-weight: bold");
+        bolds2.attr(STYLE, FONT_WEIGHT_BOLD);
         Elements smallCaps = page.select("span.ChapterContent_nd__ECPAf");
-        smallCaps.attr("style", "font-variant: small-caps");
+        smallCaps.attr(STYLE, "font-variant: small-caps");
     }
 
     private void removeUnwantedSpaces() {
@@ -298,7 +301,7 @@ public class YouVersionFormatChapter {
     private boolean shouldAddPlusSign(Element child, Element previous) {
         return (!child.text().matches("[@$&=].*")
                 && (previous != null && previous.text().matches("[@$&].*")))
-                || (previous != null && previous.hasClass("paragraph") && !child.text().matches("[@$&=].*"));
+                || (previous != null && previous.hasClass(PARAGRAPH) && !child.text().matches("[@$&=].*"));
     }
 
     private void addSignBeforeScriptureNumber(String sign, Element div) {
