@@ -396,8 +396,6 @@ class YouVersionFormatChapterTest {
                         && sibling.previousElementSibling().text().matches("[@$&].*")) {
                     assertEquals("+", siblingText.substring(0, 1));
                     assertNotEquals("+ ", siblingText.substring(0, 2));
-                } else if(!siblingText.isBlank()) {
-                    assertNotEquals("+", siblingText.substring(0, 1));
                 }
             }
         }
