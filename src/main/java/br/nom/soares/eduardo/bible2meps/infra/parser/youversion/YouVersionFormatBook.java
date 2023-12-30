@@ -2,6 +2,7 @@ package br.nom.soares.eduardo.bible2meps.infra.parser.youversion;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -26,13 +27,14 @@ public class YouVersionFormatBook {
     private Document book;
 
     private String bookNameFromPage = "";
+    private Logger logger = Logger.getLogger(getClass().getName());
 
     private List<YouVersionFormatChapter> youVersionFormatChapters = new ArrayList<>();
 
     public String execute(List<String> urls, BookName bookName, Runnable progress) {
         Elements bookChapters = new Elements();
         for (String url : urls) {
-            System.out.println(url);
+            logger.info(url);
             Element page = parsePage(url, bookName);
             if (page != null) {
                 bookChapters.add(page);
@@ -86,13 +88,13 @@ public class YouVersionFormatBook {
         if (bookNameElement == null) {
             return "";
         }
-        String bookNameFromPage = bookNameElement.text();
-        String[] nameSplited = bookNameFromPage.split(" ");
-        bookNameFromPage = "";
+        String bookName = bookNameElement.text();
+        String[] nameSplited = bookName.split(" ");
+        StringBuilder bookNameBuilder = new StringBuilder();
         for (int i = 0; i < nameSplited.length - 1; i++) {
-            bookNameFromPage += nameSplited[i] + " ";
+            bookNameBuilder.append(nameSplited[i] + " ");
         }
-        return bookNameFromPage.trim();
+        return bookNameBuilder.toString().trim();
     }
 
     private void addBookCodeAtFirstLine(BookName bookName) {
