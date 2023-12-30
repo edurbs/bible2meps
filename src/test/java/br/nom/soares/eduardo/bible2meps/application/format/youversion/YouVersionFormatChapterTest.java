@@ -31,7 +31,7 @@ class YouVersionFormatChapterTest {
     @AfterAll
     void tearDown() throws IOException {
         StringBuilder html = new StringBuilder();
-        // html.append("<html><head><meta chatset=\"utf-8\"></meta></head><body>");
+        html.append("<html><head><meta chatset=\"utf-8\"></meta></head><body>");
         html.append("<h1>Mateus 11</h1>"+pages.get("MAT.11.NAA").getChapter().outerHtml());
         html.append("<h1>Isaías 1</h1>"+pages.get("ISA.1.NAA").getChapter().outerHtml());
         html.append("<h1>Genesis 2</h1>"+pages.get("GEN.2.NAA").getChapter().outerHtml());

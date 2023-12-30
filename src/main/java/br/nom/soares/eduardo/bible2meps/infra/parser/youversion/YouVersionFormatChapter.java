@@ -15,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 @Getter
 public class YouVersionFormatChapter {
 
+    private static final String COMMOM_CONTENT2 = "ChapterContent_m__3AINJ";
     private static final String SUPERSCRIPTION = "ChapterContent_d__OHSpy";
     private static final String DIVISOR_FOR_POETIC_TEXT = "ChapterContent_b__BLNfi";
     private static final String POETIC_TEXT_2 = "ChapterContent_q2__Z9WWu";
@@ -46,10 +47,10 @@ public class YouVersionFormatChapter {
         addAtSignToHeadings();
         addDolarSignToSuperscription();
         addAmpersandToBookDivision();
-        addPlusSignToHeadings();
         handleDivergentNumberOfScriptures();
         addSoftReturnAtEachLineOfPoeticText();
         addSoftReturnToEndOfLinePrecedingPoeticTextWhenStartsInMiddleOfVerse();
+        addPlusSignToHeadings();
         removeUnwantedSpaces();
         addStyles();
         page = Jsoup.parseBodyFragment(chapter.html());
@@ -290,23 +291,30 @@ public class YouVersionFormatChapter {
     }
 
     private void addPlusSignToHeadings() {
-        Elements headings = chapter.select(
-                "div.ChapterContent_s1__bNNaW, div.ChapterContent_d__OHSpy, ChapterContent_ms1__s_U5R");
-        for (Element heading : headings) {
-            Elements nextSiblingElements = heading.nextElementSiblings();
-            for (Element sibling : nextSiblingElements) {
-                if ((sibling.classNames().contains("ChapterContent_m__3AINJ")
-                        || sibling.classNames().contains("ChapterContent_p__dVKHb"))
-                        && !sibling.text().matches("[@$&].*")
-                        && sibling.previousElementSibling().text().matches("[@$&].*")) {
-                    Elements siblingBlocks = sibling.select("span.ChapterContent_verse__57FIw");
-                    for (Element siblingBlock : siblingBlocks) {
-                        if (siblingBlock.hasText()) {
-                            siblingBlock.firstChild().before("+");
-                            break;
-                        }
-                    }
+        Elements chapterChildren = chapter.children();
+        for (Element child : chapterChildren) {
+            Element previous = child.previousElementSibling();
+            if (shouldAddPlusSign(child, previous)) {
+                Elements verseBlocks = child.select("span.ChapterContent_verse__57FIw");
+                if (!verseBlocks.isEmpty()) {
+                    addPlusSignBeforeFirstChild(verseBlocks);
+                } else {
+                    child.prependText("+");
                 }
+            }
+        }
+    }
+
+    private boolean shouldAddPlusSign(Element child, Element previous) {
+        return (!child.text().matches("[@$&=].*")
+                && (previous != null && previous.text().matches("[@$&].*")))
+                || (previous != null && previous.hasClass("paragraph") && !child.text().matches("[@$&=].*"));
+    }
+
+    private void addPlusSignBeforeFirstChild(Elements verseBlocks) {
+        for (Element block : verseBlocks) {
+            if (block.hasText()) {
+                block.firstChild().before("+");
                 break;
             }
         }
