@@ -46,7 +46,7 @@ public class Bible2mepsApplicationIT {
     }
 
     @Test
-    public void givenWac_whenServletContext_thenItProvidesGreetController() {
+    void givenWac_whenServletContext_thenItProvidesGreetController() {
         ServletContext servletContext = webApplicationContext.getServletContext();
 
         assertNotNull(servletContext);
@@ -57,15 +57,23 @@ public class Bible2mepsApplicationIT {
 
     @Test
     @Tag("integration")
+    void shouldFormatNAATranslation() throws IOException {
+        shouldFormatTranslation("1840", "NAA");
+    }
+
+    @Test
+    @Tag("integration")
     void shouldFormatA21Translation() throws IOException {
+        shouldFormatTranslation("2645", "A21");
+    }
+
+    void shouldFormatTranslation(String bibleId, String abbreviation) throws IOException {
 
         RestTemplate restTemplate = new RestTemplateBuilder().build();
         ProxyListServer proxyScrape = new ProxyScrape(restTemplate);
         YouVersionFormatBook youVersionFormatBook = new YouVersionFormatBook(proxyScrape);
         SiteParser youVersionSiteParser = new YouVersionSiteParser(youVersionFormatBook);
         ZipFile zipFileHandler = new JavaZipFileImpl();
-        String bibleId = "2645";
-        String abbreviation = "A21";
         BibleParams bibleParams =
                 new BibleParams(bibleId, abbreviation, youVersionSiteParser, zipFileHandler);
         FormatBible formatBible = new FormatBible(bibleParams);

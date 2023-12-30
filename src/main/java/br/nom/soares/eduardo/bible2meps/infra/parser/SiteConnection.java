@@ -1,6 +1,5 @@
 package br.nom.soares.eduardo.bible2meps.infra.parser;
 
-import java.io.IOException;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -23,6 +22,7 @@ public class SiteConnection {
             if (document == null) {
                 proxyListServer.removeProxy(proxy);
                 proxy = proxyListServer.getRandomProxy();
+                System.out.println("Trying proxy: " + proxy.host()+":"+proxy.port());
             }
         }
         return document;
@@ -37,9 +37,9 @@ public class SiteConnection {
         }
         try {
             return connection.get();
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.getMessage();
+            return null;
         }
-        return null;
     }
 }

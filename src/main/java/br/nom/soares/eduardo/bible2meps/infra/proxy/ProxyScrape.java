@@ -17,6 +17,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class ProxyScrape implements ProxyListServer {
     private List<Proxy> proxies = new ArrayList<>();
+    private Random random = new Random();
 
     @NonNull
     private RestTemplate restTemplate;
@@ -25,7 +26,7 @@ public class ProxyScrape implements ProxyListServer {
         if (proxies.isEmpty()) {
             readApi();
         }
-        int index = new Random().nextInt(proxies.size());
+        int index = this.random.nextInt(proxies.size());
         return proxies.get(index);
     }
 
@@ -53,13 +54,15 @@ public class ProxyScrape implements ProxyListServer {
         String apiUrl =
                 "https://api.proxyscrape.com/v2/?request=displayproxies&protocol=http&timeout=1000&country=all&ssl=all&anonymity=elite";
         String text = getText(apiUrl);
-        String[] lines = text.split("\\r?\\n");
-        for (String line : lines) {
-            String[] parts = line.split(":");
-            Proxy proxy = new Proxy(parts[0], Integer.parseInt(parts[1]));
-            proxies.add(proxy);
+        if (text!=null) {
+            String[] lines = text.split("\\r?\\n");
+            for (String line : lines) {
+                String[] parts = line.split(":");
+                Proxy proxy = new Proxy(parts[0], Integer.parseInt(parts[1]));
+                proxies.add(proxy);
+            }
         }
-        addProxyFromTxtFile();
+        //addProxyFromTxtFile();
     }
 
     private String getText(String apiUrl) {
