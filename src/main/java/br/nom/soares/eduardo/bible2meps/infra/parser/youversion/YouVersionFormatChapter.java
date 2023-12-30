@@ -2,7 +2,6 @@ package br.nom.soares.eduardo.bible2meps.infra.parser.youversion;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
@@ -56,33 +55,19 @@ public class YouVersionFormatChapter {
     }
 
     private void addSoftReturnToEndOfLinePrecedingPoeticTextWhenStartsInMiddleOfVerse() {
-        /*
-         * cria novo parent
-         * lê todos div do capítulo
-         *
-         *      se o div [próximo sibling] for um texto poético
-         *          criar um <P> [como primeiro filho do DIVISOR]
-         *          mover para o <P> todos div que são poéticos até o próximo div que não é poético [siblings até o próximo DIVISOR]
-         *          adiciona o <P> antes do primeiro texto poético.
-         *          se o código usfm do primeiro div poético [sibling] não estiver vazio (texto poético começou no meio)
-         *              mover para o <P> o div [sibling] anterior ao div [DIVISOR] atual se ele existir
-         *          senão (é porque o texto poético começa no começo do versículo)
-         *              se for um versículo maior que 1
-         *                  colocar um sinal de = antes do versículo
-         *              se for o versículo 1
-         *                  se for o capitulo maior que 1
-         *                      colocar um sinal de = antes do capítulo
-         *                  se for o capítulo 1
-         *                      se o versículo 2 também for poético
-         *                          colocar um sinal de = antes do versículo 2
-         */
-        // reads all divisors
+
         Element newPage = new Element("div").addClass("ChapterContent_chapter__uvbXo");
-        Element paragraph = new Element("div");
+        Element paragraph = new Element("div").addClass("paragraph");
         Elements divs = chapter.children();
         for (Element div : divs) {
-            if (isPoetic(div) || poeticTextStartedInMiddle(div)) {
-                //addEqualsSign(div);
+            // if (isPoetic(div) && poeticTextStartedInTheBeginning(div)) {
+            //     Element scriptureElement = div.selectFirst(SPAN_SCRIPTURE_NUMBER_BOLD);
+            //     if (scriptureElement != null) {
+            //         scriptureElement.prependText("=");
+            //     }
+            //     //newPage.appendChild(div.clone());
+            // } else
+            if (isNotHeader(div) && (isPoetic(div) || poeticTextStartedInMiddle(div))) {
                 paragraph = formatPoeticDiv(newPage, paragraph, div);
             } else {
                 newPage.appendChild(div.clone());
@@ -92,177 +77,9 @@ public class YouVersionFormatChapter {
         chapter.remove();
         this.page = newPage;
         extractChapter();
-
-        //         Element firstDiv = div;
-        //         Element scriptureElement = firstDiv.selectFirst(SPAN_SCRIPTURE_NUMBER_BOLD);
-        //         int scriptureNumber = 0;
-        //         if(scriptureElement != null && !scriptureElement.text().isEmpty()) {
-        //             scriptureNumber = Integer.parseInt(scriptureElement.text());
-        //         }
-        //         Element paragraph = new Element("p");
-        //         //div.before(paragraph);
-        //         Node previousDiv = div.previousSibling();
-        //         Element usfm = div.selectFirst("span[data-usfm]");
-        //         String usfmText = "";
-        //         if(usfm!=null){
-        //             usfmText=usfm.text();
-        //         }
-        //         Node beforePreviousChild = null;
-        //         if(previousDiv != null){
-        //             beforePreviousChild = previousDiv.previousSibling();
-        //         }
-        //         if (!usfmText.isBlank()) { // poetic text started in the middle
-        //             paragraph.appendChild(previousDiv);
-        //         }
-        //         while(div.tagName().equals("span")
-        //                 && (div.hasClass(POETIC_TEXT_1) || div.hasClass(POETIC_TEXT_2))) {
-        //             Element child = divs.get(i);
-        //             paragraph.appendChild(child);
-        //             i++;
-        //             if(i >= divs.size()) {
-        //                 break;
-        //             }
-        //             div = divs.get(i);
-        //         }
-        //         if (usfmText.isEmpty()) { // poetical text started at the beginning
-        //             if (scriptureNumber == 0) {
-        //                 if (previousDiv != null) {
-        //                     previousDiv.after(paragraph);
-        //                 } else {
-        //                     chapter.prependChild(paragraph);
-        //                 }
-        //             }else if (scriptureNumber > 1) {
-        //                 if (beforePreviousChild != null) {
-        //                     beforePreviousChild.after(paragraph);
-        //                 } else if (previousDiv != null) {
-        //                     previousDiv.after(paragraph);
-        //                 } else {
-        //                     chapter.prependChild(paragraph);
-        //                 }
-        //                 if (scriptureElement != null) {
-        //                     scriptureElement.prependText("=");
-        //                 }
-        //             } else if (scriptureNumber == 1) {
-        //                 chapter.prependChild(paragraph);
-        //                 int chapterNumber = getChapterNumber();
-        //                 if (chapterNumber > 1) {
-        //                     Element chapterElement =
-        //                             chapter.selectFirst("span.ChapterContent_label__R2PLt");
-        //                     if (chapterElement == null) {
-        //                         continue;
-        //                     }
-        //                     chapterElement.prependText("=");
-        //                 } else if (chapterNumber == 1) {
-        //                     Elements scripturesElements =
-        //                             chapter.select(SPAN_SCRIPTURE_NUMBER_BOLD);
-        //                     for (Element scripture : scripturesElements) {
-        //                         // if the scripture is 2
-        //                         if (scripture.text().equals("2")){
-        //                             Element scriptureParent = scripture.parent();
-        //                             if (scriptureParent == null) {
-        //                                 continue;
-        //                             }
-        //                             Element scriptureGrandParent = scriptureParent.parent();
-        //                             // if the scripture 2 is poetic
-        //                             if(scriptureGrandParent != null
-        //                                 && ( scriptureGrandParent.hasClass(POETIC_TEXT_1)
-        //                                             || scriptureGrandParent
-        //                                                     .hasClass(POETIC_TEXT_2))) {
-        //                                 scripture.prependText("=");
-        //                             }
-        //                         }
-        //                     }
-        //                 }
-        //             }
-        //         }
-        //     }
-        // }
-
-
-        /*
-        for (Element divisor : divs) {
-            Element nextSibling = divisor.nextElementSibling();
-            if (nextSibling == null) {
-                continue;
-            }
-            Element previousSiblingOfDivisor = divisor.previousElementSibling();
-            // if the next one is a poetic text
-            if (nextSibling.tagName().equals("span")
-                    && (nextSibling.hasClass(POETIC_TEXT_1)
-                            || nextSibling.hasClass(POETIC_TEXT_2)
-                    )) {
-                Element poeticText = nextSibling;
-                Element paragraph = new Element("p");
-                divisor.before(paragraph);
-                Elements nextSiblingsOfDivisor = divisor.nextElementSiblings();
-                // add to <P> the next paragraphs until the next divisor
-                for (Element nextSiblingOfDivisor : nextSiblingsOfDivisor) {
-                    if (nextSiblingOfDivisor.hasClass(DIVISOR_FOR_POETIC_TEXT)) {
-                        break;
-                    }
-                    paragraph.appendChild(nextSiblingOfDivisor);
-                }
-                Elements usfmElements = poeticText.select("span[data-usfm]");
-                if (usfmElements.isEmpty()) {
-                    continue;
-                }
-                String usfmText = usfmElements.getFirst().text();
-                // if the usfm code text is not empty
-                if (!usfmText.isBlank()) { // poetic text started in the middle
-                    // add the paragraph before the poetic text as first child of <P>
-                    if (previousSiblingOfDivisor != null) {
-                        Element newElement = new Element("span");
-                        previousSiblingOfDivisor.append("<br>");
-                        newElement.html(previousSiblingOfDivisor.html());
-                        paragraph.prependChild(newElement);
-                        previousSiblingOfDivisor.remove();
-                    }
-                } else { // poetical text started at the beginning
-                    // if this scripture is bigger than 1
-                    Element scriptureElement = poeticText.selectFirst(SPAN_SCRIPTURE_NUMBER_BOLD);
-                    if(scriptureElement == null) {
-                        continue;
-                    }
-                    int scriptureNumber = Integer.parseInt(scriptureElement.text());
-                    if (scriptureNumber > 1) {
-                        scriptureElement.prependText("=");
-                    } else if (scriptureNumber == 1) {
-                        int chapterNumber = getChapterNumber();
-                        if (chapterNumber > 1) {
-                            Element chapterElement =
-                                    chapter.selectFirst("span.ChapterContent_label__R2PLt");
-                            if (chapterElement == null) {
-                                continue;
-                            }
-                            chapterElement.prependText("=");
-                        } else if (chapterNumber == 1) {
-                            Elements scripturesElements =
-                                    chapter.select(SPAN_SCRIPTURE_NUMBER_BOLD);
-                            for (Element scripture : scripturesElements) {
-                                // if the scripture is 2
-                                if (scripture.text().equals("2")){
-                                    Element scriptureParent = scripture.parent();
-                                    if (scriptureParent == null) {
-                                        continue;
-                                    }
-                                    Element scriptureGrandParent = scriptureParent.parent();
-                                    // if the scripture 2 is poetic
-                                    if(scriptureGrandParent != null
-                                        && ( scriptureGrandParent.hasClass(POETIC_TEXT_1)
-                                                    || scriptureGrandParent
-                                                            .hasClass(POETIC_TEXT_2))) {
-                                        scripture.prependText("=");
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }*/
     }
 
-    private void addEqualsSign(Element div) {
+    // private Element addEqualsSign(Element newPage, Element paragraph, Element div) {
         /*
          *              se for um versículo maior que 1
          *                  colocar um sinal de = antes do versículo
@@ -273,40 +90,47 @@ public class YouVersionFormatChapter {
          *                      se o versículo 2 também for poético
          *                          colocar um sinal de = antes do versículo 2
          */
-        Element scriptureElement = div.selectFirst(SPAN_SCRIPTURE_NUMBER_BOLD);
-        if (scriptureElement != null) {
-            int scriptureNumber = Integer.parseInt(scriptureElement.text());
-            if (scriptureNumber > 1) {
-                scriptureElement.prependText("=");
-            } else if (scriptureNumber == 1) {
-                handlePoeticTextInScriptureOne();
-            }
-        }
-    }
+        // Element scriptureElement = div.selectFirst(SPAN_SCRIPTURE_NUMBER_BOLD);
+        // if (scriptureElement != null) {
+        //     scriptureElement.prependText("=");
+        // }
+        // return div;
+        // int scriptureNumber = Integer.parseInt(scriptureElement.text());
+        // if (scriptureNumber > 1) {
+        // } else if (scriptureNumber == 1) {
+        //     scriptureElement.prependText("=");
+            // int chapterNumber = getChapterNumber();
+            // if (chapterNumber > 1) {
+            // } else if (chapterNumber == 1) {
+                // Element scripture2 = div.nextElementSibling();
+                // scripture2.prependText("=");
 
-    private void handlePoeticTextInScriptureOne() {
-        int chapterNumber = getChapterNumber();
-        if (chapterNumber > 1) {
-            Optional.of(chapter.selectFirst("span.ChapterContent_label__R2PLt")).get()
-                    .prependText("=");
-        } else if (chapterNumber == 1) {
-            chapter.select(SPAN_SCRIPTURE_NUMBER_BOLD).forEach(this::analyzeToAddEqualsSign);
-        }
-    }
+                /* Elements scriptures = chapter.select(SPAN_SCRIPTURE_NUMBER_BOLD);
+                for (Element scripture : scriptures) {
+                    if (scripture.text().equals("2")){
+                        Element scriptureParent = Optional.of(scripture.parent()).get();
+                        Element scriptureGrandParent = Optional.of(scriptureParent.parent()).get();
+                        if( scriptureGrandParent.hasClass(POETIC_TEXT_1)
+                                || scriptureGrandParent.hasClass(POETIC_TEXT_2)) {
+                            scripture.prependText("=");
+                        }
+                    }
+                } */
+            // }
+        // }
+    // }
 
-    private void analyzeToAddEqualsSign(Element scripture) {
-        if (scripture.text().equals("2")){
-            Element scriptureParent = Optional.of(scripture.parent()).get();
-            Element scriptureGrandParent = Optional.of(scriptureParent.parent()).get();
-            if( scriptureGrandParent.hasClass(POETIC_TEXT_1)
-                    || scriptureGrandParent.hasClass(POETIC_TEXT_2)) {
-                scripture.prependText("=");
-            }
-        }
-    }
+
 
     private Element formatPoeticDiv(Element newPage, Element paragraph, Element div) {
-        if(isNotHeader(div) && div.tagName().equals("div")){
+        int scriptureNumber = getFirstScriptureNumberFromDiv(div);
+        boolean poeticTextStartedInTheBeginning = poeticTextStartedInTheBeginning(div);
+        int childrenSize = paragraph.childrenSize();
+        if (childrenSize == 0 && (poeticTextStartedInTheBeginning || scriptureNumber == 1)) {
+            div.prependText("=");
+        }
+        //if(isNotHeader(div) && div.tagName().equals("div")){
+        if(div.tagName().equals("div")){
             Element span = createPoeticSpan(div);
             paragraph.appendChild(span.clone());
         } else {
@@ -315,7 +139,7 @@ public class YouVersionFormatChapter {
         Element nextDiv = div.nextElementSibling();
         if (nextDiv == null || !isPoetic(nextDiv)) {
             newPage.appendChild(paragraph.clone());
-            paragraph = new Element("div");
+            paragraph = new Element("div").addClass("paragraph");
         }
         return paragraph;
     }
@@ -330,6 +154,23 @@ public class YouVersionFormatChapter {
 
     private boolean isNotHeader(Element div) {
         return !div.hasClass(HEADER) && !div.hasClass(SUPERSCRIPTION);
+    }
+
+    private int getFirstScriptureNumberFromDiv(Element div) {
+        Element scriptureElement = div.selectFirst(SPAN_SCRIPTURE_NUMBER_BOLD);
+        if (scriptureElement == null) {
+            return 0;
+        }
+        String text = scriptureElement.text();
+        if(text.isBlank()) {
+            return 1;
+        }
+        return Integer.parseInt(text);
+    }
+
+    private boolean poeticTextStartedInTheBeginning(Element div) {
+        Element usfmElement = div.selectFirst("span[data-usfm]");
+        return usfmElement != null && usfmElement.text().isBlank() && isPoetic(div);
     }
 
     private boolean poeticTextStartedInMiddle(Element div) {

@@ -81,7 +81,7 @@ Step 4: Format the text
 
             f.	✅When poetic text starts in the middle of a verse, add a soft return (Shift+Enter) to the end of the line preceding the poetic text.
 
-            g. ➡️Place an Equals sign (=) before the 🤔first chapter or ✅verse number where poetic text starts.
+            g. ✅Place an Equals sign (=) before the ✅first chapter or ✅verse number where poetic text starts.
 
                 🤔Note: If a Bible book begins with poetic text, place the Equals sign (=) at the beginning of the second verse containing poetic text instead.
 
@@ -89,7 +89,7 @@ Step 4: Format the text
 
             h. ✅Add a hard return at the end of each chapter and group of verses that form a paragraph.
 
-            i. ➡️Place a Plus sign (+) at the start of a line when body text immediately follows 🤔poetic text or ✅any type of heading.
+            i. ➡️Place a Plus sign (+) at the start of a line when body text (body, not poetic neither header text) immediately follows 🤔poetic text or ✅any type of heading.
 
 Step 5 - Footnotes
 
@@ -113,4 +113,4 @@ BUGs
 ✅ 3 João - verse 15 excedes verse limit
 ✅ 16 98 102 143 must have superscription
 ✅ fix NUM 16,17,29,30 and 2CO 13
-🤔SENHOR style="font-variant: small-caps;"
+✅SENHOR style="font-variant: small-caps;"
