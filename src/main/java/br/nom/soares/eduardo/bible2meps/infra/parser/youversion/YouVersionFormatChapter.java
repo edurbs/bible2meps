@@ -60,13 +60,7 @@ public class YouVersionFormatChapter {
         Element paragraph = new Element("div").addClass("paragraph");
         Elements divs = chapter.children();
         for (Element div : divs) {
-            // if (isPoetic(div) && poeticTextStartedInTheBeginning(div)) {
-            //     Element scriptureElement = div.selectFirst(SPAN_SCRIPTURE_NUMBER_BOLD);
-            //     if (scriptureElement != null) {
-            //         scriptureElement.prependText("=");
-            //     }
-            //     //newPage.appendChild(div.clone());
-            // } else
+
             if (isNotHeader(div) && (isPoetic(div) || poeticTextStartedInMiddle(div))) {
                 paragraph = formatPoeticDiv(newPage, paragraph, div);
             } else {
@@ -79,48 +73,6 @@ public class YouVersionFormatChapter {
         extractChapter();
     }
 
-    // private Element addEqualsSign(Element newPage, Element paragraph, Element div) {
-        /*
-         *              se for um versículo maior que 1
-         *                  colocar um sinal de = antes do versículo
-         *              se for o versículo 1
-         *                  se for o capitulo maior que 1
-         *                      colocar um sinal de = antes do capítulo
-         *                  se for o capítulo 1
-         *                      se o versículo 2 também for poético
-         *                          colocar um sinal de = antes do versículo 2
-         */
-        // Element scriptureElement = div.selectFirst(SPAN_SCRIPTURE_NUMBER_BOLD);
-        // if (scriptureElement != null) {
-        //     scriptureElement.prependText("=");
-        // }
-        // return div;
-        // int scriptureNumber = Integer.parseInt(scriptureElement.text());
-        // if (scriptureNumber > 1) {
-        // } else if (scriptureNumber == 1) {
-        //     scriptureElement.prependText("=");
-            // int chapterNumber = getChapterNumber();
-            // if (chapterNumber > 1) {
-            // } else if (chapterNumber == 1) {
-                // Element scripture2 = div.nextElementSibling();
-                // scripture2.prependText("=");
-
-                /* Elements scriptures = chapter.select(SPAN_SCRIPTURE_NUMBER_BOLD);
-                for (Element scripture : scriptures) {
-                    if (scripture.text().equals("2")){
-                        Element scriptureParent = Optional.of(scripture.parent()).get();
-                        Element scriptureGrandParent = Optional.of(scriptureParent.parent()).get();
-                        if( scriptureGrandParent.hasClass(POETIC_TEXT_1)
-                                || scriptureGrandParent.hasClass(POETIC_TEXT_2)) {
-                            scripture.prependText("=");
-                        }
-                    }
-                } */
-            // }
-        // }
-    // }
-
-
 
     private Element formatPoeticDiv(Element newPage, Element paragraph, Element div) {
         int scriptureNumber = getFirstScriptureNumberFromDiv(div);
@@ -129,7 +81,6 @@ public class YouVersionFormatChapter {
         if (childrenSize == 0 && (poeticTextStartedInTheBeginning || scriptureNumber == 1)) {
             div.prependText("=");
         }
-        //if(isNotHeader(div) && div.tagName().equals("div")){
         if(div.tagName().equals("div")){
             Element span = createPoeticSpan(div);
             paragraph.appendChild(span.clone());
@@ -282,7 +233,6 @@ public class YouVersionFormatChapter {
     }
 
     private void addAmpersandToBookDivision() {
-        //Element bookDivision = chapter.selectFirst("div.ChapterContent_ms1__s_U5R");
         Element bookDivision = chapter.selectFirst("div.ChapterContent_ms1__s_U5R, div.ChapterContent_ms__Z16Ky");
         if (bookDivision == null) {
             return;
