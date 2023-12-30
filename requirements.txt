@@ -89,7 +89,7 @@ Step 4: Format the text
 
             h. ✅Add a hard return at the end of each chapter and group of verses that form a paragraph.
 
-            i. ➡️Place a Plus sign (+) at the start of a line when body text (body, not poetic neither header text) immediately follows 🤔poetic text or ✅any type of heading.
+            i. 🐞Place a Plus sign (+) at the start of a line when body text (body, not poetic neither header text) immediately follows 🤔poetic text or ✅any type of heading.
 
 Step 5 - Footnotes
 

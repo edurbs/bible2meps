@@ -32,6 +32,7 @@ public class YouVersionFormatChapter {
 
     private List<Element> chapterFootnotes = new ArrayList<>();
     private Element chapter;
+    private boolean divPreviousWasPoetic = false;
 
     public void execute() {
         extractChapter();
@@ -55,12 +56,10 @@ public class YouVersionFormatChapter {
     }
 
     private void addSoftReturnToEndOfLinePrecedingPoeticTextWhenStartsInMiddleOfVerse() {
-
         Element newPage = new Element("div").addClass("ChapterContent_chapter__uvbXo");
         Element paragraph = new Element("div").addClass("paragraph");
         Elements divs = chapter.children();
         for (Element div : divs) {
-
             if (isNotHeader(div) && (isPoetic(div) || poeticTextStartedInMiddle(div))) {
                 paragraph = formatPoeticDiv(newPage, paragraph, div);
             } else {
@@ -78,8 +77,20 @@ public class YouVersionFormatChapter {
         int scriptureNumber = getFirstScriptureNumberFromDiv(div);
         boolean poeticTextStartedInTheBeginning = poeticTextStartedInTheBeginning(div);
         int childrenSize = paragraph.childrenSize();
-        if (childrenSize == 0 && (poeticTextStartedInTheBeginning || scriptureNumber == 1)) {
+        int chapterNumber = getChapterNumber();
+        if (childrenSize == 0 && poeticTextStartedInTheBeginning ) {
+            if (chapterNumber > 1 || scriptureNumber > 0) {
+                div.prependText("=");
+            }
+            // else if(chapterNumber == 1 && scriptureNumber == 1) { {
+            //     divPreviousWasPoetic = true;
+            // }
+        }
+        chapterNumber = getChapterNumber(paragraph);
+        //if(chapterNumber == 1 && scriptureNumber == 2 && divPreviousWasPoetic) {
+        if(chapterNumber == 1 && scriptureNumber == 2 && poeticTextStartedInTheBeginning) {
             div.prependText("=");
+            //divPreviousWasPoetic = false;
         }
         if(div.tagName().equals("div")){
             Element span = createPoeticSpan(div);
@@ -121,7 +132,8 @@ public class YouVersionFormatChapter {
 
     private boolean poeticTextStartedInTheBeginning(Element div) {
         Element usfmElement = div.selectFirst("span[data-usfm]");
-        return usfmElement != null && usfmElement.text().isBlank() && isPoetic(div);
+        return (usfmElement != null && usfmElement.text().isBlank() && isPoetic(div))
+        || (isPoetic(div) && getFirstScriptureNumberFromDiv(div) == 1 && getChapterNumber() > 1);
     }
 
     private boolean poeticTextStartedInMiddle(Element div) {
@@ -260,7 +272,7 @@ public class YouVersionFormatChapter {
         }
     }
 
-    private int getChapterNumber() {
+    private int getChapterNumber(Element chapter) {
         Element elementChapterNumber = chapter.selectFirst("span.chapterNumber");
         if (elementChapterNumber != null) {
             String stringChapterNumber = elementChapterNumber.wholeText();
@@ -271,6 +283,10 @@ public class YouVersionFormatChapter {
             return 1;
         }
         return 0;
+    }
+
+    private int getChapterNumber() {
+        return getChapterNumber(chapter);
     }
 
     private void addPlusSignToHeadings() {
