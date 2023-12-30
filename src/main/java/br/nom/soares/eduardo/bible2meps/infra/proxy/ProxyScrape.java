@@ -1,9 +1,5 @@
 package br.nom.soares.eduardo.bible2meps.infra.proxy;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -30,22 +26,6 @@ public class ProxyScrape implements ProxyListServer {
         return proxies.get(index);
     }
 
-    private void addProxyFromTxtFile() {
-        try {
-            InputStream inputStream =
-                    ProxyScrape.class.getClassLoader().getResourceAsStream("proxyList.txt");
-            BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
-            String line;
-            while ((line = reader.readLine()) != null) {
-                String[] parts = line.split(":");
-                proxies.add(new Proxy(parts[0], Integer.parseInt(parts[1])));
-            }
-            reader.close();
-        } catch (IOException e) {
-            e.getMessage();
-        }
-    }
-
     public void removeProxy(Proxy proxy) {
         proxies.remove(proxy);
     }
@@ -62,7 +42,6 @@ public class ProxyScrape implements ProxyListServer {
                 proxies.add(proxy);
             }
         }
-        //addProxyFromTxtFile();
     }
 
     private String getText(String apiUrl) {
