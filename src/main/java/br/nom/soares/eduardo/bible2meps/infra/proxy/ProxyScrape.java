@@ -1,8 +1,8 @@
 package br.nom.soares.eduardo.bible2meps.infra.proxy;
 
+import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 import br.nom.soares.eduardo.bible2meps.application.format.ProxyListServer;
@@ -13,7 +13,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class ProxyScrape implements ProxyListServer {
     private List<Proxy> proxies = new ArrayList<>();
-    private Random random = new Random();
+    private SecureRandom random = new SecureRandom();
 
     @NonNull
     private RestTemplate restTemplate;
