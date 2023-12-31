@@ -2,6 +2,7 @@ package br.nom.soares.eduardo.bible2meps.application.format;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 import br.nom.soares.eduardo.bible2meps.domain.Book;
 import br.nom.soares.eduardo.bible2meps.domain.enums.BookName;
 import lombok.Getter;
@@ -16,13 +17,13 @@ public class FormatBible {
     @Getter
     private int progress;
     private int totalBibleChapters;
+    private Logger logger = Logger.getLogger(getClass().getName());
 
     public record BibleParams(String bibleId, String abbreviation, SiteParser siteParser,
             ZipFile zipFile) {
     }
 
     public byte[] execute() {
-        // TODO add thread
         totalBibleChapters = getTotalBibleChapters();
 
         SiteParser siteParser = params.siteParser();
@@ -47,7 +48,8 @@ public class FormatBible {
     protected void updateProgress() {
         progress++;
         float percentDone = ((float) progress / (float) totalBibleChapters) * 100;
-        System.out.println("Progress: " + percentDone);
+        String message = "Progress: " + percentDone + "%";
+        logger.info(message);
     }
 
 }

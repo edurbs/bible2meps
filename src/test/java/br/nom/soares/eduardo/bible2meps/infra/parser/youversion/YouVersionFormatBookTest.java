@@ -77,8 +77,8 @@ class YouVersionFormatBookTest {
         Element body = youVersionFormatBook.getBook().selectFirst("body");
         Elements divs = body.children();
         Element lastDiv = divs.getLast();
-        assertTrue(lastDiv.className().equals("footnoteDiv"));
+        assertEquals("footnoteDiv", lastDiv.className());
         Element penultimateDiv = divs.get(divs.size() - 2);
-        assertTrue(penultimateDiv.className().equals("ChapterContent_chapter__uvbXo"));
+        assertEquals("ChapterContent_chapter__uvbXo", penultimateDiv.className());
     }
 }

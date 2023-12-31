@@ -3,7 +3,7 @@ package br.nom.soares.eduardo.bible2meps.domain.enums;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-public class BookNameTest {
+class BookNameTest {
 
     @Test
     void testGetMepsFormat() {

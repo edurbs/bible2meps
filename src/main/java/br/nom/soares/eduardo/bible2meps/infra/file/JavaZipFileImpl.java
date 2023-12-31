@@ -28,7 +28,7 @@ public class JavaZipFileImpl implements ZipFile {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return null;
+        return new byte[0];
     }
 
     private void addEntry(ZipOutputStream zipOutputStream, String html, String htmlFilename)

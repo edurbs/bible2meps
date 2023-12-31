@@ -18,7 +18,7 @@ import br.nom.soares.eduardo.bible2meps.infra.file.JavaZipFileImpl;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @ExtendWith(MockitoExtension.class)
-public class FormatBibleTest {
+class FormatBibleTest {
 
     @Mock
     private SiteParser siteParserMock;

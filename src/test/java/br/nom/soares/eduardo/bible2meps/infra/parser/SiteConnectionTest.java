@@ -13,7 +13,7 @@ import br.nom.soares.eduardo.bible2meps.infra.proxy.ProxyScrape;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @ExtendWith(MockitoExtension.class)
-public class SiteConnectionTest {
+class SiteConnectionTest {
 
     @Mock
     private RestTemplate restTemplateMock;

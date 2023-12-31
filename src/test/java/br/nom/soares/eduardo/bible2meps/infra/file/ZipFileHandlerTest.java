@@ -16,7 +16,7 @@ import org.junit.jupiter.api.Test;
 import br.nom.soares.eduardo.bible2meps.domain.Book;
 import br.nom.soares.eduardo.bible2meps.domain.enums.BookName;
 
-public class ZipFileHandlerTest {
+class ZipFileHandlerTest {
     @Test
     void createZipFile_shouldReturnZipFileByteArrayWithTwoFilesAndContents() {
         // Arrange

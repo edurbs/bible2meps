@@ -1,5 +1,6 @@
 package br.nom.soares.eduardo.bible2meps.infra.parser;
 
+import java.util.logging.Logger;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -14,6 +15,8 @@ public class SiteConnection {
     @NonNull
     private ProxyListServer proxyListServer;
 
+    Logger logger = Logger.getLogger(getClass().getName());
+
     public Document getDocument(String url) {
         Document document = null;
         var proxy = new Proxy("", 0);
@@ -22,7 +25,7 @@ public class SiteConnection {
             if (document == null) {
                 proxyListServer.removeProxy(proxy);
                 proxy = proxyListServer.getRandomProxy();
-                System.out.println("Trying proxy: " + proxy.host()+":"+proxy.port());
+                logger.info("Trying proxy: " + proxy.host()+":"+proxy.port());
             }
         }
         return document;

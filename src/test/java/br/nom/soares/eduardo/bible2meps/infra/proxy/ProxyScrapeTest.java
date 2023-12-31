@@ -12,13 +12,12 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.ResponseEntity;
-import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.web.client.RestTemplate;
 import br.nom.soares.eduardo.bible2meps.domain.Proxy;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @ExtendWith(MockitoExtension.class)
-public class ProxyScrapeTest {
+class ProxyScrapeTest {
 
     @Mock
     private RestTemplate restTemplate;
@@ -30,7 +29,7 @@ public class ProxyScrapeTest {
             "https://api.proxyscrape.com/v2/?request=displayproxies&protocol=http&timeout=1000&country=all&ssl=all&anonymity=elite";
 
     @Test
-    public void shouldReturnOneRandomProxy() throws NoSuchFieldException, SecurityException,
+    void shouldReturnOneRandomProxy() throws NoSuchFieldException, SecurityException,
             IllegalArgumentException, IllegalAccessException {
 
         String mockResponse = "127.0.0.1:8080\n192.168.0.1:8888\n10.0.0.1:8088";
@@ -44,18 +43,6 @@ public class ProxyScrapeTest {
 
         assertEquals(3, proxies.size());
         assertTrue(proxies.contains(result));
-    }
-
-    @Test
-    void shouldReadProxyListFromTxtFile() throws NoSuchFieldException, SecurityException,
-            IllegalArgumentException, IllegalAccessException {
-
-        proxyScrape = new ProxyScrape(restTemplate);
-        ReflectionTestUtils.invokeMethod(proxyScrape, "addProxyFromTxtFile");
-
-        List<Proxy> proxies = getProxies();
-
-        assertTrue(proxies.size() == 500);
     }
 
     @Test

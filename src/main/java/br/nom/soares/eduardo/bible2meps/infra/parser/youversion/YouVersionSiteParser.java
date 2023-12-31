@@ -33,7 +33,6 @@ public class YouVersionSiteParser implements SiteParser {
     public List<String> getUrls(BookName bookName, String id, String abbreviation) {
         List<String> urlList = new ArrayList<>();
         YouVersionBookName youVersionBookName = YouVersionBookName.fromString(bookName.name());
-        // https://www.bible.com/bible/277/LEV.1.TB
         String youVersionUrl = "https://www.bible.com/bible/";
         int totalChapter = bookName.getNumberOfChapters();
         for (int chapterNumber = 1; chapterNumber <= totalChapter; chapterNumber++) {

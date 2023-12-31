@@ -19,7 +19,7 @@ import br.nom.soares.eduardo.bible2meps.infra.proxy.ProxyScrape;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @ExtendWith(MockitoExtension.class)
-public class YouVersionSiteParserTest {
+class YouVersionSiteParserTest {
 
     @Mock
     private YouVersionFormatBook youVersionFormatBook;
