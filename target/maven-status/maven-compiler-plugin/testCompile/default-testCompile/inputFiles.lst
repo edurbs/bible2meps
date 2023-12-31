@@ -1,12 +1,11 @@
 /home/runner/work/bible2meps/bible2meps/src/test/java/br/nom/soares/eduardo/bible2meps/domain/enums/BookNameTest.java
 /home/runner/work/bible2meps/bible2meps/src/test/java/br/nom/soares/eduardo/bible2meps/infra/proxy/ProxyScrapeTest.java
-/home/runner/work/bible2meps/bible2meps/src/test/java/br/nom/soares/eduardo/bible2meps/application/format/youversion/YouVersionFormatBookTest.java
+/home/runner/work/bible2meps/bible2meps/src/test/java/br/nom/soares/eduardo/bible2meps/infra/parser/youversion/YouVersionFormatChapterTest.java
 /home/runner/work/bible2meps/bible2meps/src/test/java/br/nom/soares/eduardo/bible2meps/Bible2mepsApplicationIT.java
+/home/runner/work/bible2meps/bible2meps/src/test/java/br/nom/soares/eduardo/bible2meps/infra/parser/youversion/YouVersionFormatChapterTestHelper.java
 /home/runner/work/bible2meps/bible2meps/src/test/java/br/nom/soares/eduardo/bible2meps/application/format/FormatBibleTest.java
-/home/runner/work/bible2meps/bible2meps/src/test/java/br/nom/soares/eduardo/bible2meps/application/format/youversion/YouVersionFormatChapterTestHelper.java
 /home/runner/work/bible2meps/bible2meps/src/test/java/br/nom/soares/eduardo/bible2meps/infra/file/ZipFileHandlerTest.java
-/home/runner/work/bible2meps/bible2meps/src/test/java/br/nom/soares/eduardo/bible2meps/Bible2mepsApplicationTests.java
-/home/runner/work/bible2meps/bible2meps/src/test/java/br/nom/soares/eduardo/bible2meps/application/format/youversion/YouVersionSiteParserTest.java
 /home/runner/work/bible2meps/bible2meps/src/test/java/br/nom/soares/eduardo/bible2meps/infra/parser/SiteConnectionTest.java
-/home/runner/work/bible2meps/bible2meps/src/test/java/br/nom/soares/eduardo/bible2meps/application/format/youversion/YouVersionFormatChapterTest.java
+/home/runner/work/bible2meps/bible2meps/src/test/java/br/nom/soares/eduardo/bible2meps/infra/parser/youversion/YouVersionFormatBookTest.java
+/home/runner/work/bible2meps/bible2meps/src/test/java/br/nom/soares/eduardo/bible2meps/infra/parser/youversion/YouVersionSiteParserTest.java
 /home/runner/work/bible2meps/bible2meps/src/test/java/br/nom/soares/eduardo/bible2meps/domain/enums/YouVersionBookNameTest.java
