@@ -356,10 +356,24 @@ public class YouVersionFormatChapter {
         for (int i = 0; i < scriptureNumbers.size(); i++) {
             Element scriptureNumber = scriptureNumbers.get(i);
             String scriptureNumberText = scriptureNumber.text();
-            String scriptureText = scriptureNumber.parent().text();
+            // TODO handle united verses
+            if(scriptureNumberText.contains("-")){
+                String firstNumber = scriptureNumberText.split("-")[0];
+                String lastNumber = scriptureNumberText.split("-")[1];
+                int firstNumberInt = Integer.parseInt(firstNumber);
+                int lastNumberInt = Integer.parseInt(lastNumber);
+                int diff = lastNumberInt - firstNumberInt;
+                Elements unitedScripturesElements = new Elements();
+                unitedScripturesElements.addFirst(scriptureNumber);
+                addBlankScriptureAfter(unitedScripturesElements, diff);
+            }
+            String scriptureText;
             String startSpace = " ";
-            if (scriptureText.startsWith(scriptureNumberText)) {
-                startSpace = "";
+            if (scriptureNumber.parent() != null) {
+                scriptureText = scriptureNumber.parent().text();
+                if (scriptureText.startsWith(scriptureNumberText)) {
+                    startSpace = "";
+                }
             }
             Element scriptureNumberBoldWithSpace = new Element("span")
                     .addClass(SCRIPTURE_NUMBER_BOLD).text(startSpace + scriptureNumberText + " ");

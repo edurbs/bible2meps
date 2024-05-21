@@ -115,3 +115,5 @@ BUGs
 ✅ 16 98 102 143 must have superscription
 ✅ fix NUM 16,17,29,30 and 2CO 13
 ✅SENHOR style="font-variant: small-caps;"
+
+⚠️ handle united verses https://www.bible.com/bible/3657/MRK.15.NTHUNSRIK
