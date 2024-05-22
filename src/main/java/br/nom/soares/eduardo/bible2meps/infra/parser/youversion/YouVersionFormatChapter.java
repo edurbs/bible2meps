@@ -28,8 +28,11 @@ public class YouVersionFormatChapter {
     private static final String POETIC_TEXT_1 = "ChapterContent_q__EZOnh";
     private static final String SPAN_SCRIPTURE_NUMBER_BOLD = "span.scriptureNumberBold";
     private static final String CHAPTER_NUMBER_ORIGINAL = "ChapterContent_label__R2PLt";
-    private static final String HEADER = "ChapterContent_s1__bNNaW";
+    private static final String HEADER1 = "ChapterContent_s1__bNNaW";
     private static final String HEADER2 = "ChapterContent_s2__l6Ny0";
+    private static final String HEADER3 = "ChapterContent_s__r_36F";
+    private static final String HEADER4 = "ChapterContent_mr__Vxus8";
+    private static final String HEADER5 = "ChapterContent_qa__RzTnv";
 
     @NonNull
     private Element page;
@@ -43,6 +46,9 @@ public class YouVersionFormatChapter {
 
     public void execute() {
         extractChapter();
+        if(this.chapter == null) {
+            return;
+        }
         removeUnwantedNotes();
         removeUnwantedHeaders();
         extractFootnotes();
@@ -115,7 +121,7 @@ public class YouVersionFormatChapter {
 
 
     private boolean isNotHeader(Element div) {
-        return !div.hasClass(HEADER) && !div.hasClass(SUPERSCRIPTION);
+        return !div.hasClass(HEADER1) && !div.hasClass(SUPERSCRIPTION);
     }
 
     private int getFirstScriptureNumberFromDiv(Element div) {
@@ -195,19 +201,26 @@ public class YouVersionFormatChapter {
         Element last = listScriptures.last();
         if(last != null) {
             for (int i = 1; i <= stop; i++) {
-                Element newScripture = new Element("span");
-                Element space = new Element("span").text(" ");
-                Element blankScripture = new Element("span")
-                        .text(scriptureNumber + i + " ")
-                        .addClass(SCRIPTURE_NUMBER_BOLD)
-                        .attr(STYLE, FONT_WEIGHT_BOLD);
-                Element dash = new Element("span").text(" —— ");
-                newScripture.appendChild(space);
-                newScripture.appendChild(blankScripture);
-                newScripture.appendChild(dash);
-                last.parent().after(newScripture);
+                Element newScripture = createEmptyScripture(scriptureNumber + i);
+                if (last.parent() != null) {
+                    last.parent().after(newScripture);
+                }
             }
         }
+    }
+
+    private Element createEmptyScripture(int scriptureNumber) {
+        Element newScripture = new Element("span").addClass("ChapterContent_verse__57FIw");
+        Element space = new Element("span").text("");
+        Element blankScripture = new Element("span")
+                .text(scriptureNumber + " ")
+                .addClass(SCRIPTURE_NUMBER_BOLD)
+                .attr(STYLE, FONT_WEIGHT_BOLD);
+        Element dash = new Element("span").text(" —— ");
+        newScripture.appendChild(space);
+        newScripture.appendChild(blankScripture);
+        newScripture.appendChild(dash);
+        return newScripture;
     }
 
     private void addStyles() {
@@ -235,7 +248,12 @@ public class YouVersionFormatChapter {
     }
 
     private void addAtSignToHeadings() {
-        Elements headings = chapter.select("div."+HEADER+", div."+HEADER2+", div.ChapterContent_mr__Vxus8, div.ChapterContent_qa__RzTnv");
+        Elements headings = chapter.select(
+                "div." + HEADER1 + ", " +
+                         "div." + HEADER2 + ", " +
+                         "div." + HEADER3 + ", " +
+                         "div." + HEADER4 + ", " +
+                         "div." + HEADER5);
         for (Element heading : headings) {
             heading.text("@" + heading.text());
         }
@@ -357,18 +375,31 @@ public class YouVersionFormatChapter {
             Element scriptureNumber = scriptureNumbers.get(i);
             String scriptureNumberText = scriptureNumber.text();
             // TODO handle united verses
-            if(scriptureNumberText.contains("-")){
+            if (scriptureNumberText.contains("-")) {
                 String firstNumber = scriptureNumberText.split("-")[0];
                 String lastNumber = scriptureNumberText.split("-")[1];
                 int firstNumberInt = Integer.parseInt(firstNumber);
                 int lastNumberInt = Integer.parseInt(lastNumber);
                 int diff = lastNumberInt - firstNumberInt;
-                Elements unitedScripturesElements = new Elements();
-                unitedScripturesElements.addFirst(scriptureNumber);
-                addBlankScriptureAfter(unitedScripturesElements, diff);
+                for (int j = 1; j <= diff; j++) {
+                    Element emptyScripture = createEmptyScripture(firstNumberInt + j);
+                    if(i+1 < scriptureNumbers.size()) {
+                        Element nextScripture = scriptureNumbers.get(i+1);
+                        nextScripture.before(emptyScripture);
+                    }else{
+                        if (scriptureNumber.parent() != null) {
+                            String text = emptyScripture.html();
+                            text = " " + text;
+                            emptyScripture.html(text);
+                            scriptureNumber.parent().after(emptyScripture);
+                        }
+                    }
+
+                }
+                scriptureNumberText= firstNumber;
             }
             String scriptureText;
-            String startSpace = " ";
+            String startSpace = "";
             if (scriptureNumber.parent() != null) {
                 scriptureText = scriptureNumber.parent().text();
                 if (scriptureText.startsWith(scriptureNumberText)) {

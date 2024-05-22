@@ -2,6 +2,11 @@ package br.nom.soares.eduardo.bible2meps.infra.parser.youversion;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import br.nom.soares.eduardo.bible2meps.application.format.ProxyListServer;
+import br.nom.soares.eduardo.bible2meps.infra.parser.SiteConnection;
+import br.nom.soares.eduardo.bible2meps.infra.proxy.ProxyScrape;
+import org.jsoup.nodes.Document;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
@@ -36,9 +41,9 @@ public class YouVersionSiteParser implements SiteParser {
         String youVersionUrl = "https://www.bible.com/bible/";
         int totalChapter = bookName.getNumberOfChapters();
         for (int chapterNumber = 1; chapterNumber <= totalChapter; chapterNumber++) {
-            String finalUrl = new StringBuilder().append(youVersionUrl).append(id).append("/")
-                    .append(youVersionBookName.getName()).append(".").append(chapterNumber)
-                    .append(".").append(abbreviation).toString();
+            String finalUrl = youVersionUrl + id + "/" +
+                    youVersionBookName.getName() + "." + chapterNumber +
+                    "." + abbreviation;
             urlList.add(finalUrl);
         }
         return urlList;
@@ -87,4 +92,10 @@ public class YouVersionSiteParser implements SiteParser {
     }
 
 
+    public int getHowManyBibles(String number) {
+        if(number.equals("3657")){
+            return 27;
+        }
+        return 66;
+    }
 }

@@ -74,6 +74,9 @@ public class YouVersionFormatBook {
     private Element parsePage(String url, BookName bookName) {
         siteConnection = new SiteConnection(proxyListServer);
         Document document = siteConnection.getDocument(url);
+        if (document == null) {
+            return null;
+        }
         var youVersionFormatChapter = new YouVersionFormatChapter(document, bookName);
         youVersionFormatChapter.execute();
         if (bookNameFromPage.isEmpty()) {

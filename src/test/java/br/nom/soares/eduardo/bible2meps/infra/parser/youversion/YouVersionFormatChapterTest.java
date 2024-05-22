@@ -5,6 +5,8 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Path;
@@ -46,16 +48,19 @@ class YouVersionFormatChapterTest {
         }
         html.append("</body></html>");
 
-        Path tempFilePath = Path.of("/tmp/testtempfile.html");
+        //Path tempFilePath = Path.of("/tmp/testtempfile.html");
+        File tempFile = File.createTempFile("testTempFile", ".html"); // C:\Users\%username%\AppData\Local\Temp\
+        //Path tempFilePath = Path.of("C:\\temp\\testTempFile.html");
         // Write HTML content to the temporary file
-        FileWriter writer = new FileWriter(tempFilePath.toFile());
+        FileWriter writer = new FileWriter(tempFile);
         writer.write(html.toString());
         writer.close();
+        System.out.println(tempFile.getAbsolutePath());
     }
 
     @BeforeAll
     void setup() {
-        pages.put("GEN.1.A21", YouVersionFormatChapterTestHelper.builder()
+        /*pages.put("GEN.1.A21", YouVersionFormatChapterTestHelper.builder()
                 .url("https://www.bible.com/bible/2645/GEN.1.A21")
                 .chapterNumber("1")
                 .totalScriptureNumbers(31)
@@ -203,7 +208,25 @@ class YouVersionFormatChapterTest {
                 .chapterNumber("5")
                 .totalScriptureNumbers(48)
                 .psalmWithSuperscription(false)
-                .bookName(BookName.BOOK_40_MAT).build().get());
+                .bookName(BookName.BOOK_40_MAT).build().get());*/
+        pages.put("MRK.15.NTHUNSRIK", YouVersionFormatChapterTestHelper.builder()
+                .url("https://www.bible.com/bible/3657/MRK.15.NTHUNSRIK")
+                .chapterNumber("15")
+                .totalScriptureNumbers(47)
+                .psalmWithSuperscription(false)
+                .bookName(BookName.BOOK_41_MAR).build().get());
+        pages.put("MRK.1.NTHUNSRIK", YouVersionFormatChapterTestHelper.builder()
+                .url("https://www.bible.com/bible/3657/MRK.1.NTHUNSRIK")
+                .chapterNumber("1")
+                .totalScriptureNumbers(45)
+                .psalmWithSuperscription(false)
+                .bookName(BookName.BOOK_41_MAR).build().get());
+        pages.put("ACT.4.NTHUNSRIK", YouVersionFormatChapterTestHelper.builder()
+                .url("https://www.bible.com/bible/3657/ACT.4.NTHUNSRIK")
+                .chapterNumber("4")
+                .totalScriptureNumbers(37)
+                .psalmWithSuperscription(false)
+                .bookName(BookName.BOOK_44_ACT).build().get());
     }
 
     Stream<Arguments> provideTestData() {

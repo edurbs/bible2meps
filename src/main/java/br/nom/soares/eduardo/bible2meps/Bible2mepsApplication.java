@@ -10,9 +10,6 @@ public class Bible2mepsApplication {
         SpringApplication.run(Bible2mepsApplication.class, args);
     }
 
-    // TODO add threads
-    // TODO add DB to storage the pages
-    // TODO rest API
-    // TODO html progress bar
+
 
 }

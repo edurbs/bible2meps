@@ -30,6 +30,7 @@ public class FormatBible {
         String abbreviation = params.abbreviation();
         List<Book> books = new ArrayList<>();
         for (BookName bookName : BookName.values()) {
+            if(bookName.getOrdinalValue() < 40) continue; // TODO fix NT translation
             List<String> urls = siteParser.getUrls(bookName, params.bibleId(), abbreviation);
             String bookHtml = siteParser.formatBook(urls, bookName, this::updateProgress);
             books.add(new Book(bookName, bookHtml));

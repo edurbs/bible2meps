@@ -71,4 +71,9 @@ class YouVersionSiteParserTest {
         assertEquals(27, urls.size());
         assertEquals("https://www.bible.com/bible/277/LEV.1.TB", urls.get(0));
     }
+
+    @Test
+    void TestGetHowManyBibles(){
+        assertEquals(3, youVersionSiteParser.getHowManyBibles("3657"));
+    }
 }
